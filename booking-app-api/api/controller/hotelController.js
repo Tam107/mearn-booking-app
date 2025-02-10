@@ -1,5 +1,12 @@
 import Hotel from "../models/Hotel.js";
 
+/**
+ * @swagger
+ * tags:
+ *   name: Hotels
+ *   description: Hotel management API
+ */
+
 export const createHotel = async (req, res, next) => {
     const newHotel = new Hotel(req.body);
     try {
@@ -39,7 +46,7 @@ export const deleteHotel = async (req, res, next) => {
     }
 }
 
-export const hotel = async (req, res, next) => {
+export const getHotel = async (req, res, next) => {
     try{
         const hotel = await Hotel.findById(req.params.id) // return updated document
         if(!hotel){
