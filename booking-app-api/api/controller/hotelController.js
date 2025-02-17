@@ -67,3 +67,59 @@ export const getAllHotels = async (req, res, next) => {
         next(err);
     }
 }
+
+// export const countByCity = async (req, res, next) => {
+//     const cities = req.query.cities.split(','); // Transform string to array
+//     console.log(`Cities array: ${cities}`); // Log the input cities array
+//
+//     try {
+//         const list = await Promise.all(cities.map(async (city) => {
+//             const count = await Hotel.countDocuments({ city: city });
+//             console.log(`Count for city: ${city}, Count: ${count}`); // Log each count
+//             return count;
+//         }));
+//
+//         console.log(`The list of counts is: ${list}`); // Log the entire list
+//         return res.status(200).json(list);
+//
+//     } catch (err) {
+//         next(err); // Pass the error to the error handling middleware
+//     }
+// };
+
+export const countByCity = async (req, res, next) => {
+    const cities = req.query.cities.split(",");
+    try {
+        const list = await Promise.all(
+            cities.map((city) => {
+                return Hotel.countDocuments({ city: city });
+            })
+        );
+        res.status(200).json(list);
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const countByType = async (req, res, next) => {
+    try{
+        const hotelCount = await Hotel.countDocuments({type: "hotel"})
+        const apartmentCount =  await Hotel.countDocuments({ type: "apartment"})
+        const resortCount = await Hotel.countDocuments({ type: "resort" })
+        const villaCount = await Hotel.countDocuments({ type: "villa" })
+        const cabinCount = await Hotel.countDocuments({ type: "cabin" })
+
+        res.status(200).json([
+            {type: "hotel", count: hotelCount},
+            {type: "apartments", count: apartmentCount},
+            {type: "resorts", count: resortCount},
+            {type: "villas", count: villaCount},
+            {type: "cabin", count: cabinCount},
+
+        ]);
+    }catch(err){
+        next(err);
+    }
+
+}

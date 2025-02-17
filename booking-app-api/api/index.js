@@ -7,6 +7,7 @@ import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
 import roomsRoute from "./routes/rooms.js";
 import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser"; // Keep .jsx if necessary
+import cors from "cors";
 
 const app = express();
 dotenv.config();
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
+app.use(cors())
 
 // route
 app.use("/api/auth", authRoute);
