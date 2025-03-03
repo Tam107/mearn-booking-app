@@ -35,6 +35,7 @@ const SuggestionTrainTicket = () => {
       };
   return (
     <>
+        <br />
         <div className='w-11/12 mx-auto my-10'>
             <div className='w-full pb-8 bg-[#FFF7ED] rounded-[50px]'>
                 <div className='w-9/11 py-10 mx-auto'>
