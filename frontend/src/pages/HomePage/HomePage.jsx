@@ -4,12 +4,14 @@ import RecommendExperience from '../../components/RecommendExperience/RecommendE
 import RecommendPlaces from '../../components/RecommendPlaces/RecommendPlaces'
 import SuggestionTrainTicket from '../../components/SuggestionTrainTicket/SuggestionTrainTicket'
 import TravelGuide from '../../components/TravelGuide/TravelGuide'
+import Hero from '../../components/Hero/Hero'
 
 const HomePage = () => {
   return (
     <>
       
       <Header/>
+      <Hero/>
       <RecommendPlaces/>
       <RecommendExperience/>
       <SuggestionTrainTicket/>

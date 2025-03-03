@@ -37,7 +37,8 @@ const RecommendPlaces = () => {
   return (
     <>
         <div className='w-11/12 mx-auto my-10'>
-            <div className=' md:px-[24px] md:my-[20px]'>
+        <div className='w-9/11 py-10 mx-auto'>
+            <div className=''>
                 <div className='text-center flex flex-col gap-[10px]'>
                     <h2 className='font-[600] text-[36px] leading-[40px] text-[#1F2937]'>Highlights places</h2>
                     <p className='font-[400] text-[16px] leading-[24px] text-[#6B7280]'>Popular places that Chisfis recommends for you</p>
@@ -56,6 +57,7 @@ const RecommendPlaces = () => {
                     </Slider>
 
                 </div>
+            </div>
             </div>
         </div>
     </>
