@@ -31,8 +31,8 @@ const Header = () => {
                 <NavLink className={({ isActive }) => navStyle(isActive)} to="/b">Train Ticket</NavLink>
                 <NavLink className={({ isActive }) => navStyle(isActive)} to="/c">Things Todo</NavLink>
                 <NavLink className={({ isActive }) => navStyle(isActive)} to="/d">HaLong Bay Cruises</NavLink>
-                <NavLink className={({ isActive }) => navStyle(isActive)} to="/e">Hotel </NavLink>
-                <NavLink className={({ isActive }) => navStyle(isActive)} to="/f">Package Tour </NavLink>
+                <NavLink className={({ isActive }) => navStyle(isActive)} to="/hotel">Hotel </NavLink>
+                <NavLink className={({ isActive }) => navStyle(isActive)} to="/packageTour">Package Tour </NavLink>
                 <NavLink className={({ isActive }) => navStyle(isActive)} to="/hotDeal">Hot Deal </NavLink>
                 <div className='flex items-center'>
                     <CiBellOn size={28}/>
