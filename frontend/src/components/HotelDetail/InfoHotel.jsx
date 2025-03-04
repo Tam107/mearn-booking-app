@@ -79,7 +79,7 @@ Spacious and bright, in a real Bordeaux building in exposed stone, you will enjo
                     </div>
                 </div>
                 <div className='w-[360px]'>
-                    <div className='w-full bg-white shadow-xl border border-gray-200 rounded-lg p-6'>
+                    <div className='w-full bg-white shadow-xl border border-gray-200 rounded-xl p-6'>
                         <div className='flex items-center justify-between w-full'>
                             <p className='font-[400] text-[16px] leading-[24px] text-black'><span className='font-[500] text-[20px] leading-[32px] text-black'>$75</span> / night</p>
                             <div className='flex items-center gap-2'>
