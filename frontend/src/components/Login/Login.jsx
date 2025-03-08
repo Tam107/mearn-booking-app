@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaFacebookSquare } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter } from "react-icons/fa";
+import { Link, useLocation } from 'react-router';
 
 const Login = () => {
+    const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
+
+    useEffect(() => {
+            window.scrollTo({top:0,behavior:"smooth"});  // Cuộn trang lên đầu khi route thay đổi
+              // Cuộn trang lên đầu khi route thay đổi
+        }, [location]);
     return (
         <>
-            <div className={"bg-[#EEF2FF]  w-full h-[100px]"}>
+            <div className={"bg-[#EEF2FF]  w-full h-[100px] mt-3"}>
                 <div className={"absolute  top-[15%] w-full"}>
                     <div className={"w-[800px] mb-[30px]  mx-auto"}>
                         <div className={"w-full py-[10px]  rounded-[40px] shadow-lg  bg-white"}>
@@ -59,7 +66,7 @@ const Login = () => {
                                             <input type="submit" value={"Continue"} className={"py-[12px] text-white w-full rounded-[50px] bg-[#4F46E5] px-[24px]"}/>
                                         </div>
                                         <div className={"w-full text-center mt-[10px]"}>
-                                            <p className={"font-[400] text-[16px] leading-[24px]"}>New user? <span className={"text-[#3730A3]"}>Create an account</span></p>
+                                            <p  className={"font-[400] text-[16px] leading-[24px]"}>New user? <Link to={"/register"} className={"text-[#3730A3]"}>Create an account</Link></p>
                                         </div>
                                     </form>
 
