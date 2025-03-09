@@ -1,16 +1,78 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import {Form, Input} from "antd"
 import {RxAvatar} from "react-icons/rx"
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
+import { registerUser } from '../../../Axios/client/api'
+import toast from 'react-hot-toast'
 
-const Register = () => {
+const Register = ({otp,setOtp}) => {
+    const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
 
     useEffect(() => {
         window.scrollTo({top:0,behavior:"smooth"});  // Cuộn trang lên đầu khi route thay đổi
           // Cuộn trang lên đầu khi route thay đổi
     }, [location]);
+    const [form] = Form.useForm()
+    const [avatar,setAvatar] = useState(null)
+    const [buttonDisable,setButtonDisable] = useState(false)
+
+
+    const hanldeFinish = async(e)=>{
+      
+        setButtonDisable(true)
+        
+        const newForm = new FormData();
+        if(avatar){
+            newForm.append("file",avatar)
+         
+        }
+        newForm.append("username",e.username)
+        newForm.append("email",e.email)
+        newForm.append("password",e.password)
+        newForm.append("confirmPassword",e.confirmPassword)
+        if(e.password !== e.confirmPassword){
+            setButtonDisable(false)
+            return toast.error("Password and Confirm Password must be the same", {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
+        }
+        const res = await registerUser(newForm)
+    
+
+        if(res.success){
+            // toast.success(res.message);
+            setButtonDisable(false)  
+
+            setOtp(res.token)
+
+            navigate(`/confirmOtp`)
+        }
+        else{
+            toast.error(res.message, {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
+            setButtonDisable(false)
+        }
+        setButtonDisable(false)
+
+        form.resetFields()
+        setAvatar(null)
+
+    }
+    const handleFileInputChange = (e)=>{
+        const file = e.target.files[0]
+        setAvatar(file)
+    }
+
+
   return (
     <>
         <div className={"bg-[#EEF2FF]  w-full h-[100px] mt-3"}>
@@ -39,7 +101,7 @@ const Register = () => {
                         </div>
                     </div>
                     <br />
-                    <Form layout='vertical'>
+                    <Form form={form} onFinish={hanldeFinish} layout='vertical'>
                         <Form.Item rules={[{required:true,message:"Email is required!"}]} name="email"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Email</div>}>
                             <Input
                                 placeholder="you@example.com"
@@ -56,7 +118,7 @@ const Register = () => {
                                 className='text-[#6B7280] font-[400] text-[16px] leading-[24px] !rounded-2xl !py-2 !px-3'
                             />
                         </Form.Item>
-                        <Form.Item rules={[{required:true,message:"Password is required!"}]} name="password"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Username</div>}>
+                        <Form.Item rules={[{required:true,message:"Password is required!"}]} name="password"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Password</div>}>
                             <Input.Password
                                 placeholder="****"
                                 type='text'
@@ -74,30 +136,28 @@ const Register = () => {
                             <label htmlFor='avatar' className='block text-sm font-medium text-gray-700'>
                             </label>
                             <div className='flex items-center'>
-                                <span className='inline-block h-8 w-8 rounded-full overflow-hidden'>
-                                    {
-                                        // avatar?
-                                        // (
-                                        //     <img
-                                        //     //  src={URL.createObjectURL(avatar)}
-                                        //       alt="avatar" className='h-full w-full object-cover rounded-full' />
-                                        // )
-                                        // :
+                                <span className='inline-block h-10 w-10 rounded-full overflow-hidden'>
+                                {
+                                        avatar?
+                                        (
+                                            <img src={URL.createObjectURL(avatar)} alt="avatar" className='h-full w-full object-cover rounded-full' />
+                                        )
+                                        :
                                         (   
-                                            <RxAvatar className='h-8 w-8'/>
+                                            <RxAvatar className='h-10 w-10'/>
                                         )
 
                                     }
                                 </span>
                                 <label htmlFor='file-input' className='flex ml-3 transition-all items-center justify-center px-4 py-2 border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100'>
                                     <span>Upload an avatar</span>
-                                    <input type="file" name="avatar" id="file-input" accept='.jpg,.jpeg,.png'  className="sr-only"/>
+                                    <input type="file" name="avatar" id="file-input" accept='.jpg,.jpeg,.png' onChange={handleFileInputChange} className="sr-only"/>
                                 </label>
                             </div>
                         </div>
                         <Form.Item  >
-                            <button className='w-full bg-[#4F46E5] rounded-4xl py-3 flex items-center justify-center text-white font-[500] text-[16px] leading-[24px] '>Continute</button>
-                                   
+                            <button disabled={buttonDisable} className={' cursor-pointer w-full bg-[#4F46E5] rounded-4xl py-3 flex items-center justify-center text-white font-[500] text-[16px] leading-[24px] ' + (!buttonDisable?"cursor-pointer ":"cursor-progress  opacity-70")}>Continute</button>
+   
                         </Form.Item>
                         <div className={"w-full text-center mt-[10px]"}>
                             <p  className={"font-[400] text-[16px] leading-[24px]"}>Have an account? <Link to={"/login"} className={"text-[#3730A3]"}>Sign In</Link></p>

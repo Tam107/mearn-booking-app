@@ -2,11 +2,14 @@ import React, { useState } from 'react'
 import {Link, NavLink} from 'react-router-dom'
 import { CiBellOn } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
+import { useSelector } from 'react-redux';
 
 
 
 const Header = () => {
     const [active,setActive] = useState(false)
+    const stateAuth = useSelector(state => state.UserReducer)
+    console.log(stateAuth);
     
 
     window.addEventListener("scroll", () => {
@@ -38,7 +41,19 @@ const Header = () => {
         <NavLink className={({ isActive }) => navStyle(isActive)} to="/hotDeal">Hot Deal </NavLink>
         <div className='flex items-center'>
             <CiBellOn size={28}/>
-             <Link to={"/login"}><CgProfile size={28} color="#000000" className='ml-2'/> </Link>
+            {
+              stateAuth.isAuthenticated ? (
+                  <>
+                    <Link to="/profile">
+                      {stateAuth.user?.avatar ? <img className="ml-2 object-cover w-[32px] h-[32px] rounded-full" alt="" src={`${stateAuth.user.avatar}`}  />:<CgProfile size={28} color="#000000" className='ml-2'/>}
+                    </Link>
+                  
+                  </>
+              ):(
+                <Link to={"/login"}><CgProfile size={28} color="#000000" className='ml-2'/> </Link>
+              )
+            }
+            
             {/*<img src='https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-trai-dep-Viet-Nam-58.jpg' className="ml-2 object-cover w-[32px] h-[32px] rounded-full" alt=""/>*/}
         </div>
     </div>

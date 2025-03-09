@@ -1,16 +1,43 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaFacebookSquare } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter } from "react-icons/fa";
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { Form, Input } from 'antd';
+import Store from '../../redux/store';
+import { loginApi } from '../../../Axios/client/api';
+import { loginUserAction } from '../../redux/actions/UserAction';
+import toast from 'react-hot-toast';
 
 const Login = () => {
-    const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
-
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [email,setEmail] = useState()
+    const [password,setPassword] = useState()
+    const fetchApi = async(data)=>{
+        Store.dispatch(loginUserAction(data))
+    }
     useEffect(() => {
             window.scrollTo({top:0,behavior:"smooth"});  // Cuộn trang lên đầu khi route thay đổi
-              // Cuộn trang lên đầu khi route thay đổi
         }, [location]);
+        const handleLogin = async(e) => {
+            e.preventDefault();
+            const res = await loginApi({email,password});
+            if(!res.success){
+                toast.error(res.message,{
+                    style: {
+                        maxWidth: 500
+                    }
+                })
+            }
+            else{
+                toast.success("Login successfully!")
+                fetchApi(res.data)
+                navigate("/")
+            }
+          
+        }
+    
     return (
         <>
             <div className={"bg-[#EEF2FF]  w-full h-[100px] mt-3"}>
@@ -53,17 +80,17 @@ const Login = () => {
                                 <br/>
                                 <br/>
                                 <div className={"w-full"}>
-                                    <form action="" className={"w-full flex flex-col  gap-[20px]"}>
+                                    <form action="" onSubmit={handleLogin} className={"w-full flex flex-col  gap-[20px]"}>
                                         <div>
                                             <label className={"font-[500] mb-[5px]  pr-1 text-[14px] block leading-[20px]"} htmlFor="">Email <span className={"text-red-500"}>*</span></label>
-                                            <input placeholder={"you@example.com"} type="text" className={"py-[9px] w-full px-[13px] border-[1px] border-[#D1D5DB] rounded-[16px] shadow-md"}/>
+                                            <input onChange={(e)=>{setEmail(e.target.value)}} placeholder={"you@example.com"} type="text" className={"py-[9px] w-full px-[13px] border-[1px] border-[#D1D5DB] rounded-[16px] shadow-md"}/>
                                         </div>
                                         <div>
                                             <label className={"font-[500] mb-[5px] pr-1 text-[14px] block leading-[20px]"} htmlFor="">Password <span className={"text-red-500"}>*</span></label>
-                                            <input placeholder={"****"} type="text" className={"py-[9px] w-full px-[13px] border-[1px] border-[#D1D5DB] rounded-[16px] shadow-md"}/>
+                                            <Input.Password onChange={(e)=>{setPassword(e.target.value)}} placeholder={"****"} className={"!py-[9px] !w-full !px-[13px] !border-[1px] !border-[#D1D5DB] !rounded-[16px] !shadow-md"}/>
                                         </div>
                                         <div>
-                                            <input type="submit" value={"Continue"} className={"py-[12px] text-white w-full rounded-[50px] bg-[#4F46E5] px-[24px]"}/>
+                                            <input type="submit" value={"Continue"} className={"cursor-pointer py-[12px] text-white w-full rounded-[50px] bg-[#4F46E5] px-[24px]"}/>
                                         </div>
                                         <div className={"w-full text-center mt-[10px]"}>
                                             <p  className={"font-[400] text-[16px] leading-[24px]"}>New user? <Link to={"/register"} className={"text-[#3730A3]"}>Create an account</Link></p>

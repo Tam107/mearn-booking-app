@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Register from '../../components/Register/Register'
 import Header from '../../components/Header/Header'
+import { useSelector } from 'react-redux'
 
-const RegisterPage = () => {
+const RegisterPage = ({otp,setOtp}) => {
+  const {isAuthenticated} = useSelector(state=>state.UserReducer)
+  const check = ()=>{
+    if(isAuthenticated){
+        navigate("/")
+    }
+}
+useEffect(()=>{check()},[])
   return (
     <>
         <Header/>
-        <Register/>
+        <Register otp={otp} setOtp={setOtp}/>
     </>
   )
 }

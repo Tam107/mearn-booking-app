@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import authRoute from "./routes/auth.js"; // Keep .jsx if necessary
 import usersRoute from "./routes/users.js"; // Keep .jsx if necessary
 import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
 import roomsRoute from "./routes/rooms.js";
@@ -35,10 +34,12 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
-app.use(cors())
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 
 // route
-app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);

@@ -1,11 +1,148 @@
 import User from "../models/User.js";
-
+import {generateRandomNumber} from "../helpers/generateHepler.js"
+import {sendMail} from "../helpers/sendMail.js"
+import OtpUser from "../models/OtpUser.js"
+import {deleteImg} from "../middlewares/uploadImageToCloudinary.js"
+import { sendOtpToken, sendToken } from "../helpers/JsonToken.js";
+import jwt from 'jsonwebtoken'
 /**
  * @swagger
  * tags:
  *   name: User
  *   description: User management API
  */
+
+export const register = async (req, res, next) => {
+    try {
+        
+
+        const { username, email, password,confirmPassword,file,public_id } = req.body;
+        console.log(file)
+        const userEmail = await User.findOne({ email });
+        const otpEmail = await OtpUser.findOne({ email });
+
+        if (userEmail || otpEmail) {
+            deleteImg(public_id)
+            return res.json({
+                success: false,
+                message: "Email already exist",
+              });
+        }
+        if(password !== confirmPassword){
+            deleteImg(public_id)
+            return res.json({
+                success: false,
+                message: "Password and Confirm Password must be the same",
+              });
+        }
+
+        const user = {
+            username: username,
+            email: email,
+            password: password,
+            avatar: file
+        };
+
+        const otp = generateRandomNumber(8)
+        const objectOtpUser = {
+            otp:otp,
+            expireAt:  Date.now(),
+            username: username,
+            email: email,
+            password: password,
+            avatar: file
+        }
+       
+
+        try {
+            const otpUser = new OtpUser(objectOtpUser)
+            await otpUser.save()  
+
+            await sendMail({
+                email:email,
+                subject:"[HighlightsOfVietNam] Please verify your device",
+                text: `Hello ${username},\n\nA sign-in attempt requires further verification because we did not recognize your device. To complete the sign-in, enter the verification code below:\n\nVerification code: ${objectOtpUser.otp}\n\nIf you did not attempt to sign in, your password may be compromised. Please take the necessary actions to secure your account.`
+            })
+            
+
+            sendOtpToken(otpUser, 200, res)
+
+        } catch (error) {
+            console.log(error)
+            return res.json({
+                success: false,
+                message: "token expired",
+            })
+        }
+      
+
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in BE",
+          });
+    }
+}
+
+export const checkOtp = async (req, res, next) => {
+    try {
+        
+
+        const { otp, } = req.body;
+        const {tokenOtp} = req.cookies
+        if(!tokenOtp){
+            return res.json({
+                success: false,
+                message: "Token expired",
+                code: 401
+              });
+        }
+        try {
+            const decoded = jwt.verify(tokenOtp,process.env.JWT_SECRET);     
+            const otpEntity = await OtpUser.findOne({ _id:decoded.id });
+            if(!otpEntity){
+                return res.json({
+                    success: false,
+                    message: "Token expired",
+                    code:401
+                });
+            }
+            if(otpEntity.otp !== otp){
+                return res.json({
+                    success: false,
+                    message: "Invalid OTP",
+                });
+            }
+            const user = new User({
+                username: otpEntity?.username,
+                email: otpEntity?.email,
+                password: otpEntity?.password,
+                avatar: otpEntity?.avatar
+            })
+            await user.save()
+            return res.json({
+                success: true,
+                message: "Register successfully",
+            });
+           
+        } catch (error) {
+            console.log(error)
+            return res.json({
+                success: false,
+                message: "Token expired",
+            });
+        }
+       
+        
+     
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            success: false,
+            message: "Error in BE",
+          });
+    }
+}
 
 export const updateUser = async (req, res, next) => {
     try {
@@ -36,15 +173,16 @@ export const deleteUser = async (req, res, next) => {
 }
 
 export const getUser = async (req, res, next) => {
-    try{
-        const user = await User.findById(req.params.id) // return updated document
-        if(!user){
-            res.status(404).json({message:"No User found with id "+req.params.id})
-            return;
-        }
-        res.status(200).json(user);
-    }catch(err){
-        next(err);
+    try {
+        res.status(200).json({
+            success: true,
+            user:req.user,
+          });
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:"Error in BE"
+        })
     }
 }
 
@@ -54,5 +192,37 @@ export const getAllUsers = async (req, res, next) => {
         res.status(200).json(users);
     }catch(err){
         next(err);
+    }
+}
+export const login = async (req, res, next) => {
+    try {
+
+        const {email,password} = req.body
+        const user = await User.findOne({email})
+    
+
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User doesn't exists!"
+            })
+        }
+
+        
+        const isPass = await user.comparePassword(password)
+       
+        if(!isPass){
+            return res.status(400).json({
+                success:false,
+                message:"Password is not correct!"
+            })
+        }
+        sendToken(user, 201,res)
+
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Error in BE"
+        })
     }
 }

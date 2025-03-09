@@ -1,14 +1,22 @@
 import express from "express";
-import {deleteUser, getAllUsers, getUser, updateUser} from "../controller/userController.js";
+import {deleteUser, getAllUsers, getUser, updateUser,register,checkOtp,login} from "../controller/userController.js";
 import {verifyAdmin, verifyToken, verifyUser} from "../utils/verifyToken.js";
+import {registerUserValidate,loginUserValidate} from "../validate/user.js";
+import multer from "multer";
+import {uploadImageToCloudinary} from "../middlewares/uploadImageToCloudinary.js";
+
+const upload = multer({ storage: multer.memoryStorage() }); 
 
 const router = express.Router();
 
+router.post('/register',upload.single("file"),uploadImageToCloudinary,registerUserValidate,register)
+router.post('/checkOtp',checkOtp)
+router.post('/login',loginUserValidate,login)
+router.get("/getuser",verifyToken,getUser)
 
-// check authen
-router.get("/checkAuthenticated", verifyToken, (req, res, next) => {
-    res.send("Hello user, you're login")
-});
+
+
+
 
 router.post("/logout", (req, res) => {
     res.clearCookie("access_token", { httpOnly: true, secure: true, sameSite: "none" }) // ✅ Securely clear the cookie
