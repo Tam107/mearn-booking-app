@@ -57,9 +57,52 @@ const loginApi = async(data)=>{
     }
 }
 
+const createAdmin = async(data)=>{
+    try {
+        const URL_LOGIN ='/admin/create'
+        const response = await axios.post(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
+const loginAdminApi = async(data)=>{
+    try {
+        const URL_LOGIN ='/admin/login'
+        const response = await axios.post(URL_LOGIN,data,{withCredentials:true})
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const getAdminApi = async()=>{
+    try {
+        const URL_LOGIN ='/admin/getAdmin'
+        const response = await axios.get(URL_LOGIN,{withCredentials:true})
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
+
+
 export {
     registerUser,
     checkTokenOtp,
     getUserApi,
-    loginApi
+    loginApi,
+    createAdmin,
+    loginAdminApi,
+    getAdminApi
 }

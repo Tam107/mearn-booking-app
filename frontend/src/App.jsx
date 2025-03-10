@@ -12,6 +12,11 @@ import ConfirmOtpPage from './pages/ConfirmOtpPage/ConfirmOtpPage.jsx';
 import { useSelector } from "react-redux";
 import Store from "./redux/store"
 import { loadUserAction } from './redux/actions/UserAction.js';
+import AdminCreatePage from './pages/AdminCreatePage/AdminCreatePage.jsx';
+import LoginAdminPage from './pages/LoginAdminPage/LoginAdminPage.jsx';
+import { loadAdminAction } from './redux/actions/AdminAction.js';
+import DashboardPage from './pages/DashboardPage/DashboardPage.jsx';
+import AdminCreateBusPage from './pages/AdminCreateBusPage/AdminCreateBusPage.jsx';
 
 function App() {
 
@@ -21,6 +26,7 @@ function App() {
   useEffect(()=>{
     const fetchApi = async()=>{
       Store.dispatch(loadUserAction())
+      Store.dispatch(loadAdminAction())
 
     
     }
@@ -41,6 +47,11 @@ function App() {
        <Route path="/confirmOtp"   element={<ConfirmOtpPage otp={otp} setOtp={setOtp}/>}/>
        <Route path="/hotel/:slug" element={<HotelDetailPage/>}/>
        <Route path="/packageTour/:slug" element={<PackageTourPage/>}/>
+       <Route path="/admin-create" element={<AdminCreatePage/>}/>
+       <Route path="/loginAdmin" element={<LoginAdminPage />} />
+       <Route path="/dashboard" element={<DashboardPage />} />
+       <Route path="/dashboard-create-bus" element={<AdminCreateBusPage />} />
+       {/* <Route path="/hotel" element={<HotelDetailPage/>}/> */}
       </Routes>
       
     </>

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import usersRoute from "./routes/users.js"; // Keep .jsx if necessary
 import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
+import adminsRoute from "./routes/admin.js"; // Keep .jsx if necessary
 import roomsRoute from "./routes/rooms.js";
 import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser"; // Keep .jsx if necessary
@@ -43,6 +44,7 @@ app.use(cors({
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
+app.use("/api/admin", adminsRoute);
 
 app.use((error, req, res, next)=>{
     const errorStatus = error.status || 500;

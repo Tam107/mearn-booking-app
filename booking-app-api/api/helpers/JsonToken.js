@@ -51,7 +51,7 @@ export const sendOtpToken = (data,statusCode,res)=>{
 
 
 
-export const sendShopToken = (data,statusCode,res)=>{
+export const sendAdminToken = (data,statusCode,res)=>{
 
 
   data.password = "";
@@ -64,9 +64,10 @@ export const sendShopToken = (data,statusCode,res)=>{
     secure: true,
   };
 
-  res.status(statusCode).cookie("seller_token", token, options).json({
+  res.status(statusCode).cookie("tokenAdmin", token, options).json({
     success: true,
     data,
     token,
+    message:"Admin login successfully"
   });
 }
