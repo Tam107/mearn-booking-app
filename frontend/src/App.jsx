@@ -17,6 +17,7 @@ import LoginAdminPage from './pages/LoginAdminPage/LoginAdminPage.jsx';
 import { loadAdminAction } from './redux/actions/AdminAction.js';
 import DashboardPage from './pages/DashboardPage/DashboardPage.jsx';
 import AdminCreateBusPage from './pages/AdminCreateBusPage/AdminCreateBusPage.jsx';
+import HotelListPage from './pages/HotelListPage/HotelListPage.jsx';
 
 function App() {
 
@@ -51,6 +52,7 @@ function App() {
        <Route path="/loginAdmin" element={<LoginAdminPage />} />
        <Route path="/dashboard" element={<DashboardPage />} />
        <Route path="/dashboard-create-bus" element={<AdminCreateBusPage />} />
+       <Route path="/hotel" element={<HotelListPage />} />
        {/* <Route path="/hotel" element={<HotelDetailPage/>}/> */}
       </Routes>
       

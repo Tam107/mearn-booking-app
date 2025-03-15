@@ -14,31 +14,39 @@ const BusSchema = new mongoose.Schema({
         uppercase: true, // Lưu biển số dưới dạng chữ hoa
         trim: true
     },
-    bookingInfo: [
+    Seats:[
         {
-            info: {
-               type:Object
-            },
-            paymentMethod: { 
-                type: String, 
-                enum: ["cash", "credit_card", "momo", "paypal", "bank_transfer"], 
-                required: true 
-            },
-            infoClient: [
-                {
-                    info: { 
-                        type: Object, 
-                        required: true 
-                    },
-                    seatNumber: { 
-                        type: Number, 
-                        required: true, 
-                        min: 1 // Số ghế phải từ 1 trở lên
-                    }
-                }
-            ],
+            seatNumber:Number,
+            customerId:String,
         }
     ],
+    
+
+    // bookingInfo: [
+    //     {
+    //         info: {
+    //            type:Object
+    //         },
+    //         paymentMethod: { 
+    //             type: String, 
+    //             enum: ["cash", "credit_card", "momo", "paypal", "bank_transfer"], 
+    //             required: true 
+    //         },
+    //         infoClient: [
+    //             {
+    //                 info: { 
+    //                     type: Object, 
+    //                     required: true 
+    //                 },
+    //                 seatNumber: { 
+    //                     type: Number, 
+    //                     required: true, 
+    //                     min: 1 // Số ghế phải từ 1 trở lên
+    //                 }
+    //             }
+    //         ],
+    //     }
+    // ],
     createdAt:{
       type: Date,
       default: Date.now(),

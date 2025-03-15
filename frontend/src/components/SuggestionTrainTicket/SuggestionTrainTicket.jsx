@@ -40,7 +40,7 @@ const SuggestionTrainTicket = () => {
             <div className='w-full pb-8 bg-[#FFF7ED] rounded-[50px]'>
                 <div className='w-9/11 py-10 mx-auto'>
                     <div className='mt-4 text-center'>
-                        <h2 className='font-[600] text-[36px] leading-[40px]'>Recommended Experience</h2>
+                        <h2 className='font-[600] text-[36px] leading-[40px]'>Recommended Train Experience</h2>
                         <p className='font-[400] text-[16px] leading-[24px] text-[#6B7280] my-[10px]'>Popular hotels to stay that Highlights of Vietnam recommends for you</p>
                     </div>
                     <br />
