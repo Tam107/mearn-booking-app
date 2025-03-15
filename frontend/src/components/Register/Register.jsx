@@ -106,7 +106,7 @@ const Register = ({otp,setOtp}) => {
                             <Input
                                 placeholder="you@example.com"
                                 autoComplete="email"  
-                                type='text'
+                                type='email'
                                 className='text-[#6B7280] font-[400] text-[16px] leading-[24px] !rounded-2xl !py-2 !px-3'
                             />
                         </Form.Item>
