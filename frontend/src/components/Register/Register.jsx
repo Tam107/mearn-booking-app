@@ -9,6 +9,10 @@ import toast from 'react-hot-toast'
 const Register = ({otp,setOtp}) => {
     const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
+    function isValidEmail(email) {
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email);
+    }
 
     useEffect(() => {
         window.scrollTo({top:0,behavior:"smooth"});  // Cuộn trang lên đầu khi route thay đổi
@@ -22,11 +26,59 @@ const Register = ({otp,setOtp}) => {
     const hanldeFinish = async(e)=>{
       
         setButtonDisable(true)
+
         
         const newForm = new FormData();
         if(avatar){
             newForm.append("file",avatar)
          
+        }
+       
+        if(!e.email){
+            setButtonDisable(false)
+            return toast.error("Email is required!", {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
+        }
+        if(!e.username){
+            setButtonDisable(false)
+            return toast.error("User name is required!", {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
+        }
+        if(!isValidEmail(e.email)){
+            setButtonDisable(false)
+            return toast.error("Please enter a valid email address!", {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
+        }
+        
+        if(!e.password){
+            setButtonDisable(false)
+            return toast.error("Password is required!", {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
+        }
+        if(!e.confirmPassword){
+            setButtonDisable(false)
+            return toast.error("Confirm password is required!", {
+                style: {
+                  maxWidth: 500
+                },
+                duration:3000
+              });
         }
         newForm.append("username",e.username)
         newForm.append("email",e.email)
@@ -34,7 +86,7 @@ const Register = ({otp,setOtp}) => {
         newForm.append("confirmPassword",e.confirmPassword)
         if(e.password !== e.confirmPassword){
             setButtonDisable(false)
-            return toast.error("Password and Confirm Password must be the same", {
+            return toast.error("Passwords do not match. Please try again.", {
                 style: {
                   maxWidth: 500
                 },
@@ -102,15 +154,15 @@ const Register = ({otp,setOtp}) => {
                     </div>
                     <br />
                     <Form form={form} onFinish={hanldeFinish} layout='vertical'>
-                        <Form.Item rules={[{required:true,message:"Email is required!"}]} name="email"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Email</div>}>
+                        <Form.Item  name="email"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Email</div>}>
                             <Input
                                 placeholder="you@example.com"
                                 autoComplete="email"  
-                                type='email'
+                                type='text'
                                 className='text-[#6B7280] font-[400] text-[16px] leading-[24px] !rounded-2xl !py-2 !px-3'
                             />
                         </Form.Item>
-                        <Form.Item rules={[{required:true,message:"User name is required!"}]} name="username"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Username</div>}>
+                        <Form.Item  name="username"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Username</div>}>
                             <Input
                                 placeholder="username"
                                 autoComplete="username"  
@@ -118,14 +170,14 @@ const Register = ({otp,setOtp}) => {
                                 className='text-[#6B7280] font-[400] text-[16px] leading-[24px] !rounded-2xl !py-2 !px-3'
                             />
                         </Form.Item>
-                        <Form.Item rules={[{required:true,message:"Password is required!"}]} name="password"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Password</div>}>
+                        <Form.Item  name="password"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Password</div>}>
                             <Input.Password
                                 placeholder="****"
                                 type='text'
                                 className='text-[#6B7280] font-[400] text-[16px] leading-[24px] !rounded-2xl !py-2 !px-3'
                             />
                         </Form.Item>
-                        <Form.Item rules={[{required:true,message:"Confirm Password is required!"}]} name="confirmPassword"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Confirm Password</div>}>
+                        <Form.Item  name="confirmPassword"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Confirm Password</div>}>
                             <Input.Password
                                 placeholder="****"
                                 type='text'

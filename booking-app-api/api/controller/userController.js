@@ -93,7 +93,7 @@ export const checkOtp = async (req, res, next) => {
         if(!tokenOtp){
             return res.json({
                 success: false,
-                message: "Token expired",
+                message: "OTP has expired. Please request a new one.",
                 code: 401
               });
         }
@@ -103,14 +103,14 @@ export const checkOtp = async (req, res, next) => {
             if(!otpEntity){
                 return res.json({
                     success: false,
-                    message: "Token expired",
+                    message: "OTP has expired. Please request a new one.",
                     code:401
                 });
             }
             if(otpEntity.otp !== otp){
                 return res.json({
                     success: false,
-                    message: "Invalid OTP",
+                    message: "Incorrect OTP. Please try again.",
                 });
             }
             const user = new User({
@@ -122,7 +122,7 @@ export const checkOtp = async (req, res, next) => {
             await user.save()
             return res.json({
                 success: true,
-                message: "Register successfully",
+                message: "Your account has been successfully created!",
             });
            
         } catch (error) {

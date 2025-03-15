@@ -2,14 +2,14 @@ export const registerUserValidate = (req,res,next)=>{
     if(!req.body.username){
         res.status(400).json({
             code:400,
-            message:"Name does not empyty!"
+            message:"User name is required! "
         })
         return;
     }
     if(!req.body.email){
 
         res.status(400).json({
-            message:"Email does not empyty!"
+            message:"Email is required!"
         })
         return;
     }
@@ -17,7 +17,7 @@ export const registerUserValidate = (req,res,next)=>{
 
         res.status(400).json({
             code:400,
-            message:"Password does not empyty!"
+            message:"Password is required!"
         })
         return;
     }
@@ -26,7 +26,15 @@ export const registerUserValidate = (req,res,next)=>{
 
         res.status(400).json({
             code:400,
-            message:"Password does not empyty!"
+            message:"Confirm password is required!"
+        })
+        return;
+    }
+    if(req.body.password.length <8){
+
+        res.status(400).json({
+            code:400,
+            message:"Password must be at least 8 characters long!"
         })
         return;
     }
