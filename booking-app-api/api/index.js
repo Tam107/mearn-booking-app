@@ -8,6 +8,8 @@ import roomsRoute from "./routes/rooms.js";
 import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser"; // Keep .jsx if necessary
 import cors from "cors";
+import googleAuthRoute from "./routes/googleAuth.js";
+
 
 const app = express();
 dotenv.config();
@@ -45,6 +47,7 @@ app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 app.use("/api/admin", adminsRoute);
+app.use("/api/auth", googleAuthRoute);
 
 app.use((error, req, res, next)=>{
     const errorStatus = error.status || 500;
