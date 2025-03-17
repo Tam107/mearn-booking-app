@@ -6,9 +6,7 @@ import { sendToken } from "../helpers/JsonToken.js";
 const router = express.Router();
 
 const oAuth2Client = new OAuth2Client(
-    "1021003224063-gprhsennt0tv0rl9bhc3ifh74sc4kobc.apps.googleusercontent.com",
-    "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",
-    "http://localhost:8080/api/auth/oauth"
+    
 );
 
 async function getUserData(access_token) {
