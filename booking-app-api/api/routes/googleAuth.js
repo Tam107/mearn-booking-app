@@ -2,11 +2,14 @@ import express from "express";
 import { OAuth2Client } from "google-auth-library";
 import User from "../models/User.js";
 import { sendToken } from "../helpers/JsonToken.js";
-
+import dotenv from "dotenv"
+dotenv.config()
 const router = express.Router();
 
 const oAuth2Client = new OAuth2Client(
-    
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    process.env.REDIRECT_URL
 );
 
 async function getUserData(access_token) {
@@ -68,7 +71,7 @@ router.get("/oauth", async (req, res) => {
             .redirect("http://localhost:5173");
     } catch (error) {
         console.error("Google OAuth error:", error);
-        res.redirect("http://localhost:5173?error=auth_failed");
+        res.redirect("http://localhost:5173/register?error=auth_failed");
     }
 });
 

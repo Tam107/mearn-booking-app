@@ -53,7 +53,7 @@ const Login = () => {
 
             const res = await getUserApi();
             if (res.success) {
-                toast.success("Google login successful!");
+                // toast.success("Google login successful!");
                 await fetchApi(res.user);
                 // Respect backend's redirect to /dashboard
                 // if (window.location.pathname === "/login") {
