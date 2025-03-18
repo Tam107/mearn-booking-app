@@ -4,12 +4,14 @@ import { FaStar } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux';
 import { addToWishlist, removeFromWishlist } from '../../redux/actions/WishlistAction';
+import toast from 'react-hot-toast';
 
 const Item = ({data}) => {
     const { wishlist } = useSelector((state) => state.WishlistReducer);
     const [click, setClick] = useState(false);
     const dispatch = useDispatch();
 
+    const {isAuthenticated} = useSelector(state=>state.UserReducer)
 
     useEffect(() => {
         if (wishlist && wishlist.find((i) => i._id === data._id)) {
@@ -19,14 +21,26 @@ const Item = ({data}) => {
         }
       }, [wishlist]);
       const removeFromWishlistHandler = (data) => {
-        setClick(!click);
+        if(isAuthenticated){
+            setClick(!click);
         dispatch(removeFromWishlist(data));
+        }
+        else{
+            toast.error("Please login to use wishlist")
+        }
+        
       };
     
       const addToWishlistHandler = (data) => {
-        setClick(!click);
-        // console.log(data)
-        dispatch(addToWishlist(data));
+        if(isAuthenticated){
+            setClick(!click);
+            // console.log(data)
+            dispatch(addToWishlist(data));
+        }
+        else{
+            toast.error("Please login to use wishlist")
+        }
+        
       };
   return (
     <>

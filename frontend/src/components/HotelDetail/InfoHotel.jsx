@@ -71,7 +71,7 @@ Spacious and bright, in a real Bordeaux building in exposed stone, you will enjo
                         <div className='w-[50%] flex flex-col gap-4'>
                             <h3 className='font-[500] text-[24px] leading-[32px]'>Where you’ll sleep</h3>
                             <div>
-                                <img className='w-[320px] rounded-lg aspect-[3/2] ' src="https://s3-alpha-sig.figma.com/img/91d6/ccd9/96e5b436aa98cbfacf7fc152380f2a69?Expires=1742169600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jQLT~27oImA8rmdHxnMxmDknusffLHxQ77MdW~1H7aYrGVi038uAV2p9oucB06PxVzNVGvL44~7GiPAxLlqWQaj-mFuL6odIwsBePpPQ2XAQJJc0OQcYoxvkggEFMQbxvTSmO4FsaUktx3LLPigU0TlaWkQfunep0bbwxRex0IGJ50fm6GCJjISQflP~RKvXR~L0Pe-SaOqr~AJwjLWM55Hd73rBtVcmb-ZEYLd7EE8cZPurPHsfmpM4jB-6BMwOC7WPLH8Du4yITNdnNgw2g4ei0VWifYpGN8baovpEfjg833aBzJGRP7Zgg208L8NGNx~J4tiqZoqWX5j8PXpnrA__" alt="" />
+                                <img className='w-[320px] rounded-lg aspect-[3/2] ' src="https://s3-alpha-sig.figma.com/img/91d6/ccd9/96e5b436aa98cbfacf7fc152380f2a69?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=XZW86VFe-srTvaVuCGF7ngAsB-8K5WOpHzZik7oJdx1MbSgatCeVH6RxrhlOTUovLrPPZHptnLusJ7B5s7IV3eI~EIJZCDIroP5v5J244e7uARAJjFu-Prb1-SZsj~H4x1zVKhQYEORT90NZz8Ek0fGW0whewErW5Ke5OrBjGmWJC37HN~Lbr7BN68BfrUTLjA286ZEcQ4mfPyGiewdHl7RIXcF4Cqh-HaDkCZdQH~48z9OSfrpClwGuL4BVE2VTFgRFacBtaBNIcvFvSHGY86yVMrckHRTjL46~x1yfJIzUe-xneL85DrJLHbE5~0OyVi6oxOFlteEVdSi0yb0U-g__" alt="" />
                                 <h3 className='font-[500] text-[16px] leading-[24px]'>Bedroom</h3>
                                 <p className='font-[400] text-[14px] leading-[20px]'>1 queen bed</p>
                                 </div>

@@ -5,12 +5,19 @@ import { BsCartPlus } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromWishlist } from '../../redux/actions/WishlistAction';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 const WishList = ({setOpenWishList}) => {
     const { wishlist } = useSelector((state) => state.WishlistReducer);
+        const {isAuthenticated} = useSelector(state=>state.UserReducer)
+    
     const dispatch = useDispatch();
     const removeFromWishlistHandler = (data) => {
+      if(isAuthenticated){
         dispatch(removeFromWishlist(data));
+      }else{
+        toast.error("Please login to use wishlist")
+      }
       };
     
      

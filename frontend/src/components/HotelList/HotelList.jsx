@@ -24,8 +24,10 @@ const HotelList = () => {
         , []);
 
     const {wishlist} = useSelector(state=>state.WishlistReducer)
+          
+    
 
-    const [showFilter,setShowFilter] = useState(true);
+    const [showFilter,setShowFilter] = useState(false);
 
        
   return (
@@ -39,7 +41,7 @@ const HotelList = () => {
                 <input 
                 type="text" 
                 placeholder="Search for name" 
-                className="placeholder-[#BFBFBF] placeholder:font-[400]  placeholder:text-[14px] py-1 px-1  grow font-[500] text-[16px] leading-[20px]  transition-all duration-300 focus:w-[200px] outline-none"
+                className="placeholder-[#BFBFBF] placeholder:font-[400]  placeholder:text-[14px] py-1 px-1  grow font-[500] text-[16px] leading-[20px]  transition-all duration-300  outline-none"
                 />
             </div>
             <div className="flex pl-4 border-r flex-col border-gray-200">
@@ -47,7 +49,7 @@ const HotelList = () => {
                 <input 
                 type="text" 
                 placeholder="Search destinations" 
-                className="placeholder-[#BFBFBF] placeholder:font-[400] placeholder:text-[14px] text-[16px] py-1 px-1 grow font-[500]  leading-[20px]  transition-all duration-300 focus:w-[200px] outline-none"
+                className="placeholder-[#BFBFBF] placeholder:font-[400] placeholder:text-[14px] text-[16px] py-1 px-1 grow font-[500]  leading-[20px]  transition-all duration-300  outline-none"
                 />
             </div>
             <div className="flex px-4 flex-col border-r border-gray-200">
@@ -71,7 +73,7 @@ const HotelList = () => {
                 <input 
                 type="text" 
                 placeholder="Add guests" 
-                className="placeholder-[#BFBFBF] placeholder:font-[400] placeholder:text-[14px] grow font-[500] px-1 py-1 text-[16px] leading-[20px] transition-all duration-300 focus:w-[200px] outline-none"
+                className="placeholder-[#BFBFBF] placeholder:font-[400] placeholder:text-[14px] grow font-[500] px-1 py-1 text-[16px] leading-[20px] transition-all duration-300  outline-none"
                 />
             </div>
             <div className="flex items-center">
@@ -154,7 +156,7 @@ const HotelList = () => {
                           <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
                           <GiHomeGarage size={18}/>
 
-                            <p className="text-[16px]">Guest house</p>
+                            <p className="text-[16px]">Villa</p>
                           </div>
                           <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
                           <LiaHotelSolid size={18}/>
