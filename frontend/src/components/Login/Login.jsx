@@ -78,13 +78,13 @@ const Login = () => {
                             </div>
                             <div className={"w-[50%] my-12 mx-auto"}>
                                 <div className={"w-full flex flex-col items-center gap-[15px]"}>
-                                    <div
+                                    {/* <div
                                         className={"px-[24px] flex items-center rounded-[16px] py-[12px] bg-[#F3F4F6] w-full"}>
                                         <FaFacebookSquare color="#3C5999" size={24}/>
 
                                         <p className={"flex-1 flex items-center justify-center"}>Continue with
                                             Facebook</p>
-                                    </div>
+                                    </div> */}
                                     <div
                                         className={"px-[24px] flex items-center rounded-[16px] py-[12px] bg-[#F3F4F6] w-full"}>
                                         <button
@@ -100,13 +100,13 @@ const Login = () => {
                                         {/*<p className={"flex-1 flex items-center justify-center"}>Continue with*/}
                                         {/*    Google</p>*/}
                                     </div>
-                                    <div
+                                    {/* <div
                                         className={"px-[24px] flex items-center rounded-[16px] py-[12px] bg-[#F3F4F6] w-full"}>
                                         <FaTwitter color="black" size={24}/>
 
                                         <p className={"flex-1 flex items-center justify-center"}>Continue with
                                             Twitter</p>
-                                    </div>
+                                    </div> */}
 
                                 </div>
                                 <br/>

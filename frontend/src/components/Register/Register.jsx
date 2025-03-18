@@ -138,21 +138,21 @@ const Register = ({otp,setOtp}) => {
                 <br />
                 <br />
                 <div className='w-[60%]  mx-auto'>
-                     <div className={"px-6 flex items-center rounded-[16px] py-3 bg-[#F3F4F6] w-full"}>
+                     {/* <div className={"px-6 flex items-center rounded-[16px] py-3 bg-[#F3F4F6] w-full"}>
                         <FcGoogle
 
                                 size={20} />
 
                         <p className={"flex-1 flex items-center justify-center font-[500] text-[16px] leading-[24px] text-[#374151]"}>Continue with Google</p>
-                    </div>
+                    </div> */}
                  
                     <br />
-                    <div className={"w-full"}>
+                    {/* <div className={"w-full"}>
                         <div className={"w-full h-[1px] bg-[#E5E7EB] relative"}>
                             <div className={"px-[12px] bottom-[-10px] left-[45%] absolute bg-white"}><p className={"font-[500] text-[16px] leading-[24px]"}>OR</p></div>
                         </div>
-                    </div>
-                    <br />
+                    </div> */}
+                    {/* <br /> */}
                     <Form form={form} onFinish={hanldeFinish} layout='vertical'>
                         <Form.Item  name="email"  label={<div className='font-[500] text-[14px] leading-[20px] text-[#374151]'>Email</div>}>
                             <Input
@@ -188,7 +188,7 @@ const Register = ({otp,setOtp}) => {
                             <label htmlFor='avatar' className='block text-sm font-medium text-gray-700'>
                             </label>
                             <div className='flex items-center'>
-                                <span className='inline-block h-10 w-10 rounded-full overflow-hidden'>
+                                {/* <span className='inline-block h-10 w-10 rounded-full overflow-hidden'>
                                 {
                                         avatar?
                                         (
@@ -200,11 +200,11 @@ const Register = ({otp,setOtp}) => {
                                         )
 
                                     }
-                                </span>
-                                <label htmlFor='file-input' className='flex ml-3 transition-all items-center justify-center px-4 py-2 border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100'>
+                                </span> */}
+                                {/* <label htmlFor='file-input' className='flex ml-3 transition-all items-center justify-center px-4 py-2 border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100'>
                                     <span>Upload an avatar</span>
                                     <input type="file" name="avatar" id="file-input" accept='.jpg,.jpeg,.png' onChange={handleFileInputChange} className="sr-only"/>
-                                </label>
+                                </label> */}
                             </div>
                         </div>
                         <Form.Item  >
