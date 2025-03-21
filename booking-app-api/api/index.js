@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import usersRoute from "./routes/users.js"; // Keep .jsx if necessary
+import serviceHotelRoute from "./routes/serviceHotel.js"; // Keep .jsx if necessary
 import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
 import adminsRoute from "./routes/admin.js"; // Keep .jsx if necessary
 import roomsRoute from "./routes/rooms.js";
@@ -48,6 +49,7 @@ app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 app.use("/api/admin", adminsRoute);
 app.use("/api/auth", googleAuthRoute);
+app.use("/api/servicesHotel", serviceHotelRoute);
 
 app.use((error, req, res, next)=>{
     const errorStatus = error.status || 500;

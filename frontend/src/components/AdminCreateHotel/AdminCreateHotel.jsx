@@ -2,7 +2,7 @@ import { Form } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { Country, State, City } from 'country-state-city';
 import { IoCloudUploadOutline } from "react-icons/io5";
-
+import {Editor} from "@tinymce/tinymce-react"
 
 
 const AdminCreateHotel = () => {
@@ -10,6 +10,10 @@ const AdminCreateHotel = () => {
     const [citySelected, setCitySelected] = useState(null);
     const [description, setDescription] = useState('');
 
+   
+    const handleEditorChange = (content) => {
+        setDescription(content);
+      };
 
     // Load cities once on component mount (when country is Vietnam)
     useEffect(() => {
@@ -93,7 +97,7 @@ const AdminCreateHotel = () => {
 
                     <div className='mb-4 w-full flex flex-col '>
                         <p htmlFor="" className='font-[400] text-[25px]'>Description</p>
-                        {/* <Editor
+                        <Editor
                             apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
                             value={description}
                             onEditorChange={handleEditorChange}
@@ -103,11 +107,24 @@ const AdminCreateHotel = () => {
                                 plugins: [
                                     'advlist autolink lists link image charmap print preview anchor',
                                     'searchreplace visualblocks code fullscreen',
-                                    'insertdatetime media table paste code help wordcount'
-                                ],
-                                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code'
+                                    'insertdatetime media table paste code help wordcount',
+                                    'textcolor' // Thêm plugin textcolor để hỗ trợ màu chữ
+                                  ],
+                                toolbar:
+            'undo redo | formatselect | bold italic forecolor backcolor | \
+             alignleft aligncenter alignright alignjustify | \
+             bullist numlist outdent indent | removeformat | help',
                             }}
-                        /> */}
+                        />
+                    </div>
+
+
+                    <div className='mb-4 w-full flex flex-col '>
+                        <p htmlFor="" className='font-[400] text-[25px]'>Services</p>
+                        <p className='text-[16px] font-[400] text-gray-400'>Select the services available at your accommodation to offer your guests a great experience.</p>
+                        <div className='grid gap-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6'>
+                            
+                        </div>
                     </div>
 
                    

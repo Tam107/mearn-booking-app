@@ -47,7 +47,11 @@ const HotelSchema = new mongoose.Schema({
     feature:{
         type: Boolean,
         default: false,
-    }
+    },
+    services: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ServiceHotel",  // Trỏ tới mô hình ServiceHotel
+    }],
 })
 
 export default mongoose.model("Hotel", HotelSchema);
