@@ -11,6 +11,7 @@ import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSyst
 import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link, useLocation } from "react-router-dom";
+import { LuHotel } from "react-icons/lu";
 
 const SidebarAdmin = () => {
   const location = useLocation();
@@ -100,6 +101,15 @@ const SidebarAdmin = () => {
 
                       <span className="text-sm font-semibold text-gray-600">
                         Create Bus
+                      </span>
+                    </li>
+                  </Link>
+                  <Link to="/dashboard-create-hotel">
+                    <li className={navStyle("/dashboard-create-hotel")}>
+                      <LuHotel className="text-indigo-600 cursor-pointer" />
+
+                      <span className="text-sm font-semibold text-gray-600">
+                        Create Hotel
                       </span>
                     </li>
                   </Link>
