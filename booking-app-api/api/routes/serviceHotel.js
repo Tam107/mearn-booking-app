@@ -1,10 +1,10 @@
 import express from "express";
-import User from "../models/User";
+import ServiceHotel from "../models/ServiceHotel.js";
 
 const router = express.Router();
 router.get("/get",async(req,res)=>{
     try{
-        const service = await User.find({})
+        const service = await ServiceHotel.find({})
         return res.json({
             success:true,
             data:service

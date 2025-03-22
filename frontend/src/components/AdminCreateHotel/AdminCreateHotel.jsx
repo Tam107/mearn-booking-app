@@ -1,139 +1,556 @@
-import { Form } from 'antd'
-import React, { useState, useEffect } from 'react'
-import { Country, State, City } from 'country-state-city';
+import { Form, TimePicker } from "antd";
+import React, { useState, useEffect } from "react";
+import { Country, State, City } from "country-state-city";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import {Editor} from "@tinymce/tinymce-react"
-
+import { Editor } from "@tinymce/tinymce-react";
+import {
+  createHotelApi,
+  getAllServicesApi,
+  uploadByFilesApi,
+  uploadByLinkApi,
+} from "../../../Axios/client/api";
+import iconMap from "../../data/iconMap"; // Import the iconMap from the external file
+import toast from "react-hot-toast";
+import dayjs from "dayjs";
+import { RxCross1 } from "react-icons/rx";
 
 const AdminCreateHotel = () => {
-    const [cities, setCities] = useState([]);
-    const [citySelected, setCitySelected] = useState(null);
-    const [description, setDescription] = useState('');
+  // popup model
+  const [showModel, setShowModel] = useState(false);
 
-   
-    const handleEditorChange = (content) => {
-        setDescription(content);
-      };
+  // default values
+  const typeDefault = ["Hotel", "Villa", "House", "Flat"];
+  const cities = State.getStatesOfCountry("VN");
+  const roomTypeDefault = [
+    "King Room",
+    "1 Bed Room",
+    "2 Bed Room",
+    "1 Bed Large Room",
+  ];
+  const [servicesDefault, setServicesDefault] = useState([]);
 
-    // Load cities once on component mount (when country is Vietnam)
-    useEffect(() => {
-        const citiesInVietnam = State.getStatesOfCountry("VN");
+  // create hotel
+  const [name, setName] = useState("");
+  const [type, setType] = useState("Hotel");
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [numberOfrooms, setNumberOfRooms] = useState();
+  const [numberOfFloor, setNumberOfFloor] = useState();
+  const [cheapestPrice, setCheapestPrice] = useState();
+  const [roomType, setRoomType] = useState([]);
+  const [checkIn, setCheckIn] = useState(dayjs("14:00", "HH:mm")); // Default value for check-in
+  const [checkOut, setCheckOut] = useState(dayjs("12:00", "HH:mm"));
+  const [linkPhoto, setLinkPhoto] = useState("");
+  const [photos, setPhotos] = useState([]);
+  const [description, setDescription] = useState("");
+  const [services, setServices] = useState([]);
 
-        // Filter out only cities (not districts or regions)
-        setCities(citiesInVietnam);  // Set cities state
-    }, []);
+  // handle function
+  const addPhotoByFile = async (ev) => {
+    // ev.preventDefault();
+    const files = ev.target.files;
+    const data = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      data.append("photos", files[i]);
+    }
+    console.log("ok");
 
-    // Handle city selection
-    const handleCityChange = (e) => {
-        setCitySelected(e.target.value); // Update the selected city
+    const res = await uploadByFilesApi(data);
+    console.log(res);
+
+    if (res.success) {
+      const newImg = res.data.map((item) => item.url);
+      setPhotos([...photos, ...newImg]);
+    } else {
+      console.log(res);
+
+      toast.error("Error");
+    }
+  };
+
+  const addPhotoByLink = async (e) => {
+    e.preventDefault();
+    // setDisableButton(true);
+    if (!linkPhoto) {
+      toast.error("Please enter a valid image URL");
+      // setDisableButton(false)
+      return;
+    } else {
+      const res = await uploadByLinkApi({ imageUrl: linkPhoto });
+      setLinkPhoto("");
+      if (res.code == 200) {
+        // setPhotosByLink([...photosByLink,res.data.url])
+        setPhotos([...photos, res.data.url]);
+        setLinkPhoto("");
+        // setDisableButton(false)
+        toast.success("ok");
+      } else {
+        console.log(res);
+
+        toast.error("Link error");
+        // setDisableButton(false)
+      }
+    }
+  };
+  function removePhoto(ev, filename) {
+    ev.preventDefault();
+    setPhotos([...photos.filter((photo) => photo !== filename)]);
+  }
+  const handleEditorChange = (content) => {
+    setDescription(content);
+  };
+
+  useEffect(() => {
+    const alo = async () => {
+      const ad = await getAllServicesApi();
+      setServicesDefault(ad.data);
+    };
+    alo();
+  }, []);
+
+  const handleServiceChange = (serviceId) => {
+    setServices((services) => {
+      // If the service is already selected, remove it; otherwise, add it
+      if (services.includes(serviceId)) {
+        return services.filter((id) => id !== serviceId); // Remove the id
+      } else {
+        return [...services, serviceId]; // Add the id
+      }
+    });
+  };
+
+  const handleRoomTypeChange = (name) => {
+    const isExist = roomType.find((i) => i === name);
+    if (isExist) {
+      const tmp = roomType.filter((i) => i != name);
+      setRoomType(tmp);
+    } else {
+      return setRoomType([...roomType, name]);
+    }
+  };
+
+  const handleCreateHotel = async(e) => {
+    e.preventDefault();
+    // console.log(123);
+    if (!name) {
+      return toast.error("Name cannot be empty");
     }
 
-    console.log(cities);  // This will log the list of cities in Vietnam
+    if (!type) {
+      return toast.error("Type accommodation cannot be empty");
+    }
+    if (!city) {
+      return toast.error("City cannot be empty");
+    }
+    if (!address) {
+      return toast.error("Address cannot be empty");
+    }
 
-    return (
-        <>
-            <div className='w-full py-6 px-6'>
-                <h2 className='font-[600] leading-[40px] text-gray-600 text-[36px]'>Create new hotel</h2>
+    if (!roomType.length > 0) {
+      return toast.error("At least one room type is required");
+    }
+    if (!cheapestPrice) {
+      return toast.error("Cheapest Price cannot be empty");
+    }
+    if (!checkIn) {
+      return toast.error("Check in time cannot be empty");
+    }
+    if (!checkOut) {
+      return toast.error("Check out time cannot be empty");
+    }
+
+    let dataHotel = {
+      name,
+      type,
+      city,
+      address,
+      // photos,
+      // description,
+      // services,
+      // numberOfrooms,
+      roomType,
+      // numberOfFloor,
+      cheapestPrice,
+      checkIn,
+      checkOut,
+    };
+    if (photos.length > 0) {
+      dataHotel.photos = photos;
+    }
+
+    if (description) {
+      dataHotel.description = description;
+    }
+    if (services.length > 0) {
+      dataHotel.services = services;
+    }
+    if (numberOfrooms) {
+      dataHotel.numberOfrooms = numberOfrooms;
+    }
+    if (numberOfFloor) {
+      dataHotel.numberOfFloor = numberOfFloor;
+    }
+    console.log(dataHotel);
+    const res = await createHotelApi(dataHotel)
+  };
+
+  return (
+    <>
+      <div className="w-full py-6 px-6">
+        <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
+          Create new hotel
+        </h2>
+      </div>
+      <div className="w-full px-6">
+        <form className="w-full">
+          <div className="mb-4 w-full flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Name
+            </p>
+            <p className="text-[16px] font-[400] text-gray-400">
+              Name of accommodation, should be short and catchy as in
+              advertisement
+            </p>
+            <input
+              placeholder="Name"
+              className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-4 w-full flex items-center justify-between">
+            <div className="w-[48%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Type of Accommodation
+              </p>
+              <p className="text-[16px] font-[400] text-gray-400">
+                Choose the type of accommodation, such as hotel, villa, guest
+                house, ...
+              </p>
+              <select
+                defaultValue={type}
+                onChange={(e) => setType(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+              >
+                {typeDefault.map((i, index) => (
+                  <option key={index} value={i}>
+                    {i}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className='w-full px-6'>
-                <form className='w-full'>
-                    <div className='mb-4 w-full flex flex-col '>
-                        <p htmlFor="" className='font-[400] text-[25px]'>Name</p>
-                        <p className='text-[16px] font-[400] text-gray-400'>Name of accommodation, should be short and catchy as in advertisement</p>
-                        <input placeholder='Name' className='w-full px-4 py-2 border border-gray-400 rounded-3xl' />
+
+            <div className=" w-[50%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                City
+              </p>
+              <p className="text-[16px] font-[400] text-gray-400">
+                Choose the city of your accomodation
+              </p>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+              >
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mb-4 w-full flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Address
+            </p>
+            <p className="text-[16px] font-[400] text-gray-400">
+              Specific address of the building
+            </p>
+            <input
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+            />
+          </div>
+
+          <div className="mb-4 w-full flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Photos
+            </p>
+            <p className="text-[16px] font-[400] text-gray-400">Specific URL</p>
+            <div className="flex justify-between">
+              <input
+                type="text"
+                className=" w-[90%]  px-4 py-2 border border-gray-400 rounded-3xl"
+                placeholder="Add using a link"
+                value={linkPhoto}
+                onChange={(e) => setLinkPhoto(e.target.value)}
+              />
+              <button
+                onClick={addPhotoByLink}
+                className="cursor-pointer flex items-center w-[9%]  bg-gray-400 rounded-2xl text-white justify-center "
+              >
+                Add photo
+              </button>
+            </div>
+            <div className="grid gap-2 mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4">
+              <label className="border cursor-pointer bg-transparent rounded-2xl p-8 flex items-center  text-2xl text-gray-600">
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={addPhotoByFile}
+                />
+                <IoCloudUploadOutline />
+                Upload
+              </label>
+              {photos.length > 0 &&
+                photos.map((item, index) => (
+                  <>
+                    <div key={index} className="h-32 relative flex ">
+                      <img
+                        src={item}
+                        className="rounded-2xl w-full object-cover"
+                      />
+                      <span
+                        onClick={(ev) => removePhoto(ev, item)}
+                        className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition duration-300"
+                      >
+                        X
+                      </span>
                     </div>
+                  </>
+                ))}
+            </div>
+          </div>
 
-                    <div className='mb-4 w-full flex items-center justify-between'>
-                        <div className='w-[48%] flex flex-col '>
-                            <p htmlFor="" className='font-[400] text-[25px]'>Type of Accommodation</p>
-                            <p className='text-[16px] font-[400] text-gray-400'>Choose the type of accommodation, such as hotel, villa, guest house, ...</p>
-                            <select defaultValue={"hotel"} className='w-full px-4 py-2 border border-gray-400 rounded-3xl'>
-                                <option value="hotel">Hotel</option>
-                                <option value="villa">Villa</option>
-                                <option value="guest-house">Guest House</option>
-                                <option value="apartment">Apartment</option>
-                            </select>
-                        </div>
-
-                        <div className=' w-[50%] flex flex-col '>
-                        <p htmlFor="" className='font-[400] text-[25px]'>City</p>
-                        <p className='text-[16px] font-[400] text-gray-400'>Choose the city of your accomodation</p>
-                        <select
-                            value={citySelected}
-                            onChange={handleCityChange}
-                            className='w-full px-4 py-2 border border-gray-400 rounded-3xl'
-                        >
-                            <option value="">Select City</option>
-                            {cities.map((city) => (
-                                <option key={city.id} value={city.id}>
-                                    {city.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    </div>
-
-                    <div className='mb-4 w-full flex flex-col '>
-                        <p htmlFor="" className='font-[400] text-[25px]'>Address</p>
-                        <p className='text-[16px] font-[400] text-gray-400'>Specific address of the building</p>
-                        <input placeholder='Name' className='w-full px-4 py-2 border border-gray-400 rounded-3xl' />
-                    </div>
-
-                    <div className='mb-4 w-full flex flex-col '>
-                        <p htmlFor="" className='font-[400] text-[25px]'>Photos</p>
-                        <p className='text-[16px] font-[400] text-gray-400'>Specific address of the building</p>
-                        <div className='flex justify-between'>
-                            <input type="text" className=' w-[90%]  px-4 py-2 border border-gray-400 rounded-3xl' placeholder='Add using a link' name="" id="" />
-                            <button className='flex items-center w-[9%]  bg-gray-400 rounded-2xl text-white justify-center '>Add photo</button>
-                        </div>
-                        <div className='grid mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4'>
-                            <button className='border gap-2 bg-transparent rounded-2xl p-8 flex items-center gap-2 text-2xl text-gray-600'>
-                                <IoCloudUploadOutline/>
-                                Upload
-                            </button>
-
-                        </div>
-                    </div>
-
-                    <div className='mb-4 w-full flex flex-col '>
-                        <p htmlFor="" className='font-[400] text-[25px]'>Description</p>
-                        <Editor
-                            apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
-                            value={description}
-                            onEditorChange={handleEditorChange}
-                            init={{
-                                height: 400,
-                                menubar: true,
-                                plugins: [
-                                    'advlist autolink lists link image charmap print preview anchor',
-                                    'searchreplace visualblocks code fullscreen',
-                                    'insertdatetime media table paste code help wordcount',
-                                    'textcolor' // Thêm plugin textcolor để hỗ trợ màu chữ
-                                  ],
-                                toolbar:
-            'undo redo | formatselect | bold italic forecolor backcolor | \
+          <div className="mb-4 w-full flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Description
+            </p>
+            <Editor
+              apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
+              value={description}
+              onEditorChange={handleEditorChange}
+              init={{
+                height: 400,
+                menubar: true,
+                plugins: [
+                  "advlist autolink lists link image charmap print preview anchor",
+                  "searchreplace visualblocks code fullscreen",
+                  "insertdatetime media table paste code help wordcount",
+                  "textcolor", // Thêm plugin textcolor để hỗ trợ màu chữ
+                ],
+                toolbar:
+                  "undo redo | formatselect | bold italic forecolor backcolor | \
              alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help',
-                            }}
-                        />
-                    </div>
+             bullist numlist outdent indent | removeformat | help",
+              }}
+            />
+          </div>
 
+          <div className="mb-4 w-full flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Services
+            </p>
+            <p className="text-[16px] font-[400] text-gray-400">
+              Select the services available at your accommodation to offer your
+              guests a great experience.
+            </p>
+            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+              <div
+                onClick={() => setShowModel(true)}
+                className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center"
+              >
+                <IoCloudUploadOutline />
+                Create service
+              </div>
 
-                    <div className='mb-4 w-full flex flex-col '>
-                        <p htmlFor="" className='font-[400] text-[25px]'>Services</p>
-                        <p className='text-[16px] font-[400] text-gray-400'>Select the services available at your accommodation to offer your guests a great experience.</p>
-                        <div className='grid gap-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6'>
-                            
-                        </div>
-                    </div>
+              {servicesDefault?.length > 0 && (
+                <>
+                  {servicesDefault.map((service, index) => (
+                    <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
+                      <input
+                        onChange={() => handleServiceChange(service._id)}
+                        type="checkbox"
+                        className="mr-2"
+                      />
 
-                   
+                      <span className="mr-2">
+                        {iconMap[service.icon]
+                          ? React.createElement(iconMap[service.icon])
+                          : null}
+                      </span>
 
-                   
-                </form>
+                      <span>{service.name}</span>
+                    </label>
+                  ))}
+                </>
+              )}
             </div>
+          </div>
+
+          <div className="mb-4 w-full flex items-center justify-between">
+            <div className="w-[48%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Number of rooms
+              </p>
+
+              <input
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                type="number"
+                name=""
+                id=""
+                value={numberOfrooms}
+                onChange={(e) => numberOfrooms(e.target.value)}
+                placeholder="numbers rooms"
+              />
+            </div>
+
+            <div className=" w-[50%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Rooms Type
+              </p>
+
+              <div className="w-full px-4 py-2 border border-gray-400 rounded-3xl">
+                <div className="flex  items-center justify-between ">
+                  {roomTypeDefault.map((item, index) => {
+                    return (
+                      <>
+                        <div key={index} className="flex items-center gap-2">
+                          <input
+                            checked={roomType.includes(item)} // Check if the room type is selected
+                            onChange={() => handleRoomTypeChange(item)}
+                            type="checkbox"
+                          />
+                          {item}
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4 w-full flex items-center justify-between">
+            <div className="w-[48%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Number of floors
+              </p>
+
+              <input
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                type="number"
+                name=""
+                value={numberOfFloor}
+                onChange={(e) => setNumberOfFloor(e.target.value)}
+                id=""
+                placeholder="numbers floors"
+              />
+            </div>
+
+            <div className=" w-[50%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Cheapest price
+              </p>
+              <input
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                type="number"
+                name=""
+                id=""
+                value={cheapestPrice}
+                onChange={(e) => setCheapestPrice(e.target.value)}
+                placeholder="Price"
+              />
+            </div>
+          </div>
+
+          <div className="mb-4 w-full flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Check in&out times
+            </p>
+            <p className="text-[16px] font-[400] text-gray-400">
+              Add check in and out times, remember to have some time window for
+              clearing the room between guests
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <TimePicker
+                onChange={(time) => setCheckIn(time)}
+                value={checkIn}
+                format="HH:mm"
+                placeholder="14:00"
+                className="rounded-2xl w-full"
+              />
+              <TimePicker
+                onChange={(time) => setCheckOut(time)}
+                value={checkOut}
+                format="HH:mm"
+                placeholder="12:00"
+                className="rounded-2xl w-full"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={handleCreateHotel}
+            className="w-full cursor-pointer flex items-center justify-center bg-gray-300 rounded-2xl my-4 mt-6 py-2"
+          >
+            Create Hotel
+          </button>
+        </form>
+      </div>
+
+      {showModel && (
+        <>
+          <div className="w-full  fixed top-0 left-0 h-screen z-50 bg-[#00000042]">
+            <div className="mx-auto p-6 w-[60%] rounded-3xl my-20 bg-white ">
+              <div className="w-full  flex items-center justify-end">
+                <RxCross1
+                  className="cursor-pointer "
+                  onClick={() => {
+                    setShowModel(false);
+                  }}
+                  size={20}
+                />
+              </div>
+              <div className="w-full text-center">
+                <h3 className="font-[500] text-[28px] text-gray-500">
+                  Create new service
+                </h3>
+              </div>
+              <div className="w-full my-4 flex items-center justify-between">
+                <input
+                  type="text"
+                  placeholder="Service name"
+                  className="w-[49%] px-4 py-2 border border-gray-400 rounded-3xl"
+                />
+                <div className="w-[50%]">
+                  <select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
         </>
-    )
-}
+      )}
+    </>
+  );
+};
 
 export default AdminCreateHotel;

@@ -70,7 +70,7 @@ export const uploadMultipleImagesToCloudinary = async (req,res,next) => {
 
   const streamUpload = (file) => {
     return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream((error, result) => {
+      const stream = cloudinaryInstance.uploader.upload_stream((error, result) => {
         if (result) {
           resolve(result);
         } else {
@@ -87,7 +87,9 @@ export const uploadMultipleImagesToCloudinary = async (req,res,next) => {
     req.resultsImg = results
     next()
   } catch (error) {
-    throw new Error(`Cloudinary Upload Error: ${error.message}`);
+    console.log(error,1);
+    
+    throw new Error(`Cloudinary Upload Error: ${error}`);
   }
 };
 export const deleteImgByUrl = async (url) => {
@@ -112,6 +114,25 @@ export const deleteImgByUrl = async (url) => {
     console.error('Error deleting image:', error);
   }
 };
+
+export const uploadFromUrl=async(imageUrl)=> {
+  try {
+      const uploadResult = await cloudinaryInstance.uploader.upload(imageUrl);
+      console.log(uploadResult);
+      
+      // console.log("Upload từ URL thành công:", uploadResult);
+      return {
+          uploadResult:uploadResult,
+          code:200
+      };
+  } catch (error) {
+      // console.error("Lỗi khi upload từ URL:", error);
+      return {
+          code:400,
+          message:"Upload failed"
+      }
+  }
+}
 
     
 

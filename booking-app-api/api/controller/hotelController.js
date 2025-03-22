@@ -7,24 +7,101 @@ import Hotel from "../models/Hotel.js";
  *   description: Hotel management API
  */
 
-export const createHotel = async (req, res, next) => {
-    const newHotel = new Hotel(req.body);
+export const createHotel = async (req, res) => {
     try {
-        const savedHotel = await newHotel.save();
-        res.status(201).json(savedHotel);
+        const { name,
+            type,
+            city,
+            address,
+            photos,
+            description,
+            services,
+     
+            numberOfrooms,
+            roomType,
+            numberOfFloor,
+            cheapestPrice,
+            checkIn,
+            checkOut } = req.body
 
-    } catch (err) {
-        next(err);
+            if (!name) {
+                return res.json({
+                  success: false,
+                  message: "Name cannot be empty"
+                });
+              }
+              
+              if (!type) {
+                return res.json({
+                  success: false,
+                  message: "Type of accommodation cannot be empty"
+                });
+              }
+              
+              if (!city) {
+                return res.json({
+                  success: false,
+                  message: "City cannot be empty"
+                });
+              }
+              
+              if (!address) {
+                return res.json({
+                  success: false,
+                  message: "Address cannot be empty"
+                });
+              }
+              
+              if (roomType.length === 0) {
+                return res.json({
+                  success: false,
+                  message: "At least one room type is required"
+                });
+              }
+              
+              if (!cheapestPrice) {
+                return res.json({
+                  success: false,
+                  message: "Cheapest Price cannot be empty"
+                });
+              }
+              
+              if (!checkIn) {
+                return res.json({
+                  success: false,
+                  message: "Check-in time cannot be empty"
+                });
+              }
+              
+              if (!checkOut) {
+                return res.json({
+                  success: false,
+                  message: "Check-out time cannot be empty"
+                });
+              }
+
+              const data = new Hotel(req.body)
+              console.log(data);
+
+        res.json(1)
+
+
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            success: false,
+            message: "Error in BE",
+        })
     }
 }
 
 export const updateHotel = async (req, res, next) => {
     try {
         const updatedHotel = await Hotel.findByIdAndUpdate(req.params.id
-            , {$set: req.body}
-            , {new: true}) // return updated document
+            , { $set: req.body }
+            , { new: true }) // return updated document
         if (!updatedHotel) {
-            res.status(404).json({message: "No hotel found with id " + req.params.id})
+            res.status(404).json({ message: "No hotel found with id " + req.params.id })
             return;
         }
         res.status(200).json(updatedHotel);
@@ -37,7 +114,7 @@ export const deleteHotel = async (req, res, next) => {
     try {
         const deletedHotel = await Hotel.findByIdAndDelete(req.params.id) // return updated document
         if (!deletedHotel) {
-            res.status(404).json({message: "No hotel found with id " + req.params.id})
+            res.status(404).json({ message: "No hotel found with id " + req.params.id })
             return;
         }
         res.status(200).json(deletedHotel);
@@ -47,23 +124,23 @@ export const deleteHotel = async (req, res, next) => {
 }
 
 export const getHotel = async (req, res, next) => {
-    try{
+    try {
         const hotel = await Hotel.findById(req.params.id) // return updated document
-        if(!hotel){
-            res.status(404).json({message:"No hotel found with id "+req.params.id})
+        if (!hotel) {
+            res.status(404).json({ message: "No hotel found with id " + req.params.id })
             return;
         }
         res.status(200).json(hotel);
-    }catch(err){
+    } catch (err) {
         next(err);
     }
 }
 
 export const getAllHotels = async (req, res, next) => {
-    try{
+    try {
         const hotels = await Hotel.find();
         res.status(200).json(hotels);
-    }catch(err){
+    } catch (err) {
         next(err);
     }
 }
@@ -103,22 +180,22 @@ export const countByCity = async (req, res, next) => {
 
 
 export const countByType = async (req, res, next) => {
-    try{
-        const hotelCount = await Hotel.countDocuments({type: "hotel"})
-        const apartmentCount =  await Hotel.countDocuments({ type: "apartment"})
+    try {
+        const hotelCount = await Hotel.countDocuments({ type: "hotel" })
+        const apartmentCount = await Hotel.countDocuments({ type: "apartment" })
         const resortCount = await Hotel.countDocuments({ type: "resort" })
         const villaCount = await Hotel.countDocuments({ type: "villa" })
         const cabinCount = await Hotel.countDocuments({ type: "cabin" })
 
         res.status(200).json([
-            {type: "hotel", count: hotelCount},
-            {type: "apartments", count: apartmentCount},
-            {type: "resorts", count: resortCount},
-            {type: "villas", count: villaCount},
-            {type: "cabin", count: cabinCount},
+            { type: "hotel", count: hotelCount },
+            { type: "apartments", count: apartmentCount },
+            { type: "resorts", count: resortCount },
+            { type: "villas", count: villaCount },
+            { type: "cabin", count: cabinCount },
 
         ]);
-    }catch(err){
+    } catch (err) {
         next(err);
     }
 

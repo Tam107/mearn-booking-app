@@ -17,29 +17,33 @@ const HotelSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    distance: {
-        type: String,
-        required: true,
-    },
     photos: {
         type: [String],
     },
-    title: {
-      type: String,
-      required: true,
-    },
+  
     description: {
         type: String,
-        required: true,
     },
+    services: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ServiceHotel",  // Trỏ tới mô hình ServiceHotel
+    }],
     rating: {
         type: Number,
         min: 0,
         max: 5,
+        default:0
     },
-    rooms: {
-        type: [String],
+    numberOfrooms: {
+        type: Number,
     },
+    roomType:[{
+        type:String
+    }],
+    numberOfFloor: {
+        type: Number,
+    },
+
     cheapestPrice: {
         type: Number,
         required: true,
@@ -48,10 +52,14 @@ const HotelSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    services: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "ServiceHotel",  // Trỏ tới mô hình ServiceHotel
-    }],
+    
+   
+    checkIn: {
+        type: Date,  // Store time as a Date object
+    },
+    checkOut: {
+        type: Date,  // Store time as a Date object
+    }
 })
 
 export default mongoose.model("Hotel", HotelSchema);

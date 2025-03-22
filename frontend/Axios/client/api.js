@@ -95,8 +95,72 @@ const getAdminApi = async()=>{
     }
 }
 
-
-
+const getAllServicesApi = async()=>{
+    try {
+        const URL_LOGIN ='/servicesHotel/get'
+        const response = await axios.get(URL_LOGIN)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const uploadByLinkApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/upload/upload-by-link`
+        // console.log(URL_LOGIN);
+        const response = await axios.post(URL_LOGIN,data)
+        console.log(response);
+        
+        
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const uploadByFilesApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/upload/upload-by-files`
+        console.log(URL_LOGIN);
+        const response = await axios.post(URL_LOGIN,data)
+        console.log(response);
+            
+        
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const createHotelApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/hotels/create`
+        console.log(URL_LOGIN);
+        const response = await axios.post(URL_LOGIN,data)
+        console.log(response);
+            
+        
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 export {
     registerUser,
     checkTokenOtp,
@@ -104,5 +168,9 @@ export {
     loginApi,
     createAdmin,
     loginAdminApi,
-    getAdminApi
+    getAdminApi,
+    getAllServicesApi,
+    uploadByLinkApi,
+    uploadByFilesApi,
+    createHotelApi
 }
