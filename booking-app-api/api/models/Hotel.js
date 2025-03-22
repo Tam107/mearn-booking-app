@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-
+import  slug from "mongoose-slug-updater" 
+mongoose.plugin(slug)
 const HotelSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -59,6 +60,11 @@ const HotelSchema = new mongoose.Schema({
     },
     checkOut: {
         type: Date,  // Store time as a Date object
+    },
+    slug:{
+        type:String,
+        slug:"name",
+        unique:true
     }
 })
 
