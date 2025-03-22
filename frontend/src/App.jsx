@@ -19,16 +19,20 @@ import DashboardPage from './pages/DashboardPage/DashboardPage.jsx';
 import AdminCreateBusPage from './pages/AdminCreateBusPage/AdminCreateBusPage.jsx';
 import HotelListPage from './pages/HotelListPage/HotelListPage.jsx';
 import AdminCreateHotelPage from './pages/AdminCreateHotelPage/AdminCreateHotelPage.jsx';
+import AdminViewRoomPage from './pages/AdminViewRoomPage/AdminViewRoomPage.jsx';
+import { getAllHotelsAction } from './redux/actions/HotelAction.js';
 
 function App() {
 
   const [otp,setOtp] = useState('');
   const stateAuth = useSelector(state=>state.UserReducer)
-  // console.log(stateSeller);
+  const stateHotels = useSelector(state=>state.HotelReducer)
+  
   useEffect(()=>{
     const fetchApi = async()=>{
       Store.dispatch(loadUserAction())
       Store.dispatch(loadAdminAction())
+      Store.dispatch(getAllHotelsAction())
 
     
     }
@@ -54,6 +58,7 @@ function App() {
        <Route path="/dashboard" element={<DashboardPage />} />
        <Route path="/dashboard-create-bus" element={<AdminCreateBusPage />} />
        <Route path='/dashboard-create-hotel' element={<AdminCreateHotelPage/>}/>
+       <Route path='/dashboard-view-room' element={<AdminViewRoomPage/>}/>
        <Route path="/hotel" element={<HotelListPage />} />
        {/* <Route path="/hotel" element={<HotelDetailPage/>}/> */}
       </Routes>

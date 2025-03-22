@@ -161,6 +161,22 @@ const createHotelApi = async(data)=>{
         }
     }
 }
+const getAllHotelApi = async()=>{
+    try {
+        const URL_LOGIN =`/hotels/getAll`
+        const response = await axios.get(URL_LOGIN)
+        console.log(response);  
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
 export {
     registerUser,
     checkTokenOtp,
@@ -172,5 +188,6 @@ export {
     getAllServicesApi,
     uploadByLinkApi,
     uploadByFilesApi,
-    createHotelApi
+    createHotelApi,
+    getAllHotelApi
 }

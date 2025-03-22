@@ -34,8 +34,7 @@ const AdminCreateHotel = () => {
   const [type, setType] = useState("Hotel");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
-  const [numberOfrooms, setNumberOfRooms] = useState();
-  const [numberOfFloor, setNumberOfFloor] = useState();
+
   const [cheapestPrice, setCheapestPrice] = useState();
   const [roomType, setRoomType] = useState([]);
   const [checkIn, setCheckIn] = useState(dayjs("14:00", "HH:mm")); // Default value for check-in
@@ -184,14 +183,28 @@ const AdminCreateHotel = () => {
     if (services.length > 0) {
       dataHotel.services = services;
     }
-    if (numberOfrooms) {
-      dataHotel.numberOfrooms = numberOfrooms;
-    }
-    if (numberOfFloor) {
-      dataHotel.numberOfFloor = numberOfFloor;
-    }
     console.log(dataHotel);
     const res = await createHotelApi(dataHotel)
+    if(res.success){
+
+      toast.success("Create hotel successfully")
+      setName("")
+      setType("")
+      setCity("")
+      setAddress("")
+      setCheapestPrice()
+      setRoomType([])
+      setCheckIn(dayjs("14:00","HH:mm"))
+      setCheckOut(dayjs('14:00',"HH:mm"))
+      setLinkPhoto("")
+      setPhotos([])
+      setDescription("")
+      setServices([])
+      
+    }
+    else{
+      toast.error("Error");
+    }
   };
 
   return (
@@ -396,19 +409,18 @@ const AdminCreateHotel = () => {
           </div>
 
           <div className="mb-4 w-full flex items-center justify-between">
-            <div className="w-[48%] flex flex-col ">
+          <div className=" w-[48%] flex flex-col ">
               <p htmlFor="" className="font-[400] text-[25px]">
-                Number of rooms
+                Cheapest price
               </p>
-
               <input
                 className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                 type="number"
                 name=""
                 id=""
-                value={numberOfrooms}
-                onChange={(e) => numberOfrooms(e.target.value)}
-                placeholder="numbers rooms"
+                value={cheapestPrice}
+                onChange={(e) => setCheapestPrice(e.target.value)}
+                placeholder="Price"
               />
             </div>
 
@@ -438,38 +450,7 @@ const AdminCreateHotel = () => {
             </div>
           </div>
 
-          <div className="mb-4 w-full flex items-center justify-between">
-            <div className="w-[48%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Number of floors
-              </p>
-
-              <input
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                type="number"
-                name=""
-                value={numberOfFloor}
-                onChange={(e) => setNumberOfFloor(e.target.value)}
-                id=""
-                placeholder="numbers floors"
-              />
-            </div>
-
-            <div className=" w-[50%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Cheapest price
-              </p>
-              <input
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                type="number"
-                name=""
-                id=""
-                value={cheapestPrice}
-                onChange={(e) => setCheapestPrice(e.target.value)}
-                placeholder="Price"
-              />
-            </div>
-          </div>
+         
 
           <div className="mb-4 w-full flex flex-col ">
             <p htmlFor="" className="font-[400] text-[25px]">

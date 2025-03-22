@@ -1,4 +1,5 @@
 import Hotel from "../models/Hotel.js";
+import Room from "../models/Room.js";
 
 /**
  * @swagger
@@ -16,10 +17,7 @@ export const createHotel = async (req, res) => {
             photos,
             description,
             services,
-     
-            numberOfrooms,
             roomType,
-            numberOfFloor,
             cheapestPrice,
             checkIn,
             checkOut } = req.body
@@ -81,13 +79,43 @@ export const createHotel = async (req, res) => {
               }
 
               const data = new Hotel(req.body)
-              console.log(data);
+              await data.save();
+              
+              for(let i =0;i<roomType.length;i++){
+                const dataRoom = {
+                    RoomType:roomType[i],
+                    services:services||[],
+                    hotel:data._id,
+                    price:cheapestPrice
+                }
+                const room = new Room(dataRoom)
+                await room.save();
+              }
 
-        res.json(1)
+        res.json({
+            success:true,
+            data:data
+        })
 
 
     } catch (error) {
         console.log(error)
+        return res.json({
+            success: false,
+            message: "Error in BE",
+        })
+    }
+}
+
+export const getAllHotels = async (req, res, next) => {
+    try {
+        const hotels = await Hotel.find({});
+        res.status(200).json({
+            success:true,
+            data:hotels
+        });
+    } catch (err) {
+        console.log(err)
         return res.json({
             success: false,
             message: "Error in BE",
@@ -136,14 +164,7 @@ export const getHotel = async (req, res, next) => {
     }
 }
 
-export const getAllHotels = async (req, res, next) => {
-    try {
-        const hotels = await Hotel.find();
-        res.status(200).json(hotels);
-    } catch (err) {
-        next(err);
-    }
-}
+
 
 // export const countByCity = async (req, res, next) => {
 //     const cities = req.query.cities.split(','); // Transform string to array

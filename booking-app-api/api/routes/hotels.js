@@ -12,6 +12,7 @@ import {
 const router = express.Router();
 
 router.post("/create", createHotel);
+router.get("/getAll", getAllHotels);
 
 /**
  * @swagger
@@ -149,60 +150,6 @@ router.delete("/:id", deleteHotel);
  */
 router.get("/find/:id", getHotel);
 
-/**
- * @swagger
- * /api/hotels:
- *   get:
- *     summary: Get all hotels
- *     tags: [Hotels]
- *     responses:
- *       200:
- *         description: List of hotels
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   name:
- *                     type: string
- *                     example: "Grand Hotel"
- *                   type:
- *                     type: string
- *                     example: "Luxury"
- *                   address:
- *                     type: string
- *                     example: "123 Luxury Lane, Paradise City"
- *                   distance:
- *                     type: string
- *                     example: "5 km"
- *                   photos:
- *                     type: string
- *                     example: "https://example.com/photo.jpg"
- *                   title:
- *                     type: string
- *                     example: "Ha Giang Hotel"
- *                   description:
- *                     type: string
- *                     example: "A luxurious hotel with all amenities."
- *                   rating:
- *                     type: number
- *                     format: float
- *                     example: 4.5
- *                   rooms:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["Deluxe Room", "Suite", "Standard Room"]
- *                   cheapestPrice:
- *                     type: number
- *                     example: 150
- *                   feature:
- *                     type: boolean
- *                     example: true
- */
-router.get("/", getAllHotels);
 
 /**
  * @swagger

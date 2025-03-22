@@ -63,16 +63,16 @@ const SidebarAdmin = () => {
                       </span>
                     </li>
                   </Link>
-                  <Link to="/hotels" style={{ textDecoration: "none" }}>
-                    <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
+                  <Link to="/dashboard-view-hotel" style={{ textDecoration: "none" }}>
+                    <li className={navStyle("/dashboard-view-hotel")}>
                       <StoreIcon className="text-indigo-600" />
                       <span className="text-sm font-semibold text-gray-600">
                         Hotels
                       </span>
                     </li>
                   </Link>
-                  <Link to="/rooms" style={{ textDecoration: "none" }}>
-                    <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
+                  <Link to="/dashboard-view-room" style={{ textDecoration: "none" }}>
+                    <li className={navStyle("/dashboard-view-room")}>
                       <CreditCardIcon className="text-indigo-600" />
                       <span className="text-sm font-semibold text-gray-600">
                         Rooms
