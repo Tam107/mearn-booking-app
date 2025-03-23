@@ -23,7 +23,7 @@ export const RoomReducer = createReducer(initialState, (builder) => {
         })
         .addCase('getAllRoomSucess',(state,action)=>{
             state.loading = false;
-            state.hotels = action.payload;
+            state.rooms = action.payload;
 
         })
         .addCase('getAllRoomFailed',(state,action)=>{

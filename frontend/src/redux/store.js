@@ -3,7 +3,7 @@ import { UserReducer } from "./reducers/UserReducer";
 import { AdminReducer } from "./reducers/AdminReducer";
 import { WishlistReducer } from "./reducers/WishlistReducer";
 import { HotelReducer } from "./reducers/HotelReducer";
-import { RoomReducer } from "./reducers/HotelReducer";
+import { RoomReducer } from "./reducers/RoomReducer";
 
 
 const Store = configureStore({

@@ -76,10 +76,23 @@ export const getRoom = async (req, res, next) => {
 }
 
 export const getAllRooms = async (req, res, next) => {
-    try{
-        const rooms = await Room.find();
-        res.status(200).json(rooms);
-    }catch(err){
-        next(err);
+    try {
+        console.log("herre");
+        
+        // Fetch all rooms
+        const rooms = await Room.find({}).populate("services").populate('hotel'); 
+        
+        // Populate hotel and services fields if needed
+       
+        
+        // Respond with rooms data
+        res.json({
+            success: true,
+            data: rooms
+        });
+    } catch (err) {
+        console.log(err);
+        
+        next(err); // Pass error to the error handler middleware
     }
-}
+};

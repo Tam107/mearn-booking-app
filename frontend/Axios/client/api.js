@@ -107,6 +107,19 @@ const getAllServicesApi = async()=>{
         }
     }
 }
+
+const createServicesApi = async(data)=>{
+    try {
+        const URL_LOGIN ='/servicesHotel/create'
+        const response = await axios.post(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 const uploadByLinkApi = async(data)=>{
     try {
         const URL_LOGIN =`/upload/upload-by-link`
@@ -165,7 +178,7 @@ const getAllHotelApi = async()=>{
     try {
         const URL_LOGIN =`/hotels/getAll`
         const response = await axios.get(URL_LOGIN)
-        console.log(response);  
+        
         return response
     } catch (error) {
         console.log(error);
@@ -176,6 +189,22 @@ const getAllHotelApi = async()=>{
         }
     }
 }
+const getAllRoomApi = async()=>{
+    try {
+        const URL_LOGIN =`/rooms/getAll`
+        const response = await axios.get(URL_LOGIN)
+     
+        return response
+    } catch (error) {
+        
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
 
 export {
     registerUser,
@@ -189,5 +218,7 @@ export {
     uploadByLinkApi,
     uploadByFilesApi,
     createHotelApi,
-    getAllHotelApi
+    getAllHotelApi,
+    getAllRoomApi,
+    createServicesApi
 }

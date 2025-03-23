@@ -27,12 +27,17 @@ const HotelSchema = new mongoose.Schema({
     },
     services: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ServiceHotel",  // Trỏ tới mô hình ServiceHotel
+        ref: "ServicesHotel",  // Trỏ tới mô hình ServiceHotel
     }],
     rating: {
         type: Number,
         min: 0,
         max: 5,
+        default:0
+    },
+    numberRating: {
+        type: Number,
+       
         default:0
     },
    

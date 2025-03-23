@@ -21,6 +21,8 @@ import HotelListPage from './pages/HotelListPage/HotelListPage.jsx';
 import AdminCreateHotelPage from './pages/AdminCreateHotelPage/AdminCreateHotelPage.jsx';
 import AdminViewRoomPage from './pages/AdminViewRoomPage/AdminViewRoomPage.jsx';
 import { getAllHotelsAction } from './redux/actions/HotelAction.js';
+import { getAllRoomsAction } from './redux/actions/RoomAction.js';
+import AdminViewRoomDetailPage from './pages/AdminViewRoomDetailPage/AdminViewRoomDetailPage.jsx';
 
 function App() {
 
@@ -33,6 +35,7 @@ function App() {
       Store.dispatch(loadUserAction())
       Store.dispatch(loadAdminAction())
       Store.dispatch(getAllHotelsAction())
+      Store.dispatch(getAllRoomsAction())
 
     
     }
@@ -59,7 +62,9 @@ function App() {
        <Route path="/dashboard-create-bus" element={<AdminCreateBusPage />} />
        <Route path='/dashboard-create-hotel' element={<AdminCreateHotelPage/>}/>
        <Route path='/dashboard-view-room' element={<AdminViewRoomPage/>}/>
+       <Route path='/dashboard-view-roomDetail/:slug' element={<AdminViewRoomDetailPage/>}/>
        <Route path="/hotel" element={<HotelListPage />} />
+       
        {/* <Route path="/hotel" element={<HotelDetailPage/>}/> */}
       </Routes>
       

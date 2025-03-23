@@ -5,6 +5,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { Editor } from "@tinymce/tinymce-react";
 import {
   createHotelApi,
+  getAllRoomApi,
   getAllServicesApi,
   uploadByFilesApi,
   uploadByLinkApi,
@@ -13,8 +14,12 @@ import iconMap from "../../data/iconMap"; // Import the iconMap from the externa
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { RxCross1 } from "react-icons/rx";
+import ModelCreateService from "./ModelCreateService";
+import Map from "./Map";
+import { useDispatch } from "react-redux";
 
 const AdminCreateHotel = () => {
+  const dispatch = useDispatch()
   // popup model
   const [showModel, setShowModel] = useState(false);
 
@@ -105,7 +110,7 @@ const AdminCreateHotel = () => {
       setServicesDefault(ad.data);
     };
     alo();
-  }, []);
+  }, [showModel]);
 
   const handleServiceChange = (serviceId) => {
     setServices((services) => {
@@ -186,7 +191,7 @@ const AdminCreateHotel = () => {
     console.log(dataHotel);
     const res = await createHotelApi(dataHotel)
     if(res.success){
-
+      
       toast.success("Create hotel successfully")
       setName("")
       setType("")
@@ -200,7 +205,7 @@ const AdminCreateHotel = () => {
       setPhotos([])
       setDescription("")
       setServices([])
-      
+      dispatch(getAllRoomApi()  )
     }
     else{
       toast.error("Error");
@@ -489,47 +494,13 @@ const AdminCreateHotel = () => {
 
       {showModel && (
         <>
-          <div className="w-full  fixed top-0 left-0 h-screen z-50 bg-[#00000042]">
-            <div className="mx-auto p-6 w-[60%] rounded-3xl my-20 bg-white ">
-              <div className="w-full  flex items-center justify-end">
-                <RxCross1
-                  className="cursor-pointer "
-                  onClick={() => {
-                    setShowModel(false);
-                  }}
-                  size={20}
-                />
-              </div>
-              <div className="w-full text-center">
-                <h3 className="font-[500] text-[28px] text-gray-500">
-                  Create new service
-                </h3>
-              </div>
-              <div className="w-full my-4 flex items-center justify-between">
-                <input
-                  type="text"
-                  placeholder="Service name"
-                  className="w-[49%] px-4 py-2 border border-gray-400 rounded-3xl"
-                />
-                <div className="w-[50%]">
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                  >
-                    <option value="">Select City</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ModelCreateService setShowModel={setShowModel}/>
+          
         </>
       )}
+
+
+      {/* <Map/> */}
     </>
   );
 };

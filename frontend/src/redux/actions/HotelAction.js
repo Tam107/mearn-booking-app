@@ -1,4 +1,4 @@
-import { createHotelApi, getAllHotelApi } from "../../../Axios/client/api"
+import { createHotelApi, getAllHotelApi, getAllRoomApi } from "../../../Axios/client/api"
 
 export const createHotelAction = (hotelData)=>async(dispatch)=>{
     try {

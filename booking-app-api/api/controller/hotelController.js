@@ -10,6 +10,8 @@ import Room from "../models/Room.js";
 
 export const createHotel = async (req, res) => {
     try {
+        console.log(req.body,1);
+        
         const { name,
             type,
             city,
@@ -79,6 +81,8 @@ export const createHotel = async (req, res) => {
               }
 
               const data = new Hotel(req.body)
+              console.log(data);
+              
               await data.save();
               
               for(let i =0;i<roomType.length;i++){
@@ -109,7 +113,7 @@ export const createHotel = async (req, res) => {
 
 export const getAllHotels = async (req, res, next) => {
     try {
-        const hotels = await Hotel.find({});
+        const hotels = await Hotel.find({}).populate('services');
         res.status(200).json({
             success:true,
             data:hotels
