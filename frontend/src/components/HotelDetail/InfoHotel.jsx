@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegStar } from "react-icons/fa6";
 import { HiOutlineBuildingLibrary } from "react-icons/hi2";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
@@ -20,16 +20,16 @@ const InfoHotel = ({ data }) => {
                 </h3>
 
                 <select
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                //   value={city}
+                //   onChange={(e) => setCity(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                 >
                   <option value="">Select City</option>
-                  {cities.map((city) => (
+                  {/* {cities.map((city) => (
                     <option key={city.id} value={city.id}>
                       {city.name}
                     </option>
-                  ))}
+                  ))} */}
                 </select>
 
                 <div className="flex items-center gap-2">

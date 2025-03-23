@@ -79,14 +79,14 @@ const SidebarAdmin = () => {
                       </span>
                     </li>
                   </Link>
-                  <Link to="/delivery" style={{ textDecoration: "none" }}>
+                  {/* <Link to="/delivery" style={{ textDecoration: "none" }}>
                     <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
                       <LocalShippingIcon className="text-indigo-600" />
                       <span className="text-sm font-semibold text-gray-600">
                         Delivery
                       </span>
                     </li>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
 

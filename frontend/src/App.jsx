@@ -23,6 +23,7 @@ import AdminViewRoomPage from './pages/AdminViewRoomPage/AdminViewRoomPage.jsx';
 import { getAllHotelsAction } from './redux/actions/HotelAction.js';
 import { getAllRoomsAction } from './redux/actions/RoomAction.js';
 import AdminViewRoomDetailPage from './pages/AdminViewRoomDetailPage/AdminViewRoomDetailPage.jsx';
+import AdminViewHotelPage from './pages/AdminViewHotelPage/AdminViewHotelPage.jsx';
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
        <Route path="/dashboard-create-bus" element={<AdminCreateBusPage />} />
        <Route path='/dashboard-create-hotel' element={<AdminCreateHotelPage/>}/>
        <Route path='/dashboard-view-room' element={<AdminViewRoomPage/>}/>
+       <Route path='/dashboard-view-hotel' element={<AdminViewHotelPage/>}/>
        <Route path='/dashboard-view-roomDetail/:slug' element={<AdminViewRoomDetailPage/>}/>
        <Route path="/hotel" element={<HotelListPage />} />
        
