@@ -28,7 +28,7 @@ const ModelCreateService = ({ setShowModel }) => {
             return toast.error("Icon must not be empty")
             
         }
-        const res =await createServicesApi({name,icon})
+        const res =await createServicesApi({name,icon,description})
         if(res.success){
             toast.success("Create service success")
             setShowModel(false)

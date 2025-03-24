@@ -1,4 +1,4 @@
-import { createHotelApi, getAllHotelApi, getAllRoomApi } from "../../../Axios/client/api"
+import { createHotelApi, deleteHotelApi, getAllHotelApi, getAllRoomApi } from "../../../Axios/client/api"
 
 export const createHotelAction = (hotelData)=>async(dispatch)=>{
     try {
@@ -59,6 +59,46 @@ export const getAllHotelsAction = ()=>async(dispatch)=>{
     } catch (error) {
         dispatch({
             type:"getAllHotelFailed",
+            payload:error?.response?.data?.message||"Error in axios",
+
+        })
+    }
+}
+
+
+export const deleteHotelAction = (id)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:"deleteHotelRequest",
+
+        })
+        const data = await deleteHotelApi(id)
+  
+        if(data.success){
+           
+            dispatch({
+                type:"deleteHotelSuccess",
+                payload:data.data
+            })
+
+            if(data?.rooms?.length>0){
+                dispatch({
+                    type:"deleteRoomSuccess",
+                    payload:data.rooms
+                })
+            }
+        } 
+       else{
+        dispatch({
+            type:"deleteHotelFailed",
+            payload:"Error when create",
+
+        })
+       }
+        
+    } catch (error) {
+        dispatch({
+            type:"deleteHotelFailed",
             payload:error?.response?.data?.message||"Error in axios",
 
         })

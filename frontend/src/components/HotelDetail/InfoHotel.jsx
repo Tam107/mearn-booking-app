@@ -2,12 +2,30 @@ import React, { useEffect, useState } from "react";
 import { FaRegStar } from "react-icons/fa6";
 import { HiOutlineBuildingLibrary } from "react-icons/hi2";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
-
+import { useSelector } from "react-redux";
+import iconMap from "../../data/iconMap";
 const InfoHotel = ({ data }) => {
-    const [roomType, setRoomType] = useState("");
+    const [roomType, setRoomType] = useState('');
+    const [dataRoom,setDataRoom]=useState({});
+    const stateRoom = useSelector(state => state.RoomReducer);
     useEffect(() => {
         setRoomType(data?.roomType?.[0]);
+        
     }, [data]);
+    useEffect(() => {
+        const room = stateRoom?.rooms?.find(room => room.hotel._id === data._id && room.RoomType === roomType);
+        setDataRoom(room);
+    }, [stateRoom.rooms, roomType]);
+
+    console.log(data?.description);
+    
+    
+
+    
+    
+
+  
+
   return (
     <>
       <div className="w-full">
@@ -15,24 +33,24 @@ const InfoHotel = ({ data }) => {
           <div className="flex-1 mr-14">
             <div className="flex items-center justify-between border-b-gray-200 border-b-1 pb-4">
               <div className="flex flex-col gap-1">
-                <h3 className="font-[500] text-[24px] leading-[32px]">
+                {/* <h3 className="font-[500] text-[24px] leading-[32px]">
                   Entire rental unit hosted by Ghazal
-                </h3>
+                </h3> */}
 
                 <select
-                //   value={city}
-                //   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                  value={roomType}
+                  onChange={(e) => setRoomType(e.target.value)}
+                  className="w-full px-2 py-2 border border-gray-400 rounded-3xl"
                 >
-                  <option value="">Select City</option>
-                  {/* {cities.map((city) => (
-                    <option key={city.id} value={city.id}>
-                      {city.name}
+                  {/* <option value="">Select City</option> */}
+                  {data?.roomType?.map((type,index) => (
+                    <option key={index} value={type}>
+                      {type}
                     </option>
-                  ))} */}
+                  ))}
                 </select>
 
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <p className="font-[400] text-[14px] leading-[20px]">
                     2 guests
                   </p>
@@ -44,67 +62,37 @@ const InfoHotel = ({ data }) => {
                   <p className="font-[400] text-[14px] leading-[20px]">1 bed</p>
                   <div className="w-[2px] h-[2px] rounded-full bg-black"></div>
                   <p className="font-[400] text-[14px] leading-[20px]">1 bad</p>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
               <div className="w-[50%] flex flex-col gap-4">
-                <div className="w-full flex items-center gap-3">
-                  <HiOutlineBuildingLibrary size={20} />
-                  <div>
-                    <h4 className="font-[500] text-[16px] leading-[24px]">
-                      Entire home
-                    </h4>
-                    <p className="font-[400] text-[14px] leading-[20px] text-gray-500">
-                      You’ll have the apartment to yourself
-                    </p>
-                  </div>
-                </div>
-                <div className="w-full flex items-center gap-3">
-                  <HiOutlineBuildingLibrary size={20} />
-                  <div>
-                    <h4 className="font-[500] text-[16px] leading-[24px]">
-                      Entire home
-                    </h4>
-                    <p className="font-[400] text-[14px] leading-[20px] text-gray-500">
-                      You’ll have the apartment to yourself
-                    </p>
-                  </div>
-                </div>
-                <div className="w-full flex items-center gap-3">
-                  <HiOutlineBuildingLibrary size={20} />
-                  <div>
-                    <h4 className="font-[500] text-[16px] leading-[24px]">
-                      Entire home
-                    </h4>
-                    <p className="font-[400] text-[14px] leading-[20px] text-gray-500">
-                      You’ll have the apartment to yourself
-                    </p>
-                  </div>
-                </div>
-                <div className="w-full flex items-center gap-3">
-                  <HiOutlineBuildingLibrary size={20} />
-                  <div>
-                    <h4 className="font-[500] text-[16px] leading-[24px]">
-                      Entire home
-                    </h4>
-                    <p className="font-[400] text-[14px] leading-[20px] text-gray-500">
-                      You’ll have the apartment to yourself
-                    </p>
-                  </div>
-                </div>
+                
+                
+                {
+                    dataRoom?.services?.map((service,index)=>(
+                        <div key={index} className="w-full flex items-center gap-3">
+                          {React.createElement(iconMap[service.icon], { size: 20 })}
+                        <div>
+                          <h4 className="font-[500] text-[16px] leading-[24px]">
+                            {service.name}
+                          </h4>
+                          <p className="font-[400] text-[14px] leading-[20px] text-gray-500">
+                            {service.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                }
+              
               </div>
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
-              <div className="w-[50%]">
-                <p className="font-[400] text-[14px] leading-[20px] text-gray-500">
-                  Come and stay in this superb duplex T2, in the heart of the
-                  historic center of Bordeaux. Spacious and bright, in a real
-                  Bordeaux building in exposed stone, you will enjoy all the
-                  charms of the city thanks to its ideal location. Close to many
-                  shops, bars and restaurants, you can access the apartment by
-                  tram A and C and bus routes 27 and 44. ...
-                </p>
+              <div className="w-full">
+              <div
+  
+  dangerouslySetInnerHTML={{ __html: data.description }}
+/>
               </div>
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">

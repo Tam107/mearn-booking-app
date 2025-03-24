@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useEffect } from "react";
 import { Space, Table } from "antd";
 import {Link} from "react-router-dom"
+import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 
 const AdminViewRoom = () => {
+
+  
   const stateHotels = useSelector((state) => state.HotelReducer);
   const [open, setOpen] = useState(false);
   const [hotelSelected,setHotelSelected] = useState("");
   const [hotelSelectedId,setHotelSelectedId] = useState("");
+  const dispatch = useDispatch();
+  dispatch(getAllRoomsAction())
   
   const stateRooms =useSelector(state=>state.RoomReducer);
   
@@ -18,7 +23,7 @@ const AdminViewRoom = () => {
   const [dataRooms,setDataRooms] = useState(stateRooms?.rooms)
   useEffect(()=>{
     setDataRooms(stateRooms.rooms)
-  },[stateRooms.rooms])
+  },[stateRooms.rooms,stateHotels.hotels,dispatch])
 
   useEffect(()=>{
     if(hotelSelectedId.length>0){

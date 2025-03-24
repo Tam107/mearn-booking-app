@@ -5,6 +5,7 @@ import RecommendPlaces from '../../components/RecommendPlaces/RecommendPlaces'
 import SuggestionTrainTicket from '../../components/SuggestionTrainTicket/SuggestionTrainTicket'
 import TravelGuide from '../../components/TravelGuide/TravelGuide'
 import Hero from '../../components/Hero/Hero'
+import Footer from '../../components/Footer/Footer'
 
 const HomePage = () => {
   useEffect(() => { 
@@ -20,7 +21,7 @@ const HomePage = () => {
       <RecommendExperience/>
       <SuggestionTrainTicket/>
       <TravelGuide/>
-      <div className='w-full h-[1px] bg-[#E5E7EB] shadow'></div>
+        <Footer/>
       
 
     </>

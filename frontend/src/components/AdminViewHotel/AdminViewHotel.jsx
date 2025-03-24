@@ -1,99 +1,158 @@
-import { Space, Table } from "antd";
+import { message, Popconfirm, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
+import { deleteHotelAction, getAllHotelsAction } from "../../redux/actions/HotelAction";
 
 const AdminViewHotel = () => {
-    const stateHotels = useSelector((state) => state.HotelReducer);
-    const [open, setOpen] = useState(false);
-    const [hotelSelected, setHotelSelected] = useState("");
-    const [hotelSelectedId, setHotelSelectedId] = useState("");
-    const [input, setInput] = useState("");
-    const [hotelPopup, setHotelPopup] = useState(stateHotels.hotels);
-    const handleSearchChange = (e) => {
-        setInput(e.target.value);
-        setHotelPopup(
-            stateHotels.hotels.filter((hotel) =>
-                hotel.name.toLowerCase().includes(e.target.value.toLowerCase())
-            )
+  
+  const stateHotels = useSelector((state) => state.HotelReducer);
+  const [open, setOpen] = useState(false);
+  const [hotelSelected, setHotelSelected] = useState("");
+  const [hotelSelectedId, setHotelSelectedId] = useState("");
+  const [input, setInput] = useState("");
+  const [hotelPopup, setHotelPopup] = useState(stateHotels.hotels);
+  const handleSearchChange = (e) => {
+    setInput(e.target.value);
+    setHotelPopup(
+      stateHotels.hotels.filter((hotel) =>
+        hotel.name.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+    );
+  };
+  const [dataHotels, setDataHotels] = useState(stateHotels.hotels);
+  
+  const dispatch = useDispatch();
+  dispatch(getAllHotelsAction());
+  useEffect(() => {
+    setDataHotels(stateHotels.hotels);
+  }, [stateHotels.hotels,dispatch]);
+
+  useEffect(() => {
+    if (hotelSelectedId.length > 0) {
+      const filterHotels = stateHotels.hotels.filter(
+        (hotel) => hotel._id === hotelSelectedId
+      );
+      setDataHotels(filterHotels);
+    } else {
+      setDataHotels(stateHotels.hotels);
+    }
+  }, [hotelSelectedId]);
+
+
+
+
+  const confirm = (e) => {
+    // console.log(e);
+    dispatch(deleteHotelAction(e));
+    setDataHotels(dataHotels.filter((hotel) => hotel._id !== e));
+    toast.success('Delete success');
+
+  }
+
+
+  const columns = [
+    {
+      title: "Hotel",
+      dataIndex: "name",
+      key: "hotel name",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+    },
+    {
+      title: "Cheapest Price",
+      dataIndex: "cheapestPrice",
+      key: "cheapestPrice",
+      render: (text) => {
+        return (
+          <span style={{ whiteSpace: "nowrap" }}>
+            {new Intl.NumberFormat("de-DE").format(text)} VND
+          </span>
         );
-    }
-    const [dataHotels, setDataHotels] = useState(stateHotels.hotels);
-    useEffect(() => {
-        setDataHotels(stateHotels.hotels);
-    }
-    , [stateHotels.hotels]);
-    useEffect(() => {
-        if (hotelSelectedId.length > 0) {
-            const filterHotels = stateHotels.hotels.filter((hotel) => hotel._id === hotelSelectedId);
-            setDataHotels(filterHotels);
-        } else {
-            setDataHotels(stateHotels.hotels);
-        }
-    }
-    , [hotelSelectedId]);
-    
+      },
+    },
 
-    const columns = [
-        {
-            title: "Hotel",
-            dataIndex: "name",
-            key: "hotel name",
-        },
-        {
-            title: "Type",
-            dataIndex: "type",
-            key: "type",
-        },
-        {
-            title: "City",
-            dataIndex: "city",
-            key: "city",
-        },
-        {
-            title:"Cheapest Price",
-            dataIndex:"cheapestPrice",
-            key:"cheapestPrice"
+    {
+      title: "Room Type",
+      dataIndex: "roomType",
+      render: (roomType) => {
+        return (
+          <>
+            {roomType.map((type, ind) => (
+              <p
+                key={ind}
+                style={{
+                  margin: 0,
+                  whiteSpace: "normal",
+                  wordWrap: "break-word",
+                }}
+              >
+                {type}
+              </p>
+            ))}
+          </>
+        );
+      },
+      // Optionally set the minimum width for the column
+      width: 150, // Adjust this value as needed
+    },
 
-        },
-        {
-            title: 'Room Type',
-            dataIndex: 'roomType',
-            render: roomType => {
-              return (
-                <>
-                  {roomType.map((type, ind) => (
-                    <p key={ind} style={{ margin: 0, whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                      {type}
-                    </p>
-                  ))}
-                </>
-              );
-            },
-            // Optionally set the minimum width for the column
-            width: 150,  // Adjust this value as needed
-          }
-          
-,          
-        {
-            title: 'Action',
-            key: 'action',
-          render: (_, record) => (
-            <Space size="middle">
-              <Link to={'/dashboard-view-roomDetail/'+record.slug}>View</Link>
-              <Link>Edit</Link>
-              <Link>Delete</Link>
-            </Space>
-          ),
-        },
-        
-       
-    ];
-
-
-    
+    {
+      title: "Services",
+      dataIndex: "services",
+      render: (services) => {
+        return (
+          <>
+            {services.map((service, ind) => (
+              <p
+                key={ind}
+                style={{
+                  margin: 0,
+                  whiteSpace: "normal",
+                  wordWrap: "break-word",
+                }}
+              >
+                {service.name}
+              </p>
+            ))}
+          </>
+        );
+      },
+      // Optionally set the minimum width for the column
+      width: 150, // Adjust this value as needed
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Link to={"/dashboard-hotel/" + record.slug}>View</Link>
+          <Link to={"/dashboard-hotel/" + record.slug}>Edit</Link>
+          <Popconfirm
+            title="Delete the hotel?"
+            description="Are you sure to delete this hotel and all rooms of hotel?"
+            onConfirm={()=>{confirm(record._id)}}
+            // onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <p className="text-[#1777FF] cursor-pointer hover:text-[#69b1ff]">Delete</p>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -114,7 +173,7 @@ const AdminViewHotel = () => {
 
             {open && (
               <>
-                <ul className="w-[100%] z-50 absolute px-4 pb-2 top-6 left-0 bg-gray-500 overflow-y-auto max-h-40 rounded-3xl mt-2">
+                <ul className="w-[100%] z-50 absolute px-4 pb-2 top-6 left-0 bg-gray-500 overflow-y-auto max-h-56 rounded-3xl mt-2">
                   <div className="flex z-10 sticky top-0 items-center gap-2 bg-gray-500 p-2">
                     <AiOutlineSearch className="text-gray-200" size={20} />
                     <input
@@ -158,7 +217,7 @@ const AdminViewHotel = () => {
           </div>
         </div>
         <div className="w-full">
-        <Table columns={columns} dataSource={dataHotels} />
+          <Table columns={columns} dataSource={dataHotels} />
         </div>
       </div>
     </>

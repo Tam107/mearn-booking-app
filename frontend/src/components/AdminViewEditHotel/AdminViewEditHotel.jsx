@@ -1,8 +1,11 @@
 import { Form, TimePicker } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Country, State, City } from "country-state-city";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { Editor } from "@tinymce/tinymce-react";
+
+import dayjs from "dayjs";
+
 import {
   createHotelApi,
   getAllRoomApi,
@@ -12,13 +15,16 @@ import {
 } from "../../../Axios/client/api";
 import iconMap from "../../data/iconMap"; // Import the iconMap from the external file
 import toast from "react-hot-toast";
-import dayjs from "dayjs";
-import { RxCross1 } from "react-icons/rx";
-import ModelCreateService from "./ModelCreateService";
-import Map from "./Map";
-import { useDispatch } from "react-redux";
 
-const AdminCreateHotel = () => {
+import { RxCross1 } from "react-icons/rx";
+// import ModelCreateService from "./ModelCreateService";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { CiCircleChevUp } from "react-icons/ci";
+
+const AdminViewEditHotel = () => {
+    const {slug} = useParams()
+    const StateHotel = useSelector(state=>state.HotelReducer)
   const dispatch = useDispatch()
   // popup model
   const [showModel, setShowModel] = useState(false);
@@ -33,8 +39,27 @@ const AdminCreateHotel = () => {
     "1 Bed Large Room",
   ];
   const [servicesDefault, setServicesDefault] = useState([]);
+  const handleUp = () => {
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth", // This enables the smooth scrolling effect
+      });
+  };
+
 
   // create hotel
+  const[dataDefault,setDataDefault] = useState({})
+  useEffect(()=>{
+    const fetchApi = ()=>{
+        const data = StateHotel?.hotels?.find(item=>item.slug === slug)
+        setDataDefault(data)
+    }
+    fetchApi()
+  }
+  ,[StateHotel.hotels])
+
+
   const [name, setName] = useState("");
   const [type, setType] = useState("Hotel");
   const [city, setCity] = useState("");
@@ -42,12 +67,32 @@ const AdminCreateHotel = () => {
 
   const [cheapestPrice, setCheapestPrice] = useState();
   const [roomType, setRoomType] = useState([]);
-  const [checkIn, setCheckIn] = useState(dayjs("14:00", "HH:mm")); // Default value for check-in
-  const [checkOut, setCheckOut] = useState(dayjs("12:00", "HH:mm"));
+  const [checkIn, setCheckIn] = useState(); // Default value for check-in
+  const [checkOut, setCheckOut] = useState();
   const [linkPhoto, setLinkPhoto] = useState("");
   const [photos, setPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      setName(dataDefault?.name)
+      setType(dataDefault?.type)
+      setCity(dataDefault?.city)
+      setAddress(dataDefault?.address)
+      setCheapestPrice(dataDefault?.cheapestPrice)
+      setRoomType(dataDefault?.roomType)
+      setCheckIn(dayjs(dataDefault?.checkIn))
+      setCheckOut(dayjs(dataDefault?.checkOut))
+      setPhotos(dataDefault?.photos)
+      setDescription(dataDefault?.description)
+      setServices(dataDefault?.services?.map(service => service._id));
+
+    };
+    fetchApi();
+  }, [dataDefault]);
+  console.log(services);
+  
 
   // handle function
   const addPhotoByFile = async (ev) => {
@@ -212,12 +257,18 @@ const AdminCreateHotel = () => {
     }
   };
 
+
+ 
+
   return (
     <>
       <div className="w-full py-6 px-6">
-        <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
-          Create new hotel
-        </h2>
+        <div className="w-full flex items-center justify-between">
+            <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
+            Infomation and Updatating
+            </h2>
+            <div className="px-4 py-2 flex items-center justify-center w-[10%] bg-gray-200 border border-gray-400 rounded-3xl cursor-pointer">Save All</div>
+        </div>
       </div>
       <div className="w-full px-6">
         <form className="w-full">
@@ -229,12 +280,15 @@ const AdminCreateHotel = () => {
               Name of accommodation, should be short and catchy as in
               advertisement
             </p>
-            <input
+         
+           <input
               placeholder="Name"
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
               value={name}
               onChange={(e) => setName(e.target.value)}
+
             />
+        
           </div>
 
           <div className="mb-4 w-full flex items-center justify-between">
@@ -327,7 +381,7 @@ const AdminCreateHotel = () => {
                 <IoCloudUploadOutline />
                 Upload
               </label>
-              {photos.length > 0 &&
+              {photos?.length > 0 &&
                 photos.map((item, index) => (
                   <>
                     <div key={index} className="h-32 relative flex ">
@@ -356,11 +410,9 @@ const AdminCreateHotel = () => {
               value={description}
               onEditorChange={handleEditorChange}
               init={{
-                 valid_elements: '*[*]',
                 height: 400,
                 menubar: true,
                 plugins: [
-                  
                   "advlist autolink lists link image charmap print preview anchor",
                   "searchreplace visualblocks code fullscreen",
                   "insertdatetime media table paste code help wordcount",
@@ -371,7 +423,6 @@ const AdminCreateHotel = () => {
              alignleft aligncenter alignright alignjustify | \
              bullist numlist outdent indent | removeformat | help",
               }}
-              
             />
           </div>
 
@@ -400,6 +451,7 @@ const AdminCreateHotel = () => {
                         onChange={() => handleServiceChange(service._id)}
                         type="checkbox"
                         className="mr-2"
+                        checked={services.includes(service._id)}
                       />
 
                       <span className="mr-2">
@@ -444,7 +496,7 @@ const AdminCreateHotel = () => {
                       <>
                         <div key={index} className="flex items-center gap-2">
                           <input
-                            checked={roomType.includes(item)} // Check if the room type is selected
+                            checked={roomType?.includes(item)} // Check if the room type is selected
                             onChange={() => handleRoomTypeChange(item)}
                             type="checkbox"
                           />
@@ -486,18 +538,26 @@ const AdminCreateHotel = () => {
             </div>
           </div>
 
-          <button
-            onClick={handleCreateHotel}
-            className="w-full cursor-pointer flex items-center justify-center bg-gray-300 rounded-2xl my-4 mt-6 py-2"
+          <div
+            
+            className="w-full flex items-center justify-center cursor-pointer my-4"
           >
-            Create Hotel
-          </button>
+            <CiCircleChevUp onClick={handleUp} size={40} />
+
+          </div>
         </form>
       </div>
+      {/* <TimePicker
+                // onChange={(time) => setCheckOut(time)}
+                value={dayjs('2025-03-23T05:00:00.000Z')}
+                format="HH:mm"
+                placeholder="12:00"
+                className="rounded-2xl w-full"
+              /> */}
 
       {showModel && (
         <>
-          <ModelCreateService setShowModel={setShowModel}/>
+          {/* <ModelCreateService setShowModel={setShowModel}/> */}
           
         </>
       )}
@@ -508,4 +568,4 @@ const AdminCreateHotel = () => {
   );
 };
 
-export default AdminCreateHotel;
+export default AdminViewEditHotel;

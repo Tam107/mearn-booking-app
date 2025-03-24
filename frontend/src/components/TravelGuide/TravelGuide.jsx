@@ -46,7 +46,7 @@ const TravelGuide = () => {
                     <Slider {...settings}>
                         {[1,2,3,4,5,6,7].map(i=>(<div key={i} className="w-[90%]">
                             <img 
-src="https://surl.li/coitqt"               className='w-[90%]  object-cover  rounded-[16px] cursor-pointer'             alt="Hanoi" 
+src="https://s3-alpha-sig.figma.com/img/edd0/72d4/518cf5d2b4f0c7fa134ac4b17c231985?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=qMPhvuiYfho3C2iITVFfGu-vGXG~GJxIBNu7FIomTxZwwyTp7mSm4SbEJZyM-KWLE0THliT9GQy0sN3B4cTCgheMWbmBpwOndj7MW~-JNiF1gL2h1baGFPLaw2~hZggRwwAk2b19kkH6g4jUi-xVKbTnoThuZz1j5UCOVW2fg6nfA5SoN68bvxEqmKZLeVFbkJGl6aB9gKzngaXMgGwItAmN7hLuRubVHzTEyH0Q7eKrS8xxZbvHcqlJFx-vxjzmwLOCHmmA4xdnQFftv95VyL4MuQwjOPuXM~1jFBqp6KG~84v1CP1PSBXql8kk511rhovy8HUNHtS~B~jJLQa3bA__"               className='w-[90%]  object-cover  rounded-[16px] cursor-pointer'             alt="Hanoi" 
                             />
                             <p className='mt-[10px] w-[90%] font-[500] text-[18px] leading-[18px]'>Sapa</p>
                             </div>

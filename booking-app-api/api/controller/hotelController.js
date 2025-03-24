@@ -24,6 +24,9 @@ export const createHotel = async (req, res) => {
             checkIn,
             checkOut } = req.body
 
+            // console.log(checkIn,checkOut);
+            
+
             if (!name) {
                 return res.json({
                   success: false,
@@ -144,14 +147,39 @@ export const updateHotel = async (req, res, next) => {
 
 export const deleteHotel = async (req, res, next) => {
     try {
-        const deletedHotel = await Hotel.findByIdAndDelete(req.params.id) // return updated document
+      
+       const deletedHotel = await Hotel.findByIdAndDelete(req.params.id) 
         if (!deletedHotel) {
             res.status(404).json({ message: "No hotel found with id " + req.params.id })
+            res.json({
+                success: false,
+                message:"No hotel found with id " + req.params.id 
+            })
             return;
         }
-        res.status(200).json(deletedHotel);
+
+        const roomsToDelete = await Room.find({ hotel: req.params.id  });
+        if(roomsToDelete.length > 0){
+            await Room.deleteMany({ hotel: req.params.id  });
+            res.status(200).json({
+                success:true,
+                data:deletedHotel,
+                rooms:roomsToDelete
+            });
+        }
+        else{
+            res.status(200).json({
+                success:true,
+                data:deletedHotel
+            });
+        }
+       
     } catch (err) {
         next(err);
+        res.json({
+            success: false,
+            message: "Error in BE",
+        })
     }
 }
 

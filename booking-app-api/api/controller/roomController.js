@@ -77,7 +77,7 @@ export const getRoom = async (req, res, next) => {
 
 export const getAllRooms = async (req, res, next) => {
     try {
-        console.log("herre");
+        // console.log("herre");
         
         // Fetch all rooms
         const rooms = await Room.find({}).populate("services").populate('hotel'); 

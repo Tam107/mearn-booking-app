@@ -174,6 +174,23 @@ const createHotelApi = async(data)=>{
         }
     }
 }
+
+const deleteHotelApi = async(id)=>{
+    try {
+        const URL_LOGIN =`/hotels/delete/`+id
+        const response = await axios.delete(URL_LOGIN)   
+        console.log(response);
+        
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 const getAllHotelApi = async()=>{
     try {
         const URL_LOGIN =`/hotels/getAll`
@@ -220,5 +237,6 @@ export {
     createHotelApi,
     getAllHotelApi,
     getAllRoomApi,
-    createServicesApi
+    createServicesApi,
+    deleteHotelApi
 }

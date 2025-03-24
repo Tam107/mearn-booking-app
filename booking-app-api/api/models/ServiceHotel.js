@@ -11,7 +11,6 @@ const ServicesHotelSchema = new mongoose.Schema({
         },
         description: {
             type: String,
-           
         },
     },
     {timestamps: true}
