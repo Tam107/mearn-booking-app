@@ -222,6 +222,20 @@ const getAllRoomApi = async()=>{
     }
 }
 
+const updateHotelApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/hotels/update`
+        const response = await axios.put(URL_LOGIN,data)
+        console.log(response);
+        
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 
 export {
     registerUser,
@@ -238,5 +252,6 @@ export {
     getAllHotelApi,
     getAllRoomApi,
     createServicesApi,
-    deleteHotelApi
+    deleteHotelApi,
+    updateHotelApi
 }

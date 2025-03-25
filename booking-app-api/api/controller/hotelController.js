@@ -132,14 +132,53 @@ export const getAllHotels = async (req, res, next) => {
 
 export const updateHotel = async (req, res, next) => {
     try {
-        const updatedHotel = await Hotel.findByIdAndUpdate(req.params.id
+        const hotel = await Hotel.findById(req.body._id);
+
+        console.log(req.body.services);
+        
+        
+        
+        const roomType= hotel.roomType;
+        const updatedHotel = await Hotel.findByIdAndUpdate(req.body._id
             , { $set: req.body }
-            , { new: true }) // return updated document
+            , { new: true })
+        console.log(updatedHotel);
+        
         if (!updatedHotel) {
-            res.status(404).json({ message: "No hotel found with id " + req.params.id })
+            res.json({
+                success: false,
+                message: "No hotel found with id " + req.body._id
+            })
             return;
         }
-        res.status(200).json(updatedHotel);
+        const roomDelete = roomType.filter((room)=>{
+            return !req.body.roomType.includes(room)
+        })
+        if(roomDelete.length>0){    
+            await Room.deleteMany({ hotel: req.body._id, RoomType: { $in: roomDelete } });
+        }
+        const roomAdd = req.body.roomType.filter((room)=>{
+            return !roomType.includes(room)
+        })
+        if(roomAdd.length>0){
+            for(let i =0;i<roomAdd.length;i++){
+                const dataRoom = {
+                    RoomType:roomAdd[i],
+                    services:req.body.services||[],
+                    hotel:req.body._id,
+                    price:req.body.cheapestPrice
+                }
+                const room = new Room(dataRoom)
+                await room.save();
+            }
+        }
+    
+
+        
+        res.status(200).json({
+            success:true,   
+            data:updatedHotel,
+        });
     } catch (err) {
         next(err);
     }

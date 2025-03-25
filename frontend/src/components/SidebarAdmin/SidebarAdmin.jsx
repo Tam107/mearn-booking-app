@@ -63,11 +63,11 @@ const SidebarAdmin = () => {
                       </span>
                     </li>
                   </Link>
-                  <Link to="/dashboard-view-hotel" style={{ textDecoration: "none" }}>
-                    <li className={navStyle("/dashboard-view-hotel")}>
+                  <Link to="/dashboard-view-homes" style={{ textDecoration: "none" }}>
+                    <li className={navStyle("/dashboard-view-homes")}>
                       <StoreIcon className="text-indigo-600" />
                       <span className="text-sm font-semibold text-gray-600">
-                        Hotels
+                        Homes
                       </span>
                     </li>
                   </Link>
@@ -95,21 +95,21 @@ const SidebarAdmin = () => {
                   Actions
                 </p>
                 <div className="flex flex-col">
-                  <Link to="/dashboard-create-bus">
-                    <li className={navStyle("/dashboard-create-bus")}>
+                  <Link to="/dashboard-create-room">
+                    <li className={navStyle("/dashboard-create-room")}>
                       <LocalActivityOutlinedIcon className="text-indigo-600 cursor-pointer" />
 
                       <span className="text-sm font-semibold text-gray-600">
-                        Create Bus
+                        Create Room
                       </span>
                     </li>
                   </Link>
-                  <Link to="/dashboard-create-hotel">
-                    <li className={navStyle("/dashboard-create-hotel")}>
+                  <Link to="/dashboard-create-home">
+                    <li className={navStyle("/dashboard-create-home")}>
                       <LuHotel className="text-indigo-600 cursor-pointer" />
 
                       <span className="text-sm font-semibold text-gray-600">
-                        Create Hotel
+                        Create Home
                       </span>
                     </li>
                   </Link>

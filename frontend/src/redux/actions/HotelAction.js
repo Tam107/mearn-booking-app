@@ -1,4 +1,5 @@
-import { createHotelApi, deleteHotelApi, getAllHotelApi, getAllRoomApi } from "../../../Axios/client/api"
+import toast from "react-hot-toast"
+import { createHotelApi, deleteHotelApi, getAllHotelApi, getAllRoomApi, updateHotelApi } from "../../../Axios/client/api"
 
 export const createHotelAction = (hotelData)=>async(dispatch)=>{
     try {
@@ -103,4 +104,40 @@ export const deleteHotelAction = (id)=>async(dispatch)=>{
 
         })
     }
+}
+
+export const updateHotelAction = (hotelData)=>async(dispatch)=>{
+        try {
+            dispatch({
+                type:"updateHotelRequest",
+    
+            })
+            const data = await updateHotelApi(hotelData)
+            if(data.success){
+                dispatch({
+                    type:"updateHotelSuccess",
+                    payload:data.data
+                })
+                toast.success('Hotel updated successfully!');
+            }
+              else{
+                dispatch({
+                    type:"updateHotelFailed",
+                    payload:"Error when update hotel",
+    
+                })
+                toast.error('Hotel updated failed!');
+
+            }
+            
+        } catch (error) {
+            dispatch({
+                type:"updateHotelFailed",
+                payload:error?.response?.data?.message||"Error in axios",
+    
+            })
+        }
+    
+    
+    
 }

@@ -17,6 +17,9 @@ import { RxCross1 } from "react-icons/rx";
 import ModelCreateService from "./ModelCreateService";
 import Map from "./Map";
 import { useDispatch } from "react-redux";
+import { getAllHotelsAction } from "../../redux/actions/HotelAction";
+import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import { useNavigate } from "react-router";
 
 const AdminCreateHotel = () => {
   const dispatch = useDispatch()
@@ -26,12 +29,13 @@ const AdminCreateHotel = () => {
   // default values
   const typeDefault = ["Hotel", "Villa", "House", "Flat"];
   const cities = State.getStatesOfCountry("VN");
-  const roomTypeDefault = [
+  const [roomTypeDefault,setRoomTypeDefault] = useState([
     "King Room",
-    "1 Bed Room",
-    "2 Bed Room",
-    "1 Bed Large Room",
-  ];
+    "Deluxe Room",
+    "One-Bedroom Apartment",
+    "Two-Bedroom Apartment",
+  ])
+  const [inputRoomType,setInputRoomType] = useState("")
   const [servicesDefault, setServicesDefault] = useState([]);
 
   // create hotel
@@ -132,6 +136,7 @@ const AdminCreateHotel = () => {
       return setRoomType([...roomType, name]);
     }
   };
+  const navigate = useNavigate()
 
   const handleCreateHotel = async(e) => {
     e.preventDefault();
@@ -191,7 +196,7 @@ const AdminCreateHotel = () => {
     console.log(dataHotel);
     const res = await createHotelApi(dataHotel)
     if(res.success){
-      
+      navigate("/dashboard-view-homes")
       toast.success("Create hotel successfully")
       setName("")
       setType("")
@@ -205,7 +210,9 @@ const AdminCreateHotel = () => {
       setPhotos([])
       setDescription("")
       setServices([])
-      dispatch(getAllRoomApi()  )
+      dispatch(getAllRoomsAction()  )
+      dispatch(getAllHotelsAction())
+      
     }
     else{
       toast.error("Error");
@@ -216,7 +223,7 @@ const AdminCreateHotel = () => {
     <>
       <div className="w-full py-6 px-6">
         <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
-          Create new hotel
+          Create new home
         </h2>
       </div>
       <div className="w-full px-6">
@@ -281,7 +288,24 @@ const AdminCreateHotel = () => {
             </div>
           </div>
 
-          <div className="mb-4 w-full flex flex-col ">
+          
+
+<div className=" w-full flex items-center justify-between">
+          <div className=" w-[48%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Cheapest price
+              </p>
+              <input
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                type="number"
+                name=""
+                id=""
+                value={cheapestPrice}
+                onChange={(e) => setCheapestPrice(e.target.value)}
+                placeholder="Price"
+              />
+            </div>
+            <div className="mb-4 w-[50%] flex flex-col ">
             <p htmlFor="" className="font-[400] text-[25px]">
               Address
             </p>
@@ -295,6 +319,47 @@ const AdminCreateHotel = () => {
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
             />
           </div>
+
+            
+          </div>
+
+          <div className="mb-4 w-full flex flex-col ">
+              <div className="flex mb-2 items-center justify-between">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Rooms Type
+              </p>  
+                <div className="flex items-center gap-2">
+                  <input value={inputRoomType} onChange={e=>setInputRoomType(e.target.value)} type="text" className="px-4 py-2 border border-gray-400 rounded-3xl" placeholder="Enter type's name " />
+                  <div
+                  onClick={() => {setRoomTypeDefault([...roomTypeDefault,inputRoomType]); setInputRoomType("")}}
+                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
+                >
+                  Add type
+                </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+              <div className="flex-1 px-4 py-2 border border-gray-400 rounded-3xl">
+                <div className="flex  items-center gap-4 flex-wrap ">
+                  {roomTypeDefault.map((item, index) => {
+                    return (
+                      <>
+                        <div key={index} className="flex items-center gap-2">
+                          <input
+                            checked={roomType.includes(item)} // Check if the room type is selected
+                            onChange={() => handleRoomTypeChange(item)}
+                            type="checkbox"
+                          />
+                          {item}
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
+              </div>
+              </div>
+            </div>
 
           <div className="mb-4 w-full flex flex-col ">
             <p htmlFor="" className="font-[400] text-[25px]">
@@ -386,7 +451,7 @@ const AdminCreateHotel = () => {
             <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
               <div
                 onClick={() => setShowModel(true)}
-                className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center"
+                className="cursor-pointer h-24 border p-4 flex rounded-2xl gap-2 items-center"
               >
                 <IoCloudUploadOutline />
                 Create service
@@ -395,7 +460,7 @@ const AdminCreateHotel = () => {
               {servicesDefault?.length > 0 && (
                 <>
                   {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
+                    <label className="cursor-pointer h-24 border p-4 flex rounded-2xl gap-2 items-center">
                       <input
                         onChange={() => handleServiceChange(service._id)}
                         type="checkbox"
@@ -416,47 +481,9 @@ const AdminCreateHotel = () => {
             </div>
           </div>
 
-          <div className="mb-4 w-full flex items-center justify-between">
-          <div className=" w-[48%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Cheapest price
-              </p>
-              <input
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                type="number"
-                name=""
-                id=""
-                value={cheapestPrice}
-                onChange={(e) => setCheapestPrice(e.target.value)}
-                placeholder="Price"
-              />
-            </div>
+          
 
-            <div className=" w-[50%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Rooms Type
-              </p>
-
-              <div className="w-full px-4 py-2 border border-gray-400 rounded-3xl">
-                <div className="flex  items-center justify-between ">
-                  {roomTypeDefault.map((item, index) => {
-                    return (
-                      <>
-                        <div key={index} className="flex items-center gap-2">
-                          <input
-                            checked={roomType.includes(item)} // Check if the room type is selected
-                            onChange={() => handleRoomTypeChange(item)}
-                            type="checkbox"
-                          />
-                          {item}
-                        </div>
-                      </>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
          
 

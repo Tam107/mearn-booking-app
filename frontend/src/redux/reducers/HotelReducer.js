@@ -42,6 +42,18 @@ export const HotelReducer = createReducer(initialState, (builder) => {
             state.loading = false;
             state.error = action.payload;
         })
+
+        .addCase('updateHotelRequest', (state) => {
+            state.loading = true;
+        })  
+        .addCase('updateHotelSuccess', (state, action) => {
+            state.loading = false;
+            state.hotels = state.hotels.map(hotel => hotel._id === action.payload._id ? action.payload : hotel);
+        })
+        .addCase('updateHotelFailed', (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
         // .addCase('ClearErrors', (state) => {
         //     state.error = null;
         // })

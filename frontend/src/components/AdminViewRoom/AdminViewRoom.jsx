@@ -12,15 +12,16 @@ const AdminViewRoom = () => {
   
   const stateHotels = useSelector((state) => state.HotelReducer);
   const [open, setOpen] = useState(false);
+
   const [hotelSelected,setHotelSelected] = useState("");
   const [hotelSelectedId,setHotelSelectedId] = useState("");
   const dispatch = useDispatch();
-  dispatch(getAllRoomsAction())
+  // dispatch(getAllRoomsAction())
   
   const stateRooms =useSelector(state=>state.RoomReducer);
   
-
   const [dataRooms,setDataRooms] = useState(stateRooms?.rooms)
+
   useEffect(()=>{
     setDataRooms(stateRooms.rooms)
   },[stateRooms.rooms,stateHotels.hotels,dispatch])
@@ -28,6 +29,8 @@ const AdminViewRoom = () => {
   useEffect(()=>{
     if(hotelSelectedId.length>0){
       const filterRooms = stateRooms.rooms.filter(room=>room.hotel._id === hotelSelectedId)
+      console.log(filterRooms);
+      
       setDataRooms(filterRooms) }
       else{
         setDataRooms(stateRooms?.rooms)
@@ -92,6 +95,7 @@ const AdminViewRoom = () => {
     ),
     },
   ];
+  
   
   
   

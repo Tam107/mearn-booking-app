@@ -7,8 +7,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import dayjs from "dayjs";
 
 import {
-  createHotelApi,
-  getAllRoomApi,
+
   getAllServicesApi,
   uploadByFilesApi,
   uploadByLinkApi,
@@ -19,8 +18,9 @@ import toast from "react-hot-toast";
 import { RxCross1 } from "react-icons/rx";
 // import ModelCreateService from "./ModelCreateService";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { data, useNavigate, useParams } from "react-router";
 import { CiCircleChevUp } from "react-icons/ci";
+import { updateHotelAction } from "../../redux/actions/HotelAction";
 
 const AdminViewEditHotel = () => {
     const {slug} = useParams()
@@ -91,7 +91,7 @@ const AdminViewEditHotel = () => {
     };
     fetchApi();
   }, [dataDefault]);
-  console.log(services);
+  // console.log(services);
   
 
   // handle function
@@ -178,8 +178,10 @@ const AdminViewEditHotel = () => {
     }
   };
 
-  const handleCreateHotel = async(e) => {
-    e.preventDefault();
+  const navigate = useNavigate()
+
+  const handleSave = async(e) => {
+    // e.preventDefault();
     // console.log(123);
     if (!name) {
       return toast.error("Name cannot be empty");
@@ -208,53 +210,53 @@ const AdminViewEditHotel = () => {
       return toast.error("Check out time cannot be empty");
     }
 
+    
+    
+
     let dataHotel = {
+      _id: dataDefault._id,
       name,
       type,
       city,
       address,
-      // photos,
-      // description,
-      // services,
-      // numberOfrooms,
       roomType,
-      // numberOfFloor,
       cheapestPrice,
       checkIn,
       checkOut,
-    };
-    if (photos.length > 0) {
-      dataHotel.photos = photos;
-    }
+      photos,
+      services,
+      description,
 
-    if (description) {
-      dataHotel.description = description;
-    }
-    if (services.length > 0) {
-      dataHotel.services = services;
-    }
-    console.log(dataHotel);
-    const res = await createHotelApi(dataHotel)
-    if(res.success){
+    };
+  
+    dispatch(updateHotelAction(dataHotel))
+    navigate("/dashboard-view-hotel")
+
+
+    // console.log(dataHotel);
+    
+    
+    // const res = await createHotelApi(dataHotel)
+    // if(res.success){
       
-      toast.success("Create hotel successfully")
-      setName("")
-      setType("")
-      setCity("")
-      setAddress("")
-      setCheapestPrice()
-      setRoomType([])
-      setCheckIn(dayjs("14:00","HH:mm"))
-      setCheckOut(dayjs('14:00',"HH:mm"))
-      setLinkPhoto("")
-      setPhotos([])
-      setDescription("")
-      setServices([])
-      dispatch(getAllRoomApi()  )
-    }
-    else{
-      toast.error("Error");
-    }
+    //   toast.success("Create hotel successfully")
+    //   setName("")
+    //   setType("")
+    //   setCity("")
+    //   setAddress("")
+    //   setCheapestPrice()
+    //   setRoomType([])
+    //   setCheckIn(dayjs("14:00","HH:mm"))
+    //   setCheckOut(dayjs('14:00',"HH:mm"))
+    //   setLinkPhoto("")
+    //   setPhotos([])
+    //   setDescription("")
+    //   setServices([])
+    //   dispatch(getAllRoomApi()  )
+    // }
+    // else{
+    //   toast.error("Error");
+    // }
   };
 
 
@@ -267,7 +269,7 @@ const AdminViewEditHotel = () => {
             <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
             Infomation and Updatating
             </h2>
-            <div className="px-4 py-2 flex items-center justify-center w-[10%] bg-gray-200 border border-gray-400 rounded-3xl cursor-pointer">Save All</div>
+            <div onClick={handleSave} className="px-4 py-2 flex items-center justify-center w-[10%] bg-gray-200 border border-gray-400 rounded-3xl cursor-pointer">Save All</div>
         </div>
       </div>
       <div className="w-full px-6">
@@ -451,7 +453,7 @@ const AdminViewEditHotel = () => {
                         onChange={() => handleServiceChange(service._id)}
                         type="checkbox"
                         className="mr-2"
-                        checked={services.includes(service._id)}
+                        checked={services?.includes(service._id)}
                       />
 
                       <span className="mr-2">

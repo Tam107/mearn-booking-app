@@ -15,6 +15,7 @@ import { GiHomeGarage } from "react-icons/gi";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { IoKeyOutline } from "react-icons/io5";
 import { PiDogLight } from "react-icons/pi";
+import { Country, State, City } from "country-state-city";
 
 const HotelList = () => {
   const stateHotels = useSelector((state) => state.HotelReducer);
@@ -52,6 +53,8 @@ const handleKeyDown = (e) => {
   const { wishlist } = useSelector((state) => state.WishlistReducer);
 
   const [showFilter, setShowFilter] = useState(false);
+  const [city, setCity] = useState("");
+  const cities = State.getStatesOfCountry("VN");
 
   return (
     <>
@@ -61,7 +64,7 @@ const handleKeyDown = (e) => {
             <div className="flex items-center pl-4">
               <div className="flex  border-r flex-col border-gray-200">
                 <label htmlFor="" className="px-1 ">
-                  Hotel name
+                  Accomodation name
                 </label>
                 <input
                   type="text"
@@ -76,11 +79,23 @@ const handleKeyDown = (e) => {
                 <label htmlFor="" className="px-1 ">
                   Where
                 </label>
-                <input
+                {/* <input
                   type="text"
                   placeholder="Search destinations"
                   className="placeholder-[#BFBFBF] placeholder:font-[400] placeholder:text-[14px] text-[16px] py-1 px-1 grow font-[500]  leading-[20px]  transition-all duration-300  outline-none"
-                />
+                /> */}
+                <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="cursor-pointer text-[#BFBFBF] font-[400] text-[14px]   py-1 grow leading-[20px]  transition-all duration-300  outline-none"
+              >
+                <option className="" value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
               </div>
               <div className="flex px-4 flex-col border-r border-gray-200">
                 <label htmlFor="" className="px-1 ">
