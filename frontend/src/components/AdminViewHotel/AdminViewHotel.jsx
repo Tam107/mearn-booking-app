@@ -6,6 +6,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { deleteHotelAction, getAllHotelsAction } from "../../redux/actions/HotelAction";
+import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 // import {Link} from "react-router-dom"
 const AdminViewHotel = () => {
   
@@ -50,6 +51,8 @@ const AdminViewHotel = () => {
     // console.log(e);
     dispatch(deleteHotelAction(e));
     setDataHotels(dataHotels.filter((hotel) => hotel._id !== e));
+    dispatch(getAllRoomsAction())
+    dispatch(getAllHotelsAction())
     toast.success('Delete success');
 
   }

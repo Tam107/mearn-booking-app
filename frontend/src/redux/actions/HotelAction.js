@@ -76,14 +76,20 @@ export const deleteHotelAction = (id)=>async(dispatch)=>{
         const data = await deleteHotelApi(id)
   
         if(data.success){
+            console.log(data);
+            
            
             dispatch({
                 type:"deleteHotelSuccess",
                 payload:data.data
             })
+            console.log(2);
+            
 
             if(data?.rooms?.length>0){
-                dispatch({
+                console.log("vào đây");
+                
+                await dispatch({
                     type:"deleteRoomSuccess",
                     payload:data.rooms
                 })
