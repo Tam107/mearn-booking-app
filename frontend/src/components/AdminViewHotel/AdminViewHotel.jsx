@@ -47,9 +47,9 @@ const AdminViewHotel = () => {
 
 
 
-  const confirm = (e) => {
+  const confirm = async(e) => {
     // console.log(e);
-    dispatch(deleteHotelAction(e));
+    await dispatch(deleteHotelAction(e));
     setDataHotels(dataHotels.filter((hotel) => hotel._id !== e));
     dispatch(getAllRoomsAction())
     dispatch(getAllHotelsAction())

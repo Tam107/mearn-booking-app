@@ -116,7 +116,7 @@ export const createHotel = async (req, res) => {
 
 export const getAllHotels = async (req, res, next) => {
     try {
-        const hotels = await Hotel.find({}).populate('services');
+        const hotels = await Hotel.find({}).populate('services').sort({ createdAt: 1 });
         res.status(200).json({
             success:true,
             data:hotels

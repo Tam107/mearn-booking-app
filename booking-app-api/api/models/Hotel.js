@@ -67,6 +67,6 @@ const HotelSchema = new mongoose.Schema({
         slug:"name",
         unique:true
     }
-})
+},{ timestamps: true })
 
 export default mongoose.model("Hotel", HotelSchema);

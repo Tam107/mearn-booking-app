@@ -31,17 +31,42 @@ const HotelList = () => {
   const [nameSearch,setNameSearch] = useState("");
   const [whereSearch,setWhereSearch] = useState("");
 
-  const handleSearch =()=>{
-    if(nameSearch || whereSearch){
-      let filterData
-      if(nameSearch){
-       filterData = data.filter((i)=>i.slug.toLowerCase().includes(nameSearch.toLowerCase()))
+  const handleSearch = () => {
+    if (nameSearch || whereSearch) {
+      let filterData;
+  
+      // Replace spaces with hyphens for both nameSearch and whereSearch
+      const formattedNameSearch = nameSearch ? nameSearch.replace(/\s+/g, '-') : '';
+      const formattedWhereSearch = whereSearch ? whereSearch.replace(/\s+/g, '-') : '';
+  
+      if (formattedNameSearch) {
+        filterData = data.filter((i) =>
+          i.slug.toLowerCase().includes(formattedNameSearch.toLowerCase())
+        );
       }
+  
+      if (formattedWhereSearch) {
+        filterData = data.filter((i) =>
+          i.location.toLowerCase().includes(formattedWhereSearch.toLowerCase()) // assuming `location` is the relevant field for whereSearch
+        );
+      }
+  
+      setData(filterData);
+    }
+  };
+  const [city, setCity] = useState("");
 
-      
-      setData(filterData)
+  const handleCity = (e)=>{
+    
+    if(e.target.value){
+      let filterData;
+      filterData = data.filter((i) =>
+      i.city.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setData(filterData);
   }
 }
+  
 const handleKeyDown = (e) => {
   if (e.key === "Enter" && nameSearch.length > 0) {
     handleSearch(); // Trigger search on "Enter" key press
@@ -53,7 +78,6 @@ const handleKeyDown = (e) => {
   const { wishlist } = useSelector((state) => state.WishlistReducer);
 
   const [showFilter, setShowFilter] = useState(false);
-  const [city, setCity] = useState("");
   const cities = State.getStatesOfCountry("VN");
 
   return (
@@ -75,7 +99,7 @@ const handleKeyDown = (e) => {
                   className="placeholder-[#BFBFBF] placeholder:font-[400]  placeholder:text-[14px] py-1 px-1  grow font-[500] text-[16px] leading-[20px]  transition-all duration-300  outline-none"
                 />
               </div>
-              <div className="flex pl-4 border-r flex-col border-gray-200">
+              <div className="flex pl-4 border-r mr-4 pr-4 flex-col border-gray-200">
                 <label htmlFor="" className="px-1 ">
                   Where
                 </label>
@@ -86,32 +110,49 @@ const handleKeyDown = (e) => {
                 /> */}
                 <select
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="cursor-pointer text-[#BFBFBF] font-[400] text-[14px]   py-1 grow leading-[20px]  transition-all duration-300  outline-none"
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  if(e.target.value===""){
+                    if(nameSearch.length>0){
+                      setData(stateHotels?.hotels)
+                      handleSearch()
+                    }else{
+                    setData(stateHotels?.hotels)
+                  }}
+                  else{
+                    
+                    if(nameSearch.length>0){
+                      setData(stateHotels?.hotels)
+                      handleSearch()
+                      handleCity(e)
+                  }else{    
+                    
+                    handleCity(e)
+                  }
+                }
+              }}
+                className="cursor-pointer focus:text-black text-[#BFBFBF] font-[400] text-[14px]   py-1 grow leading-[20px]  transition-all duration-300  outline-none"
               >
                 <option className="" value="">Select City</option>
                 {cities.map((city) => (
-                  <option key={city.id} value={city.id}>
+                  <option className="text-black" key={city.id} value={city.id}>
                     {city.name}
                   </option>
                 ))}
               </select>
               </div>
-              <div className="flex px-4 flex-col border-r border-gray-200">
+              
+              {/* <div className="flex px-4 flex-col border-r border-gray-200">
                 <label htmlFor="" className="px-1 ">
                   Check in
                 </label>
-                {/* <input 
-                type="date" 
-                placeholder="Check in/out" 
-                className="py-1 px-1 grow font-[500] text-[16px] leading-[20px]  transition-all duration-300 focus:w-[200px] outline-none"
-                /> */}
+               
                 <DatePicker
                   placeholder="Add days"
                   className=" !px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
                 />
-              </div>
-              <div className="flex px-4 flex-col mr-6">
+              </div> */}
+              {/* <div className="flex px-4 flex-col mr-6">
                 <label htmlFor="" className="px-1 ">
                   Check out
                 </label>
@@ -120,7 +161,7 @@ const handleKeyDown = (e) => {
                   placeholder="Add days"
                   className="  !px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
                 />
-              </div>
+              </div> */}
              
               <div onClick={handleSearch} className="flex items-center">
                 <div className="w-[32px] cursor-pointer flex items-center justify-center h-[32px] rounded-full bg-[#DE3151] shadow">
