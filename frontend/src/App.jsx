@@ -57,7 +57,7 @@ function App() {
        <Route path="/login"  element={<LoginPage  otp={otp} setOtp={setOtp}/>}/>
        <Route path="/register"   element={<RegisterPage otp={otp} setOtp={setOtp}/>}/>
        <Route path="/confirmOtp"   element={<ConfirmOtpPage otp={otp} setOtp={setOtp}/>}/>
-       <Route path="/hotel/:slug" element={<HotelDetailPage/>}/>
+       <Route path="/homes/:slug" element={<HotelDetailPage/>}/>
        <Route path="/packageTour/:slug" element={<PackageTourPage/>}/>
        <Route path="/admin-create" element={<AdminCreatePage/>}/>
        <Route path="/loginAdmin" element={<LoginAdminPage />} />

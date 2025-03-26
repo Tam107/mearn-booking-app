@@ -141,7 +141,7 @@ const AdminViewHotel = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Link to={"/dashboard-hotel/" + record.slug}>View</Link>
+          <Link to={"/homes/" + record.slug} target="_blank">View</Link>
           <Link to={"/dashboard-hotel/" + record.slug}>Edit</Link>
           <Popconfirm
             title="Delete the hotel?"
