@@ -114,19 +114,19 @@ const InfoHotel = ({ data }) => {
               <div className="flex items-center justify-between w-full">
                 <p className="font-[400] text-[16px] leading-[24px] text-black">
                   <span className="font-[500] text-[20px] leading-[32px] text-black">
-                    $75
+                  {new Intl.NumberFormat("en-US").format(data?.cheapestPrice)}{" VND"}
                   </span>{" "}
                   / night
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <FaRegStar color="#DE3151" size={15} />
-                    <p className="font-[500] text-[14px] leading-[20px]">5.0</p>
+                    <p className="font-[500] text-[14px] leading-[20px]">{data?.rating}</p>
                   </div>
                   <div className="w-[2px] h-[2px] rounded-full bg-gray-500"></div>
                   <div className="flex items-center gap-1">
                     <p className="font-[500] text-[14px] leading-[20px] underline">
-                      7 reviews
+                      {data?.numberRating} reviews
                     </p>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ const InfoHotel = ({ data }) => {
                   You won’t be charged yet
                 </p>
               </div>
-              <div className="w-full flex flex-col gap-1 border-b border-gray-200 mb-2 pb-4">
+              {/* <div className="w-full flex flex-col gap-1 border-b border-gray-200 mb-2 pb-4">
                 <div className="flex items-center justify-between">
                   <p className="font-[400] text-[16px] leading-[24px]">
                     $79 x 7 nights
@@ -210,10 +210,10 @@ const InfoHotel = ({ data }) => {
                   </p>
                   <p className="font-[400] text-[16px] leading-[24px]">$62</p>
                 </div>
-              </div>
+              </div> */}
               <div className="flex items-center justify-between">
                 <p className="font-[400] text-[16px] leading-[24px]">Total</p>
-                <p className="font-[400] text-[16px] leading-[24px]">$62</p>
+                <p className="font-[400] text-[16px] leading-[24px]"> {new Intl.NumberFormat("en-US").format(data?.cheapestPrice)}{" VND"}</p>
               </div>
             </div>
             <br />
