@@ -5,7 +5,7 @@ import { CiHeart } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Item from "./Item";
-import { DatePicker } from "antd";
+import { DatePicker, TimePicker } from "antd";
 import { TbFilterSearch } from "react-icons/tb";
 import { RxCross1 } from "react-icons/rx";
 import { GoHome } from "react-icons/go";
@@ -142,26 +142,34 @@ const handleKeyDown = (e) => {
               </select>
               </div>
               
-              {/* <div className="flex px-4 flex-col border-r border-gray-200">
+              <div className="flex px-4 flex-col border-r border-gray-200">
                 <label htmlFor="" className="px-1 ">
                   Check in
                 </label>
                
-                <DatePicker
-                  placeholder="Add days"
-                  className=" !px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
-                />
-              </div> */}
-              {/* <div className="flex px-4 flex-col mr-6">
+                <TimePicker
+                // onChange={(time) => setCheckIn(time)}
+                // value={checkIn}
+                format="HH:mm"
+                placeholder="14:00"
+                className="!px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
+              />
+              </div>
+              <div className="flex px-4 flex-col mr-6">
                 <label htmlFor="" className="px-1 ">
                   Check out
                 </label>
 
-                <DatePicker
-                  placeholder="Add days"
-                  className="  !px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
-                />
-              </div> */}
+            
+                 <TimePicker
+                                // onChange={(time) => setCheckOut(time)}
+                                // value={checkOut}
+                                format="HH:mm"
+                                placeholder="12:00"
+                                className="!px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
+                              />
+                
+              </div>
              
               <div onClick={handleSearch} className="flex items-center">
                 <div className="w-[32px] cursor-pointer flex items-center justify-center h-[32px] rounded-full bg-[#DE3151] shadow">
@@ -186,6 +194,7 @@ const handleKeyDown = (e) => {
         {data?.map((i, index) => (
           <Item i={i} key={index} />
         ))}
+        {data?.length==0&& (<div className="flex items-center justify-between">No hotels availabel for the selected criteria. Try modifying your search.</div>)}
       </div>
       {showFilter && (
         <>
@@ -300,7 +309,7 @@ const handleKeyDown = (e) => {
                   <p className="font-[400] text-[18px]">Clear All</p>
                   <div className="py-2 px-4 rounded-md bg-black ">
                     <p className="font-[400] text-white text-[18px]">
-                      Show 1000+ places
+                      Search
                     </p>
                   </div>
                 </div>

@@ -9,6 +9,7 @@ import { useParams } from 'react-router';
 import { useSelector } from 'react-redux';
 
 const HotelDetail = () => {
+  const [open, setOpen] = useState(true);
 
     const {slug} = useParams()
     const [data,setData] = useState({})
@@ -27,8 +28,10 @@ const HotelDetail = () => {
           );
 
           setData(hotel || {});  // If no hotel is found, set data as empty object
+          setOpen(false);
         }
       }, [slug, stateHotels.hotels]);
+
 
     
     
@@ -75,7 +78,7 @@ const HotelDetail = () => {
                         </div>
                     </div>
                     <br />
-                    <ImageHotel photos={data?.photos}/>
+                    <ImageHotel open={open} setOpen={setOpen} data={data} photos={data?.photos}/>
                     <br />
                     <InfoHotel data={data}/>
                     

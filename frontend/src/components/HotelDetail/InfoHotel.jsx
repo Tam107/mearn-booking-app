@@ -17,7 +17,7 @@ const InfoHotel = ({ data }) => {
         setDataRoom(room);
     }, [stateRoom.rooms, roomType]);
 
-    console.log(data?.description);
+    // console.log(data?.description);
 
   return (
     <>
