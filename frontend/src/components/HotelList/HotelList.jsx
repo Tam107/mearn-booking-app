@@ -25,6 +25,8 @@ const HotelList = () => {
     
   }, []);
 
+  const [filterType, setFilterType] = useState([]);
+
   useEffect(() => {
     setData(stateHotels?.hotels);
   }, [stateHotels.hotels]);
@@ -79,6 +81,24 @@ const handleKeyDown = (e) => {
 
   const [showFilter, setShowFilter] = useState(false);
   const cities = State.getStatesOfCountry("VN");
+  const handleFilter = async()=>{
+    if(filterType.length>0){
+
+      let filterData;
+      filterData = data.filter((i) =>
+      filterType.includes(i.type)
+    );
+    setData(filterData);
+    setShowFilter(false);
+  }
+  else{
+    setNameSearch("");
+    setCity("");
+    setData(stateHotels?.hotels)
+    setShowFilter(false);
+    
+  }
+  }
 
   return (
     <>
@@ -178,6 +198,21 @@ const handleKeyDown = (e) => {
               </div>
             </div>
           </div>
+          <div className="flex gap-2 items-center ">
+          <div
+            onClick={() => {
+              console.log(123);
+              setFilterType([]);
+              setData(stateHotels?.hotels);
+              
+              
+              }
+            }
+            className="border cursor-pointer hover:border-black hover:bg-gray-100 transition duration-300  border-gray-200 rounded-lg flex items-center gap-4 w-fit p-4"
+          >
+         
+            <p className="font-[400] text-[16px]">Clear Filter</p>
+          </div>
           <div
             onClick={() => {
               setShowFilter(true);
@@ -186,6 +221,7 @@ const handleKeyDown = (e) => {
           >
             <TbFilterSearch />
             <p className="font-[400] text-[16px]">Filter</p>
+          </div>
           </div>
         </div>
 
@@ -199,9 +235,7 @@ const handleKeyDown = (e) => {
       {showFilter && (
         <>
           <div
-            onClick={() => {
-              setShowFilter(false);
-            }}
+            
             className="fixed top-0 left-0 w-full h-screen z-50 bg-[#0000004b]"
           >
             <div className="w-full h-full p-12  ">
@@ -236,23 +270,51 @@ const handleKeyDown = (e) => {
 
 <div className=" p-6 ">
                     <h2 className="font-[400] text-[20px]">Property Type</h2>
-                    <div className="flex mt-4 items-center gap-2">
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
+                    <div  className="flex mt-4 items-center gap-2">
+                      <div onClick={()=>{
+                        if(!filterType.includes("House")){
+                          setFilterType([...filterType,"House"])
+                        }
+                        else{
+                          setFilterType(filterType.filter((i)=>i!=="House"))
+                        }
+                      }} className={" cursor-pointer flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4" + `${filterType.includes("House") ? " border border-gray-800" : ""}`}>
                         <GoHome size={18} />
 
                         <p className="text-[16px]">House</p>
                       </div>
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
+                      <div onClick={()=>{
+                        if(!filterType.includes("Flat")){
+                          setFilterType([...filterType,"Flat"])
+                        }
+                        else{
+                          setFilterType(filterType.filter((i)=>i!=="Flat"))
+                        }
+                      }} className={" cursor-pointer flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4" + `${filterType.includes("Flat") ? " border border-gray-800" : ""}`}>
                         <MdOutlineMapsHomeWork size={18} />
 
                         <p className="text-[16px]">Flat</p>
                       </div>
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
+                      <div onClick={()=>{
+                        if(!filterType.includes("Villa")){
+                          setFilterType([...filterType,"Villa"])
+                        }
+                        else{
+                          setFilterType(filterType.filter((i)=>i!=="Villa"))
+                        }
+                      }} className={" cursor-pointer flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4" + `${filterType.includes("Villa") ? " border border-gray-800" : ""}`}>
                         <GiHomeGarage size={18} />
 
                         <p className="text-[16px]">Villa</p>
                       </div>
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
+                      <div onClick={()=>{
+                        if(!filterType.includes("Hotel")){
+                          setFilterType([...filterType,"Hotel"])
+                        }
+                        else{
+                          setFilterType(filterType.filter((i)=>i!=="Hotel"))
+                        }
+                      }} className={" cursor-pointer flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4" + `${filterType.includes("Hotel") ? " border border-gray-800" : ""}`}>
                         <LiaHotelSolid size={18} />
 
                         <p className="text-[16px]">Hotel</p>
@@ -307,9 +369,9 @@ const handleKeyDown = (e) => {
                 </div>
                 <div className="w-full p-6 flex rounded-b-4xl items-center justify-between bg-[#FFFFFF] shadow-lg border-t border-t-gray-200">
                   <p className="font-[400] text-[18px]">Clear All</p>
-                  <div className="py-2 px-4 rounded-md bg-black ">
-                    <p className="font-[400] text-white text-[18px]">
-                      Search
+                  <div onClick={handleFilter} className="py-2 px-4 rounded-md bg-black ">
+                    <p className=" cursor-pointer font-[400] text-white text-[18px]">
+                      Find
                     </p>
                   </div>
                 </div>

@@ -65,8 +65,14 @@ export const createHotel = async (req, res) => {
               if (!cheapestPrice) {
                 return res.json({
                   success: false,
-                  message: "Cheapest Price cannot be empty"
+                  message: "Invalid price"
                 });
+              }
+              if(cheapestPrice<0){
+                return res.json({
+                    success: false,
+                    message: "Invalid price"
+                  });
               }
               
               if (!checkIn) {

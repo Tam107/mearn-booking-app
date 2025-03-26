@@ -159,7 +159,14 @@ const AdminCreateHotel = () => {
       return toast.error("At least one room type is required");
     }
     if (!cheapestPrice) {
+     
       return toast.error("Cheapest Price cannot be empty");
+    }
+    else{
+      if(cheapestPrice<0) return toast.error("Invalid price")
+    }
+    if (!services.length > 0) {
+      return toast.error("Please choose at least one service");
     }
     if (!checkIn) {
       return toast.error("Check in time cannot be empty");
