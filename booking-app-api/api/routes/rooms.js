@@ -6,5 +6,6 @@ const router = express.Router();
 
 
 router.get("/getAll", getAllRooms);
+router.post("/create", createRoom);
 
 export default router;

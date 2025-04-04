@@ -89,8 +89,19 @@ export const createHotel = async (req, res) => {
                 });
               }
 
-              const data = new Hotel(req.body)
-              console.log(data);
+              const data = new Hotel({
+                name,
+                type,
+                city,
+                address,
+                photos,
+                description,
+                services,
+            
+                cheapestPrice,
+                checkIn,
+                checkOut
+              })
               
               await data.save();
               
@@ -103,11 +114,17 @@ export const createHotel = async (req, res) => {
                 }
                 const room = new Room(dataRoom)
                 await room.save();
+                await Hotel.updateOne(
+                    { _id: data._id },
+                    { $push: { roomType: room._id } },
+                    { new: true }
+                )
               }
+                const newData = await Hotel.findById(data._id)
 
         res.json({
             success:true,
-            data:data
+            data:newData
         })
 
 
@@ -122,7 +139,7 @@ export const createHotel = async (req, res) => {
 
 export const getAllHotels = async (req, res, next) => {
     try {
-        const hotels = await Hotel.find({}).populate('services').sort({ createdAt: -1 });
+        const hotels = await Hotel.find({}).populate('services').populate("roomType").sort({ createdAt: -1 });
         res.status(200).json({
             success:true,
             data:hotels

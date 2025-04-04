@@ -73,6 +73,8 @@ const AdminViewEditHotel = () => {
   const [photos, setPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [services, setServices] = useState([]);
+  // console.log(services);
+  
 
   useEffect(() => {
     const fetchApi = async () => {

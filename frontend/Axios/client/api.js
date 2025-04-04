@@ -108,9 +108,35 @@ const getAllServicesApi = async()=>{
     }
 }
 
+
+const getAllFacilitiesApi = async()=>{
+    try {
+        const URL_LOGIN ='/facilityHotel/get'
+        const response = await axios.get(URL_LOGIN)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
 const createServicesApi = async(data)=>{
     try {
         const URL_LOGIN ='/servicesHotel/create'
+        const response = await axios.post(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const createFacilitiesApi = async(data)=>{
+    try {
+        const URL_LOGIN ='/facilityHotel/create'
         const response = await axios.post(URL_LOGIN,data)
         return response
     } catch (error) {
@@ -237,6 +263,23 @@ const updateHotelApi = async(data)=>{
     }
 }
 
+const createRoomApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/rooms/create`
+        const response = await axios.post(URL_LOGIN,data)
+        // console.log(response);
+        
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
+
+
 export {
     registerUser,
     checkTokenOtp,
@@ -253,5 +296,8 @@ export {
     getAllRoomApi,
     createServicesApi,
     deleteHotelApi,
-    updateHotelApi
+    updateHotelApi,
+    getAllFacilitiesApi,
+    createFacilitiesApi,
+    createRoomApi
 }

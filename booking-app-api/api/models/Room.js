@@ -29,7 +29,26 @@ const RoomSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    priceExtra: [],
+    priceExtra: [
+      {
+        start:Date,
+        end:Date,
+        title: Number,
+      }
+    ],
+
+    facilities:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "FacilitiesHotel",
+      },
+    ],
+    // facilitiesOutstanding:[
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "FacilitiesHotel",
+    //   },
+    // ],
     slug: {
       type: String,
       slug: ["RoomType", "hotel.name"], // Create slug based on RoomType and hotel.name

@@ -11,6 +11,7 @@ import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 const AdminViewHotel = () => {
   
   const stateHotels = useSelector((state) => state.HotelReducer);
+  
   const [open, setOpen] = useState(false);
   const [hotelSelected, setHotelSelected] = useState("");
   const [hotelSelectedId, setHotelSelectedId] = useState("");
@@ -25,6 +26,8 @@ const AdminViewHotel = () => {
     );
   };
   const [dataHotels, setDataHotels] = useState(stateHotels.hotels);
+ 
+  
   
   const dispatch = useDispatch();
   // dispatch(getAllHotelsAction());
@@ -102,14 +105,14 @@ const AdminViewHotel = () => {
                   wordWrap: "break-word",
                 }}
               >
-                {type}
+                {type.RoomType}
               </p>
             ))}
           </>
         );
       },
       // Optionally set the minimum width for the column
-      width: 150, // Adjust this value as needed
+      width: 250, // Adjust this value as needed
     },
 
     {

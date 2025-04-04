@@ -42,7 +42,8 @@ const HotelSchema = new mongoose.Schema({
     },
    
     roomType:[{
-        type:String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Room",  // Trỏ tới mô hình ServiceHotel
     }],
  
 

@@ -68,3 +68,34 @@ export const getAllRoomsAction = ()=>async(dispatch)=>{
         })
     }
 }
+
+export const updateRoomsListAction = (room)=>async(dispatch)=>{
+    try {
+       
+        console.log(room);
+        
+        if(room){
+            console.log("ok");
+            
+            // console.log(1);
+            dispatch({
+                type:"roomUpdateListSuccess",
+                payload:room
+            })
+        } 
+       else{
+        dispatch({
+            type:"roomCreateFailed",
+            payload:"Error when create",
+
+        })
+       }
+        
+    } catch (error) {
+        dispatch({
+            type:"roomUpdateListFailed",
+            payload:error?.response?.data?.message||"Error in axios",
+
+        })
+    }
+}

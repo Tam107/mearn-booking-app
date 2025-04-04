@@ -3,19 +3,74 @@ import Hotel from "../models/Hotel.js";
 import {createError} from "../utils/error.js";
 
 export const createRoom =  async (req, res, next) => {
-    const hotelId = req.params.hotelid;
-    const newRoom = new Room(req.body)
-
-    try{
-        const savedRoom = await newRoom.save()
-        try{
-            await Hotel.findByIdAndUpdate(hotelId, {$push: {rooms: savedRoom._id}})
-        }catch(e){
-            next(e);
+    try {
+        if (!req.body.RoomType) {
+            return res.json({
+                success: false,
+                message: "RoomType is required",
+            })
         }
-        res.status(200).json(savedRoom)
-    }catch(err){
-        next(err);
+        if (!req.body.hotel) {
+            return res.json({
+                success: false,
+                message: "Hotel is required",
+            })
+        }
+        if (!req.body.price) {
+            return res.json({
+                success: false,
+                message: "Price is required",
+            })
+        }
+        if (!req.body.maxPeople) {
+            return res.json({
+                success: false,
+                message: "MaxPeople is required",
+            })
+        }
+       
+        if (!req.body.services) {
+            return res.json({
+                success: false,
+                message: "Services is required",
+            })
+        }
+        if (!req.body.facilities) {
+            return res.json({
+                success: false,
+                message: "Facilities is required",
+            })
+        }
+        const room = new Room({
+            RoomType: req.body.RoomType,
+            description: req.body.description,
+            photos: req.body.photos,
+            maxPeople: req.body.maxPeople,
+            services: req.body.services,
+            hotel: req.body.hotel,
+            price: req.body.price,
+            priceExtra: req.body.priceExtra,
+            facilities:req.body.facilities,
+        });
+        const savedRoom = await room.save();
+
+        const hotel = await Hotel.findByIdAndUpdate(
+            req.body.hotel,
+            { $push: { roomType: savedRoom } },
+            { new: true }
+        );
+
+        
+        res.json({
+            success: true,
+            data: savedRoom,
+            dataHotel: hotel,
+           
+        });
+    } catch (err) {
+        console.log(err);
+        
+        next(err); 
     }
 }
 
@@ -80,7 +135,7 @@ export const getAllRooms = async (req, res, next) => {
         // console.log("herre");
         
         // Fetch all rooms
-        const rooms = await Room.find({}).populate("services").populate('hotel'); 
+        const rooms = await Room.find({}).populate("services").populate('hotel').sort({ createdAt: -1 }); 
         
         // Populate hotel and services fields if needed
        

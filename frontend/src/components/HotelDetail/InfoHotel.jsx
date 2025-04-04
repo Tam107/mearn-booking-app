@@ -17,7 +17,7 @@ const InfoHotel = ({ data }) => {
         setDataRoom(room);
     }, [stateRoom.rooms, roomType]);
 
-    // console.log(data?.description);
+    console.log(data?.roomType);
 
   return (
     <>
@@ -35,10 +35,9 @@ const InfoHotel = ({ data }) => {
                   onChange={(e) => setRoomType(e.target.value)}
                   className="w-full px-2 py-2 border border-gray-400 rounded-3xl"
                 >
-                  {/* <option value="">Select City</option> */}
                   {data?.roomType?.map((type,index) => (
-                    <option key={index} value={type}>
-                      {type}
+                    <option key={index} value={type.RoomType}>
+                      {type.RoomType}
                     </option>
                   ))}
                 </select>
@@ -59,7 +58,7 @@ const InfoHotel = ({ data }) => {
               </div>
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
-              <div className="w-[50%] flex flex-col gap-4">
+              <div className="grid grid-cols-2">
                 
                 
                 {

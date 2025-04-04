@@ -45,7 +45,7 @@ const Item = ({ i }) => {
   };
   const navigate = useNavigate();
 
-  console.log(i);
+  // console.log(i);
 
   return (
     <>
@@ -95,9 +95,11 @@ const Item = ({ i }) => {
               <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
               {i?.roomType.map((type, index) => {
                   const isLastItem = index === i.roomType.length - 1;
+                  console.log(i.roomType);
+                  
                   return (
                     <span key={index}>
-                      {type}
+                      {type.RoomType}
                       {!isLastItem && " · "}
                     </span>
                   );
@@ -106,6 +108,7 @@ const Item = ({ i }) => {
               <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
                 {i?.services.map((service, index) => {
                   const isLastItem = index === i.services.length - 1;
+                  
                   return (
                     <span key={index}>
                       {service.name}
