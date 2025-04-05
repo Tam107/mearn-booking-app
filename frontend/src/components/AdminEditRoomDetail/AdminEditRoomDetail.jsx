@@ -1,120 +1,63 @@
-import { Editor } from "@tinymce/tinymce-react";
 import { Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
-import { CiCircleChevUp } from "react-icons/ci";
 import { FaQuestionCircle } from "react-icons/fa";
+import { IoCloudUploadOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { getAllFacilitiesApi, getAllServicesApi } from "../../../Axios/client/api";
 import iconMap from "../../data/iconMap";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-const localizer = momentLocalizer(moment);
-const CustomEvent = ({ event }) => {
-  return (
-    <div className="text-[12px] whitespace-normal break-words leading-snug mt-auto">
-      {new Intl.NumberFormat("de-DE").format(event.title)} VND
-    </div>
-  );
-};
-const AdminViewRoomDetail = () => {
-  const { slug } = useParams(); // Get the slug parameter from the URL
-    const [eventsDefault, setEventsDefault] = useState([]);
-  
-  const stateRooms = useSelector((state) => state.RoomReducer);
-  const [data, setData] = useState({});
+
+const AdminEditRoomDetail = () => {
+  const { slug } = useParams();
+  const stateRoom = useSelector((state) => state.RoomReducer);
+  const stateHotels = useSelector((state) => state.HotelReducer);
+  const [price, setPrice] = useState();
+  const [maxPeople, setMaxPeople] = useState();
+  const [roomType, setRoomType] = useState();
+  const [services, setServices] = useState([]);
+
+  const [data, setData] = useState();
+  const [hotelId, setHotelId] = useState();
+    const [showModel, setShowModel] = useState(false);
     const [servicesDefault, setServicesDefault] = useState([]);
-    const [facilitiesDefault, setFacilitiesDefault] = useState([]);
-    const [servicesId,setServicesId] = useState([]);
-    useEffect(() => {
-      const alo = async () => {
-        const ad = await getAllServicesApi();
-     
-        setServicesDefault(ad.data);
-      };
-      const ola = async () => {
-        const ad = await getAllFacilitiesApi();
   
-        setFacilitiesDefault(ad.data ? ad.data : []);
-      };
-      alo();
-      ola();
-    }, []);
   useEffect(() => {
-    const tmp = stateRooms?.rooms?.find((i) => i.slug === slug);
-    setServicesId(tmp?.services.map((item) => item._id));
-    setData(tmp);
-    //set price
-    const today = moment(); // Lấy ngày hôm nay
-    const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
-
-    const events = [];
-    let currentDay = today;
-    // tmp?.priceExtra?.forEach((item) => {
-    //   const startDate = moment(item.start);
-    //   console.log(startDate);
+    const tmp = stateRoom?.rooms?.find((item) => item.slug === slug);
+    if (tmp) {
+      setData(tmp);
+      setPrice(tmp?.price);
+      setMaxPeople(tmp?.maxPeople);
+      setRoomType(tmp?.RoomType);
+      setHotelId(tmp?.hotel);
+      setServices(tmp?.services?.map((item) => item._id));
       
-      
-    // });
-    while (currentDay.isBefore(oneYearFromNow)) {
-      // const ex= tmp?.priceExtra.find(i=>moment(i.start)=== currentDay.startOf("day")._)
-      // console.log(currentDay.startOf("day")._d);
-      // console.log(currentDay);
-      const ex = tmp?.priceExtra.find((i) => {
-        const startDate = moment(i.start);
-        if(startDate.isSame(currentDay.startOf('day').toDate(), 'day')){
-          console.log(startDate);
-          return i
-        }
-        return null;
-      });
-      
-      // console.log(ex);
-      if(ex){
-        console.log(ex);
-        
-        events.push({
-          title: ex?.title, // Gán title là "100 VND"
-          start: ex?.start, // Thời gian bắt đầu là 00:00 của ngày
-          end: ex?.end, // Thời gian kết thúc là 23:59 của ngày
-        });
-  
-      }
-      else{
-        events.push({
-          title: tmp?.price, // Gán title là "100 VND"
-          start: currentDay.startOf("day").toDate(), // Thời gian bắt đầu là 00:00 của ngày
-          end: currentDay.endOf("day").toDate(), // Thời gian kết thúc là 23:59 của ngày
-        });
-      }
-      
-
-      // Tiến đến ngày tiếp theo
-      currentDay = currentDay.add(1, "day");
     }
-    setEventsDefault(events)
+  }, [slug, stateRoom]);
+  console.log(services);
+  console.log(servicesDefault);
+  
+  
+  useEffect(() => {
+    const alo = async () => {
+      const ad = await getAllServicesApi();
+      setServicesDefault(ad.data);
+    };
+    const ola = async () => {
+      const ad = await getAllFacilitiesApi();
 
-  }, [stateRooms?.rooms, slug]);
-  console.log(data);
-  const handleUp = () => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth", // This enables the smooth scrolling effect
-    });
-  };
-
+    //   setFacilitiesDefault(ad.data ? ad.data : []);
+    };
+    alo();
+    ola();
+  }, [showModel]);
 
   return (
     <>
       <div className="w-full flex items-center justify-between py-6 px-6">
         <h2 className="font-[600] flex  leading-[40px] text-gray-600 text-[36px]">
-          View Room Detail
+          Edit Room Detail
         </h2>
-        <Link to={`/dashboard-edit-roomDetail/${data?.slug}`} className="cursor-pointer bg-gray-500 text-lg text-white px-4 py-2 flex items-center justify-between rounded-3xl">Edit Room</Link>
       </div>
-
       <div className="w-full  px-6 py-6  ">
         <div className="w-full  border border-gray-300 rounded-2xl py-4 px-4">
           <div className="w-full mb-4 border-gray-300 pb-4 border-b ">
@@ -125,8 +68,6 @@ const AdminViewRoomDetail = () => {
               </Tooltip>
             </div>
             <div className="grid gap-2 mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4">
-              
-
               {data?.photos?.length > 0 &&
                 photos.map((item, index) => (
                   <>
@@ -135,15 +76,10 @@ const AdminViewRoomDetail = () => {
                         src={item}
                         className="rounded-2xl w-full object-cover"
                       />
-                    
                     </div>
                   </>
                 ))}
-                {data?.photos?.length === 0 && (
-                  <>
-                    NO IMG
-                  </>
-                )}
+              {data?.photos?.length === 0 && <>NO IMG</>}
             </div>
           </div>
 
@@ -159,12 +95,18 @@ const AdminViewRoomDetail = () => {
                 <p className="text-lg">
                   Hotel <span className="text-red-500">*</span>{" "}
                 </p>
-                <input
-                  value={data?.hotel?.name}
-
+                <select
+                  value={hotelId?._id}
+                  onChange={(e) => setHotelId(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                 >
-                </input>
+                  <option value="">Select hotel</option>
+                  {stateHotels?.hotels?.map((i, index) => (
+                    <option key={index} value={i._id}>
+                      {i.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex flex-col gap-2 ">
@@ -174,8 +116,8 @@ const AdminViewRoomDetail = () => {
                 <input
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                   type="number"
-                  value={data?.price}
-                  
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                   placeholder="Price"
                 />
               </div>
@@ -187,8 +129,8 @@ const AdminViewRoomDetail = () => {
                 <input
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                   type="text"
-                  value={data?.RoomType}
-              
+                  value={roomType}
+                  onChange={(e) => setRoomType(e.target.value)}
                   placeholder="Room Type"
                 />
               </div>
@@ -200,8 +142,8 @@ const AdminViewRoomDetail = () => {
                 <input
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                   type="number"
-                  value={data?.maxPeople}
-                 
+                  value={maxPeople}
+                  onChange={(e) => setMaxPeople(e.target.value)}
                   placeholder="2-4 guests"
                 />
               </div>
@@ -216,17 +158,23 @@ const AdminViewRoomDetail = () => {
               </Tooltip>
             </div>
             <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-              
+              <div
+                onClick={() => setShowModel(true)}
+                className="cursor-pointer h-24 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
+              >
+                <IoCloudUploadOutline />
+                Create service
+              </div>
 
-            {servicesDefault?.length > 0 && (
+              {servicesDefault?.length > 0 && (
                 <>
                   {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
+                    <label className="cursor-pointer h-24 border border-gray-300 p-4 flex rounded-2xl gap-2 items-center">
                       <input
-                     
+                        onChange={() => handleServiceChange(service._id)}
                         type="checkbox"
                         className="mr-2"
-                        checked={servicesId?.includes(service._id)}
+                        checked={services.includes(service._id)}
                       />
 
                       <span className="mr-2">
@@ -243,7 +191,7 @@ const AdminViewRoomDetail = () => {
             </div>
           </div>
 
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
+          {/* <div className="mb-4 border-gray-300 pb-4 border-b w-full">
             <div className="flex items-center justify-between">
               <div className="flex mb-3 items-center gap-4">
                 <h2 className="font-medium text-lg ">Facilities</h2>
@@ -269,9 +217,9 @@ const AdminViewRoomDetail = () => {
                 </>
               ))}
             </div>
-          </div>
+          </div> */}
 
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
+          {/* <div className="mb-4 border-gray-300 pb-4 border-b w-full">
             <h2 className="font-medium text-lg mb-2">Short Description</h2>
             <Editor
               apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
@@ -293,9 +241,9 @@ const AdminViewRoomDetail = () => {
                          bullist numlist outdent indent | removeformat | help",
               }}
             />
-          </div>
+          </div> */}
 
-          <div className="mb-4  w-full">
+          {/* <div className="mb-4  w-full">
             <div className="flex mb-3 items-center gap-4">
               <h2 className="font-medium text-lg ">Price extra</h2>
               <Tooltip title="Nên set theo ngày việt nam">
@@ -324,14 +272,14 @@ const AdminViewRoomDetail = () => {
               />
               
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="w-full flex mt-2 items-center justify-center cursor-pointer">
+        {/* <div className="w-full flex mt-2 items-center justify-center cursor-pointer">
           <CiCircleChevUp onClick={handleUp} size={40} />
-        </div>{" "}
+        </div>{" "} */}
       </div>
     </>
   );
 };
 
-export default AdminViewRoomDetail;
+export default AdminEditRoomDetail;

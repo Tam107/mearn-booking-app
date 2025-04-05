@@ -23,6 +23,7 @@ import { CiCircleChevUp } from "react-icons/ci";
 import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
 import { useNavigate } from "react-router";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import { RxCross1 } from "react-icons/rx";
 const localizer = momentLocalizer(moment);
 function getStartOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
@@ -50,7 +51,7 @@ const CustomEvent = ({ event }) => {
 };
 
 const AdminCreateRoom = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   // dispatch(getAllHotelsAction());
@@ -68,6 +69,7 @@ const AdminCreateRoom = () => {
   const [inputFacility, setInputFacility] = useState("");
   const [facilities, setFacilities] = useState([]);
   const [photos, setPhotos] = useState([]);
+  const [modelChangePrice, setModelChangePrice] = useState(false);
 
   const handleEditorChange = (content) => {
     setDescription(content);
@@ -85,7 +87,7 @@ const AdminCreateRoom = () => {
     alo();
     ola();
   }, [showModel]);
-  
+
   // console.log(facilitiesDefault);
   // chuc nang price
   const handleUp = () => {
@@ -201,7 +203,6 @@ const AdminCreateRoom = () => {
       const newImg = res.data.map((item) => item.url);
       setPhotos([...photos, ...newImg]);
     } else {
-
       toast.error("Error");
     }
   };
@@ -276,7 +277,6 @@ const AdminCreateRoom = () => {
         event.end.getTime() <= newEndDate.getTime()
       ) {
         if (daysChoosed.includes(moment(event.start).format("dddd"))) {
-
           return {
             ...event,
             title: priceEvents,
@@ -303,27 +303,26 @@ const AdminCreateRoom = () => {
         }
       }
     });
-    if(priceExtra.length>0){
-        const filter = priceExtra.filter(item=> item.start.getTime() !== newStartDate.getTime());
-        setPriceExtra([...filter, ...priceExtraTmp]);
-    } 
-    else{
+    if (priceExtra.length > 0) {
+      const filter = priceExtra.filter(
+        (item) => item.start.getTime() !== newStartDate.getTime()
+      );
+      setPriceExtra([...filter, ...priceExtraTmp]);
+    } else {
       setPriceExtra([...priceExtraTmp]);
-
     }
     setEventsDefault(newEvent);
 
     toast.success("save changes successfully!");
-    
+
     setPriceEvents("");
     setStartDate(null);
     setEndDate(null);
     setDaysChoosed([]);
   };
   // console.log(priceExtra);
-  
 
-  const handleCreateRoom = async()=>{
+  const handleCreateRoom = async () => {
     // console.log(photos);
     if (!hotelId) {
       return toast.error("Please choose hotel");
@@ -337,22 +336,32 @@ const AdminCreateRoom = () => {
     if (!price) {
       return toast.error("Please enter price");
     }
-    if(services.length === 0){
+    if (services.length === 0) {
       return toast.error("Please choose at least 1 services");
     }
-    if(facilities.length === 0){
+    if (facilities.length === 0) {
       return toast.error("Please choose at least 1 facilities");
     }
 
     // console.log(facilities);
 
-    const res = await createRoomApi({RoomType:roomType,description,photos:photos,maxPeople:maxPeople,services,hotel:hotelId,price,priceExtra:priceExtra,facilities});
-    if(res.success){
+    const res = await createRoomApi({
+      RoomType: roomType,
+      description,
+      photos: photos,
+      maxPeople: maxPeople,
+      services,
+      hotel: hotelId,
+      price,
+      priceExtra: priceExtra,
+      facilities,
+    });
+    if (res.success) {
       toast.success("Create room successfully");
-      
-       dispatch(getAllRoomsAction())
-      dispatch(getAllHotelsAction())
-      navigate('/dashboard-view-room')
+
+      dispatch(getAllRoomsAction());
+      dispatch(getAllHotelsAction());
+      navigate("/dashboard-view-room");
 
       // setRoomType("");
       // setPhotos([]);
@@ -362,15 +371,102 @@ const AdminCreateRoom = () => {
       // setServices([]);
       // setDescription("");
     }
+  };
+
+  const [infoChangePrice, setInfoChangePrice] = useState();
+  const [priceChange, setPriceChange] = useState();
+  const handleSelectSlot = (slotInfo) => {
+    if (!hotelId) {
+      return toast.error("Please choose hotel");
+    }
+    const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
+
+    // Compare only the dates (ignoring time)
+      
+    if( moment(slotInfo?.start).startOf('day').isBefore(newDate)){
+      setInfoChangePrice(null)
+      setModelChangePrice(false);
+      setPriceChange()
+      return toast.error("Please choose date in the future");
+     
+    }
 
 
     
+    setInfoChangePrice(slotInfo)
+    setModelChangePrice(true);
+  };
+  const handlePriceChangeOne = ()=>{
+    if(!priceChange){
+      return toast.error("Please enter price");
+    }
+    const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
+    
+    if(  moment(infoChangePrice?.start).startOf('day').isBefore(newDate)){
+      setInfoChangePrice(null)
+      setModelChangePrice(false);
+      setPriceChange()
+      return toast.error("Please choose date in the future");
+     
+    }
+    // console.log(infoChangePrice?.start,1);
+    
+    const newEvent = eventsDefault.map((event,index) => {
+     
+      
+      if(infoChangePrice?.start.getTime() == event.start.getTime()){   
+        console.log(event,1);
+             
+        return {
+          ...event,
+          title: priceChange,
+        };
+      }
+      return event
+      
+    }
+    )     
+    const existExtra = priceExtra.find((item)=> item.start=== infoChangePrice?.start)
+    if(existExtra){
+      const newPriceExtra = priceExtra.map((item)=>{
+        if(item.start === infoChangePrice?.start){
+          return {
+            ...item,
+            title: priceChange
+          }
+        }
+        return item
+      })
+            setPriceExtra(newPriceExtra)
+
+    }
+      else{
+        const newPriceExtra = [...priceExtra,{
+          ...infoChangePrice,
+          title: priceChange
+        }]
+              setPriceExtra(newPriceExtra)
+
+      }
+      toast.success("save changes successfully!");
+
+    setEventsDefault(newEvent)
+    setInfoChangePrice(null)
+    setModelChangePrice(false);
+    setPriceChange()
+
+
+
   }
+
 
   return (
     <>
       <div className="w-full pt-6 px-6">
-        <div onClick={handleCreateRoom} className="flex w-full items-center justify-between">
+        <div
+          onClick={handleCreateRoom}
+          className="flex w-full items-center justify-between"
+        >
           <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
             Create new room
           </h2>
@@ -609,6 +705,8 @@ const AdminCreateRoom = () => {
               }}
             >
               <Calendar
+                selectable
+                onSelectSlot={handleSelectSlot}
                 events={eventsDefault} // Sự kiện được truyền vào lịch
                 localizer={localizer}
                 startAccessor="start" // Trường 'start' trong sự kiện được sử dụng làm thời gian bắt đầu
@@ -739,16 +837,80 @@ const AdminCreateRoom = () => {
           </div>
         </div>
         <div className="w-full flex mt-2 items-center justify-center cursor-pointer">
-        <CiCircleChevUp onClick={handleUp} size={40} />
-      </div>{" "}
+          <CiCircleChevUp onClick={handleUp} size={40} />
+        </div>{" "}
       </div>
       {showModel && (
         <>
-          <ModelCreateService setShowModel={setShowModel}/>
-          
+          <ModelCreateService setShowModel={setShowModel} />
         </>
       )}
-      
+
+      {modelChangePrice && (
+        <>
+          <div className="fixed top-0  left-0 w-full bg-[#0000004b] h-screen z-50">
+            <div className=" mx-auto mt-36 p-4  w-[40%] overflow-y-scroll  bg-white  shadow-sm">
+              <div className="flex w-full justify-end ">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setModelChangePrice(false)
+                    setInfoChangePrice(null);
+                  }}
+                />
+              </div>
+              
+
+                {
+                  
+                  infoChangePrice?.slots.length ===1 && (
+                   <>
+                    <div className=" flex mt-4 itmes-center gap-4">
+                      <p className="text-lg">Checked day:</p>
+                      <p className="text-lg">
+                        {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
+                      </p>
+                    </div>
+                    <div className="w-full  mt-4 flex items-center">
+                    <input
+                      type="number"
+                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
+                      placeholder="Price"
+                      value={priceChange}
+                      onChange={(e) => setPriceChange(e.target.value)}
+                      min={0}
+                    />
+                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
+                      VND
+                    </div>
+                  </div>
+                  <div onClick={handlePriceChangeOne} className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white">
+                    <p className="w-full text-center">Save</p>
+
+                  </div>
+                    
+
+                    
+                   </>
+                  )
+                }
+                {
+                  infoChangePrice?.slots.length > 1 && (
+                   <>
+                    <p className="text-lg">Checked days:</p>
+                    <p className="text-lg">
+                    {moment(infoChangePrice?.slots[0]).startOf('day').format("DD/MM/YYYY")} - {moment(infoChangePrice?.end).subtract(1, 'days').format("DD/MM/YYYY")}
+                    </p>
+                   </>
+                  )
+                }
+          
+           
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

@@ -27,6 +27,7 @@ import AdminViewHotelPage from './pages/AdminViewHotelPage/AdminViewHotelPage.js
 import AdminViewEditHotelPage from './pages/AdminViewEditHotelPage/AdminViewEditHotelPage.jsx';
 import AdminCreateRoomPage from './pages/AdminCreateRoomPage/AdminCreateRoomPage.jsx';
 import PageNotFound from './components/PageNotFound/PageNotFound.jsx';
+import AdminEditRoomPage from './pages/AdminEditRoomPage/AdminEditRoomPage.jsx';
 
 function App() {
 
@@ -70,6 +71,8 @@ function App() {
        <Route path='/dashboard-view-homes' element={<AdminViewHotelPage/>}/>
        <Route path='/dashboard-hotel/:slug' element={<AdminViewEditHotelPage/>}/>
        <Route path='/dashboard-view-roomDetail/:slug' element={<AdminViewRoomDetailPage/>}/>
+       <Route path='/dashboard-edit-roomDetail/:slug' element={<AdminEditRoomPage/>}/>
+       
        <Route path="/homes" element={<HotelListPage />} />
        <Route path="*" element={<PageNotFound />} />
        
