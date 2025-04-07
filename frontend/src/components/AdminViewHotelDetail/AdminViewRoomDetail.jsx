@@ -72,7 +72,7 @@ const AdminViewRoomDetail = () => {
       
       // console.log(ex);
       if(ex){
-        console.log(ex);
+        // console.log(ex);
         
         events.push({
           title: ex?.title, // Gán title là "100 VND"
@@ -128,7 +128,7 @@ const AdminViewRoomDetail = () => {
               
 
               {data?.photos?.length > 0 &&
-                photos.map((item, index) => (
+                data?.photos.map((item, index) => (
                   <>
                     <div key={index} className="h-32 relative flex ">
                       <img

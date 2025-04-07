@@ -458,6 +458,75 @@ const AdminCreateRoom = () => {
 
 
   }
+  // console.log(eventsDefault);
+  
+  const handlePriceChangeMulti = () =>{
+    if(!priceChange){
+      return toast.error("Please enter price");
+    }
+    const newEvent = eventsDefault.map((event) => {
+      if (event.start.getTime() >= infoChangePrice?.start.getTime() && event.end.getTime() <= infoChangePrice?.end.getTime()) {
+      
+        
+        return {
+          ...event,
+          title: priceChange,
+        };
+      }
+      return event;
+    }
+    );
+    const timeShots = infoChangePrice.slots.map((item) => {
+      return item.getTime()
+    });
+    const existExtra = priceExtra.map((item)=> {
+      // console.log(item.start);
+      // console.log(infoChangePrice.slots,2);
+
+      
+      if(timeShots?.includes(item.start.getTime())){        
+        return {
+          ...item,
+          title: priceChange
+        }
+      }
+      else{
+        return item
+      }
+    })
+    const noTimeShots = timeShots.filter((item)=> {
+        if(!existExtra.find((i)=> i.start.getTime() === item)){
+          return item
+        }
+    })
+    console.log(moment(noTimeShots[0]).startOf("day").toDate());
+    
+    const newPriceExtra = noTimeShots.map((item)=> {
+      return {
+        
+        title: priceChange,
+        start:moment(item).startOf("day").toDate(),
+        end: moment(item).endOf("day").toDate(),
+      }
+    })    
+    setPriceExtra([...existExtra,...newPriceExtra])
+
+  
+    
+    
+
+
+    setEventsDefault(newEvent);
+
+    setPriceChange();
+    setInfoChangePrice(null);
+    setModelChangePrice(false);
+    toast.success("save changes successfully!");
+  
+    
+  }
+  // console.log(priceExtra);
+  
 
 
   return (
@@ -896,14 +965,37 @@ const AdminCreateRoom = () => {
                   )
                 }
                 {
-                  infoChangePrice?.slots.length > 1 && (
-                   <>
-                    <p className="text-lg">Checked days:</p>
-                    <p className="text-lg">
-                    {moment(infoChangePrice?.slots[0]).startOf('day').format("DD/MM/YYYY")} - {moment(infoChangePrice?.end).subtract(1, 'days').format("DD/MM/YYYY")}
-                    </p>
-                   </>
-                  )
+                 
+                  infoChangePrice?.slots.length >1 && (
+                    <>
+                     <div className=" flex mt-4 itmes-center gap-4">
+                       <p className="text-lg">Checked day:</p>
+                       <p className="text-lg">
+                       {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} - {moment(infoChangePrice?.end).subtract(1,'day').format("DD/MM/YYYY")}
+                       </p>
+                     </div>
+                     <div className="w-full  mt-4 flex items-center">
+                     <input
+                       type="number"
+                       className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
+                       placeholder="Price"
+                       value={priceChange}
+                       onChange={(e) => setPriceChange(e.target.value)}
+                       min={0}
+                     />
+                     <div className="px-4 py-2 border bg-gray-100 text-gray-500">
+                       VND
+                     </div>
+                   </div>
+                   <div onClick={handlePriceChangeMulti} className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white">
+                     <p className="w-full text-center">Save</p>
+ 
+                   </div>
+                     
+ 
+                     
+                    </>
+                   )
                 }
           
            

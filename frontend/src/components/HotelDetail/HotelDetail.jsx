@@ -10,10 +10,12 @@ import { useSelector } from 'react-redux';
 
 const HotelDetail = () => {
   const [open, setOpen] = useState(true);
-
+//  const [dataRoom,setDataRoom]=useState({});
     const {slug} = useParams()
     const [data,setData] = useState({})
     const stateHotels = useSelector(state=>state.HotelReducer)
+        // const [roomType, setRoomType] = useState('');
+    
     useEffect(() => {
         window.scrollTo(0, 0);
         
@@ -29,6 +31,7 @@ const HotelDetail = () => {
 
           setData(hotel || {});  // If no hotel is found, set data as empty object
           setOpen(false);
+         
         }
       }, [slug, stateHotels.hotels]);
 

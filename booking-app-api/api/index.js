@@ -5,6 +5,7 @@ import usersRoute from "./routes/users.js"; // Keep .jsx if necessary
 import serviceHotelRoute from "./routes/serviceHotel.js"; // Keep .jsx if necessary
 import facilityHotel from "./routes/facilityHotel.js"; // Keep .jsx if necessary
 import uploadRoute from "./routes/upload.js"; // Keep .jsx if necessary
+import policyRoute from "./routes/policy.js"; // Keep .jsx if necessary
 import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
 import adminsRoute from "./routes/admin.js"; // Keep .jsx if necessary
 import roomsRoute from "./routes/rooms.js";
@@ -54,6 +55,7 @@ app.use("/api/auth", googleAuthRoute);
 app.use("/api/servicesHotel", serviceHotelRoute);
 app.use("/api/facilityHotel", facilityHotel);
 app.use("/api/upload", uploadRoute);
+app.use("/api/policy", policyRoute);
 
 app.use((error, req, res, next)=>{
     const errorStatus = error.status || 500;

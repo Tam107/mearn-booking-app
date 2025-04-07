@@ -89,7 +89,7 @@ const AdminViewRoom = () => {
     render: (_, record) => (
       <Space size="middle">
         <Link to={'/dashboard-view-roomDetail/'+record.slug}>View</Link>
-        <Link>Edit</Link>
+        <Link to={`/dashboard-edit-roomDetail/${record.slug}`}>Edit</Link>
         <Link>Delete</Link>
       </Space>
     ),

@@ -76,17 +76,58 @@ export const createRoom =  async (req, res, next) => {
 
 export const updateRoom = async (req, res, next) => {
     try {
-        const room = await Room.findOne({ "roomNumbers._id": req.params.id });
-        if (!room) {
-            return next(createError(404, "Room not found"));
+        // console.log(req.body);
+
+        if (!req.body.RoomType) {
+            return res.json({
+                success: false,
+                message: "RoomType is required",
+            })
         }
-
-        await Room.updateOne(
-            { "roomNumbers._id": req.params.id },
-            { $push: { "roomNumbers.$.unavailableDates": req.body.dates } }
-        );
-
-        res.status(200).json({ message: "Room availability updated successfully." });
+        if (!req.params.id) {
+            return res.json({
+                success: false,
+                message: "Hotel is required",
+            })
+        }
+        if (!req.body.price) {
+            return res.json({
+                success: false,
+                message: "Price is required",
+            })
+        }
+        if (!req.body.maxPeople) {
+            return res.json({
+                success: false,
+                message: "MaxPeople is required",
+            })
+        }
+       
+        if (!req.body.services) {
+            return res.json({
+                success: false,
+                message: "Services is required",
+            })
+        }
+        if (!req.body.facilities) {
+            return res.json({
+                success: false,
+                message: "Facilities is required",
+            })
+        }
+        // console.log(req.params.id)
+        // console.log(await Room.find({_id:req.params.id}));
+        ;
+        
+        const result = await Room.updateOne({ _id: req.params.id }, req.body);
+        if (result.modifiedCount === 0) {
+          return res.json({ message: "Hotel not found or data unchanged",success:false });
+        }
+        res.json({
+            success:true
+        })    
+      
+       
     } catch (err) {
         next(err);
     }

@@ -1,12 +1,14 @@
-import { Form, TimePicker } from "antd";
+import { Form, TimePicker, Tooltip } from "antd";
 import React, { useState, useEffect } from "react";
 import { Country, State, City } from "country-state-city";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { Editor } from "@tinymce/tinymce-react";
 import {
   createHotelApi,
+  createPolicyApi,
   getAllRoomApi,
   getAllServicesApi,
+  getPolicyApi,
   uploadByFilesApi,
   uploadByLinkApi,
 } from "../../../Axios/client/api";
@@ -15,11 +17,11 @@ import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { RxCross1 } from "react-icons/rx";
 import ModelCreateService from "./ModelCreateService";
-import Map from "./Map";
 import { useDispatch } from "react-redux";
 import { getAllHotelsAction } from "../../redux/actions/HotelAction";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 import { useNavigate } from "react-router";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const AdminCreateHotel = () => {
   const dispatch = useDispatch()
@@ -105,16 +107,12 @@ const AdminCreateHotel = () => {
     setPhotos([...photos.filter((photo) => photo !== filename)]);
   }
   const handleEditorChange = (content) => {
+    console.log(content);
+    
     setDescription(content);
   };
 
-  useEffect(() => {
-    const alo = async () => {
-      const ad = await getAllServicesApi();
-      setServicesDefault(ad.data);
-    };
-    alo();
-  }, [showModel]);
+  
 
   const handleServiceChange = (serviceId) => {
     setServices((services) => {
@@ -137,6 +135,72 @@ const AdminCreateHotel = () => {
     }
   };
   const navigate = useNavigate()
+
+  // policy
+  const [typePolicyDefault,setTypePolicyDefault] = useState([
+    'House rules',
+    "Safety & property",
+    "Cancellation policy"
+  ])
+  const [inputPolicy,setInputPolicy] = useState()
+  const [typePolicy,setTypePolicy] = useState('House rules');
+  const [policy,setPolicy] = useState([])
+  const [policyChecked,setPolicyChecked] = useState([])
+  const handlePolicyChange = (id) => {
+    const isExist = policyChecked.find((i) => i === id);
+    if (isExist) {
+      const tmp = policyChecked.filter((i) => i != id);
+      setPolicyChecked(tmp);
+    } else {
+      return setPolicyChecked([...policyChecked, id]);
+    }
+  };
+  const getPolicy = async()=>{
+    console.log(typePolicy);
+    
+    if(typePolicy){
+      const tmp = await getPolicyApi({type:typePolicy})
+      // console.log(tmp);
+      
+      if(tmp.success){
+        
+        setPolicy(tmp.data)
+      }
+    }
+  }
+  useEffect(()=>{
+     
+      getPolicy()
+  },[typePolicy])
+
+  const handleAddPolicy =async ()=>{
+    
+    if(typePolicy){
+      if(inputPolicy){
+        const tmp = await createPolicyApi({name:inputPolicy,type:typePolicy})
+         if(tmp.success){
+          setPolicy([...policy,tmp.data])
+          setInputPolicy("")
+        }else{
+          return toast.error(tmp.message)
+        }
+       
+      }
+    }
+    else{
+      return toast.error("Please choose type policy first")
+    }
+  }
+  
+  
+
+  useEffect(() => {
+    const alo = async () => {
+      const ad = await getAllServicesApi();
+      setServicesDefault(ad.data);
+    };
+    alo();
+  }, [showModel]);
 
   const handleCreateHotel = async(e) => {
     e.preventDefault();
@@ -174,6 +238,8 @@ const AdminCreateHotel = () => {
     if (!checkOut) {
       return toast.error("Check out time cannot be empty");
     }
+    
+    // return 1
 
     let dataHotel = {
       name,
@@ -189,6 +255,7 @@ const AdminCreateHotel = () => {
       cheapestPrice,
       checkIn,
       checkOut,
+      policy:policyChecked
     };
     if (photos.length > 0) {
       dataHotel.photos = photos;
@@ -200,7 +267,7 @@ const AdminCreateHotel = () => {
     if (services.length > 0) {
       dataHotel.services = services;
     }
-    console.log(dataHotel);
+    // console.log(dataHotel);
     const res = await createHotelApi(dataHotel)
     if(res.success){
       navigate("/dashboard-view-homes")
@@ -225,6 +292,8 @@ const AdminCreateHotel = () => {
       toast.error("Error");
     }
   };
+
+  
 
   return (
     <>
@@ -486,6 +555,54 @@ const AdminCreateHotel = () => {
                 </>
               )}
             </div>
+          </div>
+
+          <div className="mb-4 w-full flex flex-col ">
+            <div className="flex items-center justify-between">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Policies
+            </p>
+            <div className="flex mb-3 items-center gap-4">
+                <Tooltip title="Choose the type of policy before add ">
+                  <FaQuestionCircle size={23} />
+                </Tooltip>
+               <div className="flex items-center gap-2"> <input value={inputPolicy} onChange={e=>setInputPolicy(e.target.value)}  type="text" className="px-4 py-2 border border-gray-400 rounded-3xl" placeholder="Enter policy " />
+                  <div
+                  onClick={handleAddPolicy}
+                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
+                >
+                  Add new
+                </div>
+                </div>
+              </div>
+            </div>
+              <div>
+                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
+                  <option disabled  value="" className="text-gray-200">Select type of policy</option>
+                  {typePolicyDefault?.map((i,ind)=>(
+                    <>
+                      <option key={ind} value={i}>{i}</option>
+                    </>
+                  ))}
+                </select>
+
+              </div>
+              <div className="mt-2 flex gap-4 items-center flex-wrap">
+                {
+                  policy?.map(i=>(
+                    <>
+                       <label className="flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      checked={policyChecked.includes(i._id)}
+                      onChange={() => handlePolicyChange(i._id)}
+                    />
+                    <span className="ml-2">{i.name}</span>
+                  </label>
+                    </>
+                  ))
+                }
+              </div>
           </div>
 
           

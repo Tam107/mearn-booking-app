@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.get("/getAll", getAllRooms);
 router.post("/create", createRoom);
+router.patch("/edit/:id",updateRoom)
 
 export default router;

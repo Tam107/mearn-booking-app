@@ -279,6 +279,53 @@ const createRoomApi = async(data)=>{
 }
 
 
+const updateRoomApi = async(data,id)=>{
+    try {
+        const URL_LOGIN =`/rooms/edit/${id}`
+        const response = await axios.patch(URL_LOGIN,data)
+        // console.log(response);
+        
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
+const getPolicyApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/policy/get`
+        // console.log(data,"api");
+        
+        const response = await axios.post(URL_LOGIN,data)
+     
+        return response
+    } catch (error) {
+        
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const createPolicyApi = async(data)=>{
+    try {
+        const URL_LOGIN =`/policy/create`
+        const response = await axios.post(URL_LOGIN,data)
+     
+        return response
+    } catch (error) {
+        
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 
 export {
     registerUser,
@@ -299,5 +346,8 @@ export {
     updateHotelApi,
     getAllFacilitiesApi,
     createFacilitiesApi,
-    createRoomApi
+    createRoomApi,
+    updateRoomApi,
+    getPolicyApi,
+    createPolicyApi
 }

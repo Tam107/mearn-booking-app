@@ -67,7 +67,13 @@ const HotelSchema = new mongoose.Schema({
         type:String,
         slug:"name",
         unique:true
-    }
+    },
+    policy:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Policy", 
+        }
+    ]
 },{ timestamps: true })
 
 export default mongoose.model("Hotel", HotelSchema);

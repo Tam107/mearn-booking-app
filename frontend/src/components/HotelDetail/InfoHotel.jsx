@@ -4,20 +4,29 @@ import { HiOutlineBuildingLibrary } from "react-icons/hi2";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { useSelector } from "react-redux";
 import iconMap from "../../data/iconMap";
+import { FaAngleRight } from "react-icons/fa";
 const InfoHotel = ({ data }) => {
     const [roomType, setRoomType] = useState('');
     const [dataRoom,setDataRoom]=useState({});
+    console.log(dataRoom);
+    
     const stateRoom = useSelector(state => state.RoomReducer);
     useEffect(() => {
-        setRoomType(data?.roomType?.[0]);
+        setRoomType(data?.roomType?.[0].RoomType);
+        // setDataRoom(data?.roomType?.[0]);
+
         
-    }, [data]);
+    }, [data,data.roomType]);
     useEffect(() => {
         const room = stateRoom?.rooms?.find(room => room.hotel._id === data._id && room.RoomType === roomType);
         setDataRoom(room);
     }, [stateRoom.rooms, roomType]);
+    console.log(dataRoom,"data");
+    console.log(roomType,"type");
+    
+    
 
-    console.log(data?.roomType);
+    // console.log(data?.roomType);
 
   return (
     <>
@@ -65,7 +74,7 @@ const InfoHotel = ({ data }) => {
                     dataRoom?.services?.map((service,index)=>(
                         <div key={index} className="w-full flex items-center gap-3">
                           {React.createElement(iconMap[service.icon], { size: 20 })}
-                        <div>
+                        <div className="py-2">
                           <h4 className="font-[500] text-[16px] leading-[24px]">
                             {service.name}
                           </h4>
@@ -82,28 +91,40 @@ const InfoHotel = ({ data }) => {
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
               <div className="w-full">
               <div
-  
-  dangerouslySetInnerHTML={{ __html: data.description }}
+  dangerouslySetInnerHTML={{
+    __html: data?.description?.length > 500 
+      ? data?.description?.substring(0, 500) + "..." 
+      : data?.description
+  }}
 />
+  {
+    data?.description?.length > 500 && (
+      <div className="flex cursor-pointer items-center gap-1 my-1 ">
+        <p className="font-[500] underline">Show more</p>
+        <FaAngleRight />
+
+      </div>
+    )
+  }
               </div>
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
-              <div className="w-[50%] flex flex-col gap-4">
+              <div className="w-full flex flex-col gap-4">
                 <h3 className="font-[500] text-[24px] leading-[32px]">
                   Where you’ll sleep
                 </h3>
-                <div>
-                  <img
-                    className="w-[320px] rounded-lg aspect-[3/2] "
-                    src="https://s3-alpha-sig.figma.com/img/91d6/ccd9/96e5b436aa98cbfacf7fc152380f2a69?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=XZW86VFe-srTvaVuCGF7ngAsB-8K5WOpHzZik7oJdx1MbSgatCeVH6RxrhlOTUovLrPPZHptnLusJ7B5s7IV3eI~EIJZCDIroP5v5J244e7uARAJjFu-Prb1-SZsj~H4x1zVKhQYEORT90NZz8Ek0fGW0whewErW5Ke5OrBjGmWJC37HN~Lbr7BN68BfrUTLjA286ZEcQ4mfPyGiewdHl7RIXcF4Cqh-HaDkCZdQH~48z9OSfrpClwGuL4BVE2VTFgRFacBtaBNIcvFvSHGY86yVMrckHRTjL46~x1yfJIzUe-xneL85DrJLHbE5~0OyVi6oxOFlteEVdSi0yb0U-g__"
-                    alt=""
-                  />
-                  <h3 className="font-[500] text-[16px] leading-[24px]">
-                    Bedroom
-                  </h3>
-                  <p className="font-[400] text-[14px] leading-[20px]">
-                    1 queen bed
-                  </p>
+                <div className="grid gap-2 grid-cols-2">
+                  {
+                    dataRoom?.photos?.map((i,ind)=>(<>
+                      <img key={ind} src={i} className="w-full rounded-2xl aspect-[3/2]" alt="" />
+                    </>))
+                  }
+                  {
+                    dataRoom?.photos?.length ===0 && (<>
+                      NO IMAGES
+                    </>)
+                  }
+                    
                 </div>
               </div>
             </div>

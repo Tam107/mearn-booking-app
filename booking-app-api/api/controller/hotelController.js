@@ -10,7 +10,6 @@ import Room from "../models/Room.js";
 
 export const createHotel = async (req, res) => {
     try {
-        console.log(req.body,1);
         
         const { name,
             type,
@@ -22,7 +21,7 @@ export const createHotel = async (req, res) => {
             roomType,
             cheapestPrice,
             checkIn,
-            checkOut } = req.body
+            checkOut,policy } = req.body
 
             // console.log(checkIn,checkOut);
             
@@ -97,7 +96,7 @@ export const createHotel = async (req, res) => {
                 photos,
                 description,
                 services,
-            
+                policy,
                 cheapestPrice,
                 checkIn,
                 checkOut
