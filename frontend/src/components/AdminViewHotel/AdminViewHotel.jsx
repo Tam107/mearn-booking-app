@@ -96,7 +96,7 @@ const AdminViewHotel = () => {
       render: (roomType) => {
         return (
           <>
-            {roomType.map((type, ind) => (
+            {roomType?.map((type, ind) => (
               <p
                 key={ind}
                 style={{
