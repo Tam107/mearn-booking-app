@@ -15,6 +15,7 @@ const HotelDetail = () => {
   const [data, setData] = useState({});
   const stateHotels = useSelector((state) => state.HotelReducer);
   // const [roomType, setRoomType] = useState('');
+ 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -89,7 +90,7 @@ const HotelDetail = () => {
               photos={data?.photos}
             />
             <br />
-            <InfoHotel data={data} />
+            <InfoHotel  data={data} />
 
             <div className="mt-4">
               <div className="flex flex-wrap items-stretch justify-start ">

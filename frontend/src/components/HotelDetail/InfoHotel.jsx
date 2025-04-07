@@ -5,7 +5,11 @@ import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { useSelector } from "react-redux";
 import iconMap from "../../data/iconMap";
 import { FaAngleRight } from "react-icons/fa";
+import { RxCross1 } from "react-icons/rx";
+
 const InfoHotel = ({ data }) => {
+   const [showDes,setShowDes] = useState(false)
+  
   const [roomType, setRoomType] = useState("");
   const [dataRoom, setDataRoom] = useState({});
   console.log(dataRoom);
@@ -23,7 +27,7 @@ const InfoHotel = ({ data }) => {
   }, [stateRoom.rooms, roomType]);
 
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>
@@ -91,7 +95,7 @@ const InfoHotel = ({ data }) => {
                   }}
                 />
                 {data?.description?.length > 500 && (
-                  <div className="flex cursor-pointer items-center gap-1 my-1 ">
+                  <div onClick={()=>setShowDes(true)} className="flex cursor-pointer items-center gap-1 my-1 ">
                     <p className="font-[500] underline">Show more</p>
                     <FaAngleRight />
                   </div>
@@ -321,6 +325,28 @@ const InfoHotel = ({ data }) => {
               </div>
             </div>
       </div>
+      {
+        showDes===true && (
+        <>
+        
+        <div className="w-full fixed top-0 left-0 h-screen z-50 bg-[#00000042]">
+
+        <div className="mx-auto p-6 w-[60%] h-[60%]   rounded-3xl my-40 bg-white">
+        <div className="w-full flex items-center sticky justify-end">
+            <RxCross1
+              className="cursor-pointer"
+              onClick={() => setShowDes(false)}
+              size={20}
+            />
+          </div>
+          <div className="overflow-y-scroll h-full"
+                  dangerouslySetInnerHTML={{
+                    __html:data?.description}}
+                />
+        </div>
+        </div>
+        </>)
+      }
     </>
   );
 };
