@@ -176,7 +176,7 @@ export const getAllRooms = async (req, res, next) => {
         // console.log("herre");
         
         // Fetch all rooms
-        const rooms = await Room.find({}).populate("services").populate('hotel').sort({ createdAt: -1 }); 
+        const rooms = await Room.find({}).populate("services").populate('hotel').populate('facilities').sort({ createdAt: -1 }); 
         
         // Populate hotel and services fields if needed
        

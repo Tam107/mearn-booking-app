@@ -1,4 +1,4 @@
-import { Form, TimePicker } from "antd";
+import { Form, TimePicker, Tooltip } from "antd";
 import React, { useState, useEffect, useRef } from "react";
 import { Country, State, City } from "country-state-city";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import {
 
   getAllServicesApi,
+  getPolicyApi,
   uploadByFilesApi,
   uploadByLinkApi,
 } from "../../../Axios/client/api";
@@ -21,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { data, useNavigate, useParams } from "react-router";
 import { CiCircleChevUp } from "react-icons/ci";
 import { updateHotelAction } from "../../redux/actions/HotelAction";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const AdminViewEditHotel = () => {
     const {slug} = useParams()
@@ -74,7 +76,26 @@ const AdminViewEditHotel = () => {
   const [description, setDescription] = useState("");
   const [services, setServices] = useState([]);
   // console.log(services);
+  // policy
+  const [typePolicyDefault,setTypePolicyDefault] = useState([
+    'House rules',
+    "Safety & property",
+    "Cancellation policy"
+  ])
+  const [inputPolicy,setInputPolicy] = useState()
+  const [typePolicy,setTypePolicy] = useState('House rules');
+    const [policy,setPolicy] = useState([])
+    const [policyChecked,setPolicyChecked] = useState([])
   
+    const handlePolicyChange = (id) => {
+      const isExist = policyChecked.find((i) => i === id);
+      if (isExist) {
+        const tmp = policyChecked.filter((i) => i != id);
+        setPolicyChecked(tmp);
+      } else {
+        return setPolicyChecked([...policyChecked, id]);
+      }
+    };
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -89,7 +110,9 @@ const AdminViewEditHotel = () => {
       setPhotos(dataDefault?.photos)
       setDescription(dataDefault?.description)
       setServices(dataDefault?.services?.map(service => service._id));
-
+      setPolicyChecked(dataDefault?.policy.map(i=>i._id))
+      // console.log(dataDefault);
+      
     };
     fetchApi();
   }, [dataDefault]);
@@ -156,8 +179,23 @@ const AdminViewEditHotel = () => {
       const ad = await getAllServicesApi();
       setServicesDefault(ad.data);
     };
+    
     alo();
+    
   }, [showModel]);
+  useEffect(()=>{const ola = async ()=>{
+    if(typePolicy){
+      const tmp = await getPolicyApi({type:typePolicy})
+      // console.log(tmp);
+      
+      if(tmp.success){
+        
+        setPolicy(tmp.data)
+      }
+    }
+
+  }
+ola()},[typePolicy])
 
   const handleServiceChange = (serviceId) => {
     setServices((services) => {
@@ -170,18 +208,10 @@ const AdminViewEditHotel = () => {
     });
   };
 
-  const handleRoomTypeChange = (name) => {
-    const isExist = roomType.find((i) => i === name);
-    if (isExist) {
-      const tmp = roomType.filter((i) => i != name);
-      setRoomType(tmp);
-    } else {
-      return setRoomType([...roomType, name]);
-    }
-  };
+  
 
   const navigate = useNavigate()
-
+  
   const handleSave = async(e) => {
     // e.preventDefault();
     // console.log(123);
@@ -189,9 +219,7 @@ const AdminViewEditHotel = () => {
       return toast.error("Name cannot be empty");
     }
 
-    if (!type) {
-      return toast.error("Type accommodation cannot be empty");
-    }
+   
     if (!city) {
       return toast.error("City cannot be empty");
     }
@@ -218,7 +246,7 @@ const AdminViewEditHotel = () => {
     let dataHotel = {
       _id: dataDefault._id,
       name,
-      type,
+     
       city,
       address,
       roomType,
@@ -232,7 +260,7 @@ const AdminViewEditHotel = () => {
     };
   
     dispatch(updateHotelAction(dataHotel))
-    navigate("/dashboard-view-hotel")
+    navigate("/dashboard-view-homes")
 
 
     // console.log(dataHotel);
@@ -339,7 +367,7 @@ const AdminViewEditHotel = () => {
             </div>
           </div>
 
-          <div className="mb-4 w-full flex flex-col ">
+          {/* <div className="mb-4 w-full flex flex-col ">
             <p htmlFor="" className="font-[400] text-[25px]">
               Address
             </p>
@@ -352,6 +380,41 @@ const AdminViewEditHotel = () => {
               onChange={(e) => setAddress(e.target.value)}
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
             />
+          </div> */}
+          <div className=" w-full flex items-center justify-between">
+          <div className=" w-[48%] flex flex-col ">
+              <p htmlFor="" className="font-[400] text-[25px]">
+                Cheapest price
+              </p>
+               <p className="text-[16px] font-[400] text-gray-400">
+              Specific address of the building
+            </p>
+              <input
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                type="number"
+                name=""
+                id=""
+                value={cheapestPrice}
+                onChange={(e) => setCheapestPrice(e.target.value)}
+                placeholder="Price"
+              />
+            </div>
+            <div className=" w-[50%] flex flex-col ">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Address
+            </p>
+            <p className="text-[16px] font-[400] text-gray-400">
+              Specific address of the building
+            </p>
+            <input
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+            />
+          </div>
+
+            
           </div>
 
           <div className="mb-4 w-full flex flex-col ">
@@ -472,47 +535,55 @@ const AdminViewEditHotel = () => {
             </div>
           </div>
 
-          <div className="mb-4 w-full flex items-center justify-between">
-          <div className=" w-[48%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Cheapest price
-              </p>
-              <input
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                type="number"
-                name=""
-                id=""
-                value={cheapestPrice}
-                onChange={(e) => setCheapestPrice(e.target.value)}
-                placeholder="Price"
-              />
-            </div>
-
-            <div className=" w-[50%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Rooms Type
-              </p>
-
-              <div className="w-full px-4 py-2 border border-gray-400 rounded-3xl">
-                <div className="flex  items-center justify-between ">
-                  {roomTypeDefault.map((item, index) => {
-                    return (
-                      <>
-                        <div key={index} className="flex items-center gap-2">
-                          <input
-                            checked={roomType?.includes(item)} // Check if the room type is selected
-                            onChange={() => handleRoomTypeChange(item)}
-                            type="checkbox"
-                          />
-                          {item}
-                        </div>
-                      </>
-                    );
-                  })}
+          <div className="mb-4 w-full flex flex-col ">
+            <div className="flex items-center justify-between">
+            <p htmlFor="" className="font-[400] text-[25px]">
+              Policies
+            </p>
+            <div className="flex mb-3 items-center gap-4">
+                <Tooltip title="Choose the type of policy before add ">
+                  <FaQuestionCircle size={23} />
+                </Tooltip>
+               <div className="flex items-center gap-2"> <input value={inputPolicy} onChange={e=>setInputPolicy(e.target.value)}  type="text" className="px-4 py-2 border border-gray-400 rounded-3xl" placeholder="Enter policy " />
+                  <div
+                  // onClick={handleAddPolicy}
+                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
+                >
+                  Add new
+                </div>
                 </div>
               </div>
             </div>
+              <div>
+                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
+                  <option disabled  value="" className="text-gray-200">Select type of policy</option>
+                  {typePolicyDefault?.map((i,ind)=>(
+                    <>
+                      <option key={ind} value={i}>{i}</option>
+                    </>
+                  ))}
+                </select>
+
+              </div>
+              <div className="mt-2 flex gap-4 items-center flex-wrap">
+                {
+                  policy?.map(i=>(
+                    <>
+                       <label className="flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      checked={policyChecked?.includes(i._id)}
+                      onChange={() => handlePolicyChange(i._id)}
+                    />
+                    <span className="ml-2">{i.name}</span>
+                  </label>
+                    </>
+                  ))
+                }
+              </div>
           </div>
+
+          
 
          
 

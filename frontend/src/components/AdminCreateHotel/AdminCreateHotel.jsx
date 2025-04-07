@@ -371,6 +371,9 @@ const AdminCreateHotel = () => {
               <p htmlFor="" className="font-[400] text-[25px]">
                 Cheapest price
               </p>
+              <p className="text-[16px] font-[400] text-gray-400">
+              Specific address of the building
+            </p>
               <input
                 className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                 type="number"
@@ -381,7 +384,7 @@ const AdminCreateHotel = () => {
                 placeholder="Price"
               />
             </div>
-            <div className="mb-4 w-[50%] flex flex-col ">
+            <div className=" w-[50%] flex flex-col ">
             <p htmlFor="" className="font-[400] text-[25px]">
               Address
             </p>

@@ -138,7 +138,7 @@ export const createHotel = async (req, res) => {
 
 export const getAllHotels = async (req, res, next) => {
     try {
-        const hotels = await Hotel.find({}).populate('services').populate("roomType").sort({ createdAt: -1 });
+        const hotels = await Hotel.find({}).populate('services').populate("roomType").populate('policy').sort({ createdAt: -1 });
         res.status(200).json({
             success:true,
             data:hotels
@@ -156,7 +156,7 @@ export const updateHotel = async (req, res, next) => {
     try {
         const hotel = await Hotel.findById(req.body._id);
 
-        console.log(req.body.services);
+        // console.log(req.body.services);
         
         
         
@@ -173,27 +173,7 @@ export const updateHotel = async (req, res, next) => {
             })
             return;
         }
-        const roomDelete = roomType.filter((room)=>{
-            return !req.body.roomType.includes(room)
-        })
-        if(roomDelete.length>0){    
-            await Room.deleteMany({ hotel: req.body._id, RoomType: { $in: roomDelete } });
-        }
-        const roomAdd = req.body.roomType.filter((room)=>{
-            return !roomType.includes(room)
-        })
-        if(roomAdd.length>0){
-            for(let i =0;i<roomAdd.length;i++){
-                const dataRoom = {
-                    RoomType:roomAdd[i],
-                    services:req.body.services||[],
-                    hotel:req.body._id,
-                    price:req.body.cheapestPrice
-                }
-                const room = new Room(dataRoom)
-                await room.save();
-            }
-        }
+       
     
 
         

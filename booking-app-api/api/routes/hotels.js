@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/create", createHotel);
 router.get("/getAll", getAllHotels);
 router.delete("/delete/:id", deleteHotel);
-router.put("/update", updateHotel);
+router.patch("/update", updateHotel);
 
 /**
  * @swagger

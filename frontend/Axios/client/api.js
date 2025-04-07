@@ -251,7 +251,7 @@ const getAllRoomApi = async()=>{
 const updateHotelApi = async(data)=>{
     try {
         const URL_LOGIN =`/hotels/update`
-        const response = await axios.put(URL_LOGIN,data)
+        const response = await axios.patch(URL_LOGIN,data)
         console.log(response);
         
         return response
