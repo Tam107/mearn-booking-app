@@ -23,6 +23,8 @@ import { data, useNavigate, useParams } from "react-router";
 import { CiCircleChevUp } from "react-icons/ci";
 import { updateHotelAction } from "../../redux/actions/HotelAction";
 import { FaQuestionCircle } from "react-icons/fa";
+import Services from "../Services/Services";
+import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
 
 const AdminViewEditHotel = () => {
     const {slug} = useParams()
@@ -523,24 +525,8 @@ ola()},[typePolicy])
 
               {servicesDefault?.length > 0 && (
                 <>
-                  {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
-                      <input
-                        onChange={() => handleServiceChange(service._id)}
-                        type="checkbox"
-                        className="mr-2"
-                        checked={services?.includes(service._id)}
-                      />
+                                    <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
 
-                      <span className="mr-2">
-                        {iconMap[service.icon]
-                          ? React.createElement(iconMap[service.icon])
-                          : null}
-                      </span>
-
-                      <span>{service.name}</span>
-                    </label>
-                  ))}
                 </>
               )}
             </div>
@@ -643,7 +629,7 @@ ola()},[typePolicy])
 
       {showModel && (
         <>
-          {/* <ModelCreateService setShowModel={setShowModel}/> */}
+          <ModelCreateService setShowModel={setShowModel}/>
           
         </>
       )}

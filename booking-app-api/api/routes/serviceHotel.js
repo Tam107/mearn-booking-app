@@ -39,9 +39,11 @@ router.post("/create", async (req, res) => {
 
         // Sử dụng $regex để tìm kiếm không phân biệt chữ hoa chữ thường và giữ nguyên dữ liệu trong cơ sở dữ liệu
         const Exist = await ServiceHotel.find({
-            name: { $regex: `^${serviceName}$`, $options: 'i' }
-        });
-        if (Exist) {
+            name: { $regex: `^${serviceName}$`, $options: 'i' } // So sánh chính xác, không phân biệt chữ hoa chữ thường
+          });
+        if (Exist.length>0) {
+            console.log(Exist);
+            
             return res.json({
                 success: false,
                 message: "Existed service!"

@@ -678,8 +678,8 @@ const AdminCreateRoom = () => {
 
               {servicesDefault?.length > 0 && (
                 <>
-                  <Services handleServiceChange={handleServiceChange} servicesDefault={servicesDefault} services={services} />
-                </>
+                  <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
+                  </>
               )}
             </div>
           </div>
@@ -724,7 +724,7 @@ const AdminCreateRoom = () => {
             </div>
           </div>
 
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
+          {/* <div className="mb-4 border-gray-300 pb-4 border-b w-full">
             <h2 className="font-medium text-lg mb-2">Short Description</h2>
             <Editor
               apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
@@ -746,7 +746,7 @@ const AdminCreateRoom = () => {
                          bullist numlist outdent indent | removeformat | help",
               }}
             />
-          </div>
+          </div> */}
 
           <div className="mb-4  w-full">
             <div className="flex mb-3 items-center gap-4">

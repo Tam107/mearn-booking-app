@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
 import { RxCross1 } from "react-icons/rx";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import Services from "../Services/Services";
 const CustomEvent = ({ event }) => {
   return (
     <div className="text-[12px] whitespace-normal break-words leading-snug mt-auto">
@@ -698,7 +699,7 @@ const AdminEditRoomDetail = () => {
             <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
               <div
                 onClick={() => setShowModel(true)}
-                className="cursor-pointer h-24 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
+                className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
               >
                 <IoCloudUploadOutline />
                 Create service
@@ -706,24 +707,8 @@ const AdminEditRoomDetail = () => {
 
               {servicesDefault?.length > 0 && (
                 <>
-                  {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer h-24 border border-gray-300 p-4 flex rounded-2xl gap-2 items-center">
-                      <input
-                        onChange={() => handleServiceChange(service._id)}
-                        type="checkbox"
-                        className="mr-2"
-                        checked={services.includes(service._id)}
-                      />
+                                    <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
 
-                      <span className="mr-2">
-                        {iconMap[service.icon]
-                          ? React.createElement(iconMap[service.icon])
-                          : null}
-                      </span>
-
-                      <span>{service.name}</span>
-                    </label>
-                  ))}
                 </>
               )}
             </div>
@@ -769,7 +754,7 @@ const AdminEditRoomDetail = () => {
                       </div>
                     </div>
 
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
+          {/* <div className="mb-4 border-gray-300 pb-4 border-b w-full">
                       <h2 className="font-medium text-lg mb-2">Short Description</h2>
                       <Editor
                         apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
@@ -791,7 +776,7 @@ const AdminEditRoomDetail = () => {
                                    bullist numlist outdent indent | removeformat | help",
                         }}
                       />
-                    </div>
+                    </div> */}
 
                     <div className="mb-4  w-full">
             <div className="flex mb-3 items-center gap-4">

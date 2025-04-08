@@ -45,7 +45,7 @@ const Item = ({ services, handleServiceChange, servicesDefault,service,setServic
             onChange={() => handleServiceChange(service?._id)}
             type="checkbox"
           className="mr-2"
-          checked={services.includes(service?._id)}
+          checked={services?.includes(service?._id)}
         />
 
         <span className="mr-2">
