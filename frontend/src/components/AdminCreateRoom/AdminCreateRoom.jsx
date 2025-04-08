@@ -667,10 +667,10 @@ const AdminCreateRoom = () => {
                 <FaQuestionCircle size={23} />
               </Tooltip>
             </div>
-            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
               <div
                 onClick={() => setShowModel(true)}
-                className="cursor-pointer h-24 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
+                className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
               >
                 <IoCloudUploadOutline />
                 Create service

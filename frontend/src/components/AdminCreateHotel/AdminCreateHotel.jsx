@@ -22,6 +22,7 @@ import { getAllHotelsAction } from "../../redux/actions/HotelAction";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 import { useNavigate } from "react-router";
 import { FaQuestionCircle } from "react-icons/fa";
+import Services from "../Services/Services";
 
 const AdminCreateHotel = () => {
   const dispatch = useDispatch()
@@ -530,10 +531,10 @@ const AdminCreateHotel = () => {
               Select the services available at your accommodation to offer your
               guests a great experience.
             </p>
-            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
               <div
                 onClick={() => setShowModel(true)}
-                className="cursor-pointer h-24 border p-4 flex rounded-2xl gap-2 items-center"
+                className="cursor-pointer h-20 border p-4 flex rounded-2xl gap-2 items-center"
               >
                 <IoCloudUploadOutline />
                 Create service
@@ -541,23 +542,7 @@ const AdminCreateHotel = () => {
 
               {servicesDefault?.length > 0 && (
                 <>
-                  {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer h-24 border p-4 flex rounded-2xl gap-2 items-center">
-                      <input
-                        onChange={() => handleServiceChange(service._id)}
-                        type="checkbox"
-                        className="mr-2"
-                      />
-
-                      <span className="mr-2">
-                        {iconMap[service.icon]
-                          ? React.createElement(iconMap[service.icon])
-                          : null}
-                      </span>
-
-                      <span>{service.name}</span>
-                    </label>
-                  ))}
+                  <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
                 </>
               )}
             </div>

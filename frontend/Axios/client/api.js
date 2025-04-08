@@ -134,6 +134,30 @@ const createServicesApi = async(data)=>{
         }
     }
 }
+const deleteServicesApi = async(data)=>{
+    try {
+        const URL_LOGIN ='/servicesHotel/delete/'+ data
+        const response = await axios.delete(URL_LOGIN)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const editServicesApi = async(id,data)=>{
+    try {
+        const URL_LOGIN ='/servicesHotel/edit/'+ id
+        const response = await axios.patch(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 const createFacilitiesApi = async(data)=>{
     try {
         const URL_LOGIN ='/facilityHotel/create'
@@ -349,5 +373,7 @@ export {
     createRoomApi,
     updateRoomApi,
     getPolicyApi,
-    createPolicyApi
+    createPolicyApi,
+    deleteServicesApi,
+    editServicesApi
 }
