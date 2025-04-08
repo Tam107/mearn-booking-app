@@ -41,7 +41,7 @@ const AdminViewRoom = () => {
 
   const columns = [
     {
-      title: 'Hotel',
+      title: 'Home',
       dataIndex: 'hotel',
       key: 'hotel name',
       render: (hotel) => (
@@ -160,6 +160,11 @@ const AdminViewRoom = () => {
                       </li>
                     </>
                   ))}
+                   {hotelPopup?.length ===0 && (
+                      <>
+                        <p className="text-red-400 break-words text-[16px] cursor-pointer  duration-200 transition">No homes available for the search. Try adjusting your options.</p>
+                      </>
+                     )}
                 </ul>
               </>
             )}

@@ -215,16 +215,27 @@ ola()},[typePolicy])
   const handleSave = async(e) => {
     // e.preventDefault();
     // console.log(123);
-    if (!name) {
+    if (!name || name.trim().length===0 ) {
       return toast.error("Name cannot be empty");
     }
 
    
     if (!city) {
-      return toast.error("City cannot be empty");
+      return toast.error("Please choose a city for your home.");
     }
     if (!address) {
       return toast.error("Address cannot be empty");
+    }
+    if (!services.length > 0) {
+      return toast.error(" Please select at least one service offered at this accommodation");
+    }
+   
+    if (!cheapestPrice) {
+     
+      return toast.error("please enter price"); // here
+    }
+    else{
+      if(cheapestPrice<0) return toast.error("Invalid price")
     }
 
     if (!roomType.length > 0) {

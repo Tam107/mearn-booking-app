@@ -24,6 +24,7 @@ import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
 import { useNavigate } from "react-router";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 import { RxCross1 } from "react-icons/rx";
+import Services from "../Services/Services";
 const localizer = momentLocalizer(moment);
 function getStartOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
@@ -260,6 +261,12 @@ const AdminCreateRoom = () => {
     if (daysChoosed.length === 0) {
       return toast.error("Please choose days");
     }
+    if(startDate.$d.getTime() > endDate.$d.getTime() ){
+      return toast.error("Start date must be before end date");
+
+    }
+    
+    
 
     // const dayOfWeek = moment(startDate).format("dddd");
     const newStartDate = startDate.startOf("day").toDate();
@@ -325,13 +332,13 @@ const AdminCreateRoom = () => {
   const handleCreateRoom = async () => {
     // console.log(photos);
     if (!hotelId) {
-      return toast.error("Please choose hotel");
+      return toast.error("Please select a home to create a room.");
     }
-    if (!roomType) {
-      return toast.error("Please enter room type");
+    if (!roomType || roomType.trim().length ===0) {
+      return toast.error("Please enter a room type");
     }
     if (!maxPeople) {
-      return toast.error("Please enter max people");
+      return toast.error("Invalid number of room capacity");
     }
     if (!price) {
       return toast.error("Please enter price");
@@ -574,12 +581,12 @@ const AdminCreateRoom = () => {
                         src={item}
                         className="rounded-2xl w-full object-cover"
                       />
-                      <span
+                      <div
                         onClick={(ev) => removePhoto(ev, item)}
-                        className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition duration-300"
+                        className="absolute top-0 right-0 w-6 h-6 text-sm flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition z-50 duration-300"
                       >
                         X
-                      </span>
+                      </div>
                     </div>
                   </>
                 ))}
@@ -671,24 +678,7 @@ const AdminCreateRoom = () => {
 
               {servicesDefault?.length > 0 && (
                 <>
-                  {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer h-24 border border-gray-300 p-4 flex rounded-2xl gap-2 items-center">
-                      <input
-                        onChange={() => handleServiceChange(service._id)}
-                        type="checkbox"
-                        className="mr-2"
-                        checked={services.includes(service._id)}
-                      />
-
-                      <span className="mr-2">
-                        {iconMap[service.icon]
-                          ? React.createElement(iconMap[service.icon])
-                          : null}
-                      </span>
-
-                      <span>{service.name}</span>
-                    </label>
-                  ))}
+                  <Services handleServiceChange={handleServiceChange} servicesDefault={servicesDefault} services={services} />
                 </>
               )}
             </div>

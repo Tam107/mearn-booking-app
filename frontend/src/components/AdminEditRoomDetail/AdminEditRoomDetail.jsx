@@ -87,6 +87,10 @@ const AdminEditRoomDetail = () => {
     if (daysChoosed.length === 0) {
       return toast.error("Please choose days");
     }
+    if(startDate.$d.getTime() > endDate.$d.getTime() ){
+      return toast.error("Start date must be before end date");
+
+    }
 
     // const dayOfWeek = moment(startDate).format("dddd");
     const newStartDate = startDate.startOf("day").toDate();

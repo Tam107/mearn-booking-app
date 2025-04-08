@@ -205,7 +205,7 @@ const AdminCreateHotel = () => {
   const handleCreateHotel = async(e) => {
     e.preventDefault();
     // console.log(123);
-    if (!name) {
+    if (!name || name.trim().length===0 ) {
       return toast.error("Name cannot be empty");
     }
 
@@ -213,24 +213,25 @@ const AdminCreateHotel = () => {
       return toast.error("Type accommodation cannot be empty");
     }
     if (!city) {
-      return toast.error("City cannot be empty");
+      return toast.error("Please choose a city for your home.");
     }
-    if (!address) {
+    if (!address || address.trim().length===0 ) {
       return toast.error("Address cannot be empty");
     }
 
     if (!roomType.length > 0) {
       return toast.error("At least one room type is required");
     }
+
     if (!cheapestPrice) {
      
-      return toast.error("Cheapest Price cannot be empty");
+      return toast.error("please enter price"); // here
     }
     else{
       if(cheapestPrice<0) return toast.error("Invalid price")
     }
     if (!services.length > 0) {
-      return toast.error("Please choose at least one service");
+      return toast.error("Please select at least one service offered at this accommodation");
     }
     if (!checkIn) {
       return toast.error("Check in time cannot be empty");
@@ -269,9 +270,11 @@ const AdminCreateHotel = () => {
     }
     // console.log(dataHotel);
     const res = await createHotelApi(dataHotel)
+    // console.log(services);
+    
     if(res.success){
       navigate("/dashboard-view-homes")
-      toast.success("Create hotel successfully")
+      toast.success("Home has been successfully created.")
       setName("")
       setType("")
       setCity("")
@@ -289,7 +292,7 @@ const AdminCreateHotel = () => {
       
     }
     else{
-      toast.error("Error");
+      toast.error("Unable to create home. Please try again later.");
     }
   };
 

@@ -63,7 +63,7 @@ const AdminViewHotel = () => {
 
   const columns = [
     {
-      title: "Hotel",
+      title: "Home",
       dataIndex: "name",
       key: "hotel name",
     },
@@ -89,6 +89,8 @@ const AdminViewHotel = () => {
         );
       },
     },
+    
+
 
     {
       title: "Room Type",
@@ -203,10 +205,15 @@ const AdminViewHotel = () => {
                           key={hotel._id}
                           className="text-white break-words text-[16px] cursor-pointer hover:text-blue-300 duration-200 transition"
                         >
-                          {hotel.name}
+                          {hotel.name} 
                         </li>
                       </>
                     ))}
+                     {hotelPopup?.length ===0 && (
+                      <>
+                        <p className="text-red-400 break-words text-[16px] cursor-pointer  duration-200 transition">No homes available for the search. Try adjusting your options.</p>
+                      </>
+                     )}
                   </ul>
                 </>
               )}

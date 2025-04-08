@@ -87,6 +87,9 @@ export const createHotel = async (req, res) => {
                   message: "Check-out time cannot be empty"
                 });
               }
+            //   console.log(req.body.services);
+            //   return res.json(1)
+              
 
               const data = new Hotel({
                 name,
