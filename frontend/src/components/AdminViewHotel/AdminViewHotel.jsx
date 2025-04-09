@@ -176,7 +176,7 @@ const AdminViewHotel = () => {
                 className="w-full  cursor-pointer flex items-center justify-between "
               >
                 <p className="font-[400] text-gray-600">
-                  {hotelSelected.length > 0 ? hotelSelected : "Select Hotel"}
+                  {hotelSelected.length > 0 ? hotelSelected : "Select Homec"}
                 </p>
                 <BiChevronDown className="cursor-pointer" size={20} />
               </div>
@@ -211,7 +211,7 @@ const AdminViewHotel = () => {
                     ))}
                      {hotelPopup?.length ===0 && (
                       <>
-                        <p className="text-red-400 break-words text-[16px] cursor-pointer  duration-200 transition">No homes available for the search. Try adjusting your options.</p>
+                        <p className=" break-words text-[16px] text-white cursor-pointer  duration-200 transition">No homes available for the search. Try adjusting your options.</p>
                       </>
                      )}
                   </ul>

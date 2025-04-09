@@ -540,10 +540,10 @@ const AdminCreateRoom = () => {
     <>
       <div className="w-full pt-6 px-6">
         <div
-          onClick={handleCreateRoom}
+         
           className="flex w-full items-center justify-between"
         >
-          <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
+          <h2  onClick={handleCreateRoom} className="font-[600] leading-[40px] text-gray-600 text-[36px]">
             Create new room
           </h2>
           <div className=" cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-4">
