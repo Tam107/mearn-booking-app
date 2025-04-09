@@ -85,6 +85,9 @@ const AdminEditRoomDetail = () => {
     if (!priceEvents) {
       return toast.error("Please choose price");
     }
+    if(priceEvents<=0){
+      return toast.error("Invalid price");
+    }
     if (daysChoosed.length === 0) {
       return toast.error("Please choose days");
     }
@@ -374,6 +377,9 @@ const AdminEditRoomDetail = () => {
         if(!priceChange){
           return toast.error("Please enter price");
         }
+        if(priceChange<=0){
+          return toast.error("Invalid price");
+        }
         const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
         
         if(  moment(infoChangePrice?.start).startOf('day').isBefore(newDate)){
@@ -447,6 +453,9 @@ const AdminEditRoomDetail = () => {
       const handlePriceChangeMulti = () =>{
         if(!priceChange){
           return toast.error("Please enter price");
+        }
+        if(priceChange<=0){
+          return toast.error("Invalid price");
         }
         const newEvent = eventsDefault.map((event) => {
           if (event.start.getTime() >= infoChangePrice?.start.getTime() && event.end.getTime() <= infoChangePrice?.end.getTime()) {
@@ -536,6 +545,11 @@ const AdminEditRoomDetail = () => {
         if (!maxPeople) {
           return toast.error("Please enter max people");
         }
+        if(maxPeople<=0)   return toast.error("Invalid number of room capacity");
+    if (!price) {
+      return toast.error("Please enter price");
+    }
+    if(price<=0)   return toast.error("Invalid Price");
         if (services.length === 0) {
           return toast.error("Please choose at least 1 services");
         }
