@@ -176,7 +176,7 @@ const AdminViewHotel = () => {
                 className="w-full  cursor-pointer flex items-center justify-between "
               >
                 <p className="font-[400] text-gray-600">
-                  {hotelSelected.length > 0 ? hotelSelected : "Select Homec"}
+                  {hotelSelected.length > 0 ? hotelSelected : "Select Home"}
                 </p>
                 <BiChevronDown className="cursor-pointer" size={20} />
               </div>

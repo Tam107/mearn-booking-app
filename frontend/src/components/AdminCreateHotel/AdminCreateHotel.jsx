@@ -632,7 +632,7 @@ const AdminCreateHotel = () => {
             onClick={handleCreateHotel}
             className="w-full cursor-pointer flex items-center justify-center bg-gray-300 rounded-2xl my-4 mt-6 py-2"
           >
-            Create Hotel
+            Create Home
           </button>
         </form>
       </div>

@@ -127,7 +127,7 @@ const AdminViewRoom = () => {
         <div className="w-full flex gap-6">
           <div className="w-[40%] relative shadow-2xl px-4 border border-gray-300 bg-white p-2 rounded-3xl">
            <div onClick={()=>{setOpen(!open)}} className="w-full  cursor-pointer flex items-center justify-between ">
-             <p  className="font-[400] text-gray-600">{hotelSelected.length>0? hotelSelected : "Select Hotel"}</p>
+             <p  className="font-[400] text-gray-600">{hotelSelected.length>0? hotelSelected : "Select Home"}</p>
             <BiChevronDown className="cursor-pointer" size={20} />
            </div>
 
