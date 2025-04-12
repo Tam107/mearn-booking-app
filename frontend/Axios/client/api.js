@@ -158,10 +158,35 @@ const editServicesApi = async(id,data)=>{
         }
     }
 }
+const editFacilitiesApi = async(id,data)=>{
+    try {
+        const URL_LOGIN ='/facilityHotel/edit/'+ id
+        const response = await axios.patch(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 const createFacilitiesApi = async(data)=>{
     try {
         const URL_LOGIN ='/facilityHotel/create'
         const response = await axios.post(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const deleteFacilitiesApi = async(data)=>{
+   
+    try {
+        const URL_LOGIN ='/facilityHotel/delete/'+ data
+        const response = await axios.delete(URL_LOGIN)
         return response
     } catch (error) {
         return {
@@ -302,6 +327,21 @@ const createRoomApi = async(data)=>{
     }
 }
 
+const deleteRoomApi = async(id,hotelId)=>{
+    try {
+        const URL_LOGIN =`/rooms/delete/`+id+"/"+hotelId
+        
+        const response = await axios.delete(URL_LOGIN)
+        // console.log(response);
+        
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 
 const updateRoomApi = async(data,id)=>{
     try {
@@ -375,5 +415,8 @@ export {
     getPolicyApi,
     createPolicyApi,
     deleteServicesApi,
-    editServicesApi
+    editServicesApi,
+    deleteRoomApi,
+    deleteFacilitiesApi,
+    editFacilitiesApi
 }

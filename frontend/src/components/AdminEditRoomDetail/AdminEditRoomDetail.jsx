@@ -4,7 +4,13 @@ import { FaQuestionCircle } from "react-icons/fa";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { createFacilitiesApi, getAllFacilitiesApi, getAllServicesApi, updateRoomApi, uploadByFilesApi } from "../../../Axios/client/api";
+import {
+  createFacilitiesApi,
+  getAllFacilitiesApi,
+  getAllServicesApi,
+  updateRoomApi,
+  uploadByFilesApi,
+} from "../../../Axios/client/api";
 import iconMap from "../../data/iconMap";
 import { Editor } from "@tinymce/tinymce-react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -17,6 +23,8 @@ import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
 import { RxCross1 } from "react-icons/rx";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 import Services from "../Services/Services";
+import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
+import Facilities from "../Facilities/Facilities";
 const CustomEvent = ({ event }) => {
   return (
     <div className="text-[12px] whitespace-normal break-words leading-snug mt-auto">
@@ -35,41 +43,43 @@ const AdminEditRoomDetail = () => {
   const [inputFacility, setInputFacility] = useState("");
   const [facilities, setFacilities] = useState([]);
   const [facilitiesDefault, setFacilitiesDefault] = useState([]);
-    const [photos, setPhotos] = useState([]);
-    const addPhotoByFile = async (ev) => {
-      // ev.preventDefault();
-      const files = ev.target.files;
-      const data = new FormData();
-      for (let i = 0; i < files.length; i++) {
-        data.append("photos", files[i]);
-      }
-      // console.log("ok");
-  
-      const res = await uploadByFilesApi(data);
-  
-      if (res.success) {
-        const newImg = res.data.map((item) => item.url);
-        setPhotos([...photos, ...newImg]);
-      } else {
-        toast.error("Error");
-      }
-    };
- 
-    // set gia sk 2
-    const [startDate, setStartDate] = useState(null);
-      const [endDate, setEndDate] = useState(null);
-      const [openEndDate, setOpenEndDate] = useState(false);
-      const handleStartDateChange = (date) => {
-        setOpenEndDate(false);
-        setStartDate(date);
-        setOpenEndDate(true); // Open the endDate picker when startDate is selected
-      };
-    
-      const handleEndDateChange = (date) => {
-        setEndDate(date);
-        setOpenEndDate(false); // Open the endDate picker when startDate is selected
-      };
-      const [priceEvents, setPriceEvents] = useState();
+  const [photos, setPhotos] = useState([]);
+  const [showCreateFacility, setShowCreateFacility] = useState(false);
+
+  const addPhotoByFile = async (ev) => {
+    // ev.preventDefault();
+    const files = ev.target.files;
+    const data = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      data.append("photos", files[i]);
+    }
+    // console.log("ok");
+
+    const res = await uploadByFilesApi(data);
+
+    if (res.success) {
+      const newImg = res.data.map((item) => item.url);
+      setPhotos([...photos, ...newImg]);
+    } else {
+      toast.error("Error");
+    }
+  };
+
+  // set gia sk 2
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [openEndDate, setOpenEndDate] = useState(false);
+  const handleStartDateChange = (date) => {
+    setOpenEndDate(false);
+    setStartDate(date);
+    setOpenEndDate(true); // Open the endDate picker when startDate is selected
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+    setOpenEndDate(false); // Open the endDate picker when startDate is selected
+  };
+  const [priceEvents, setPriceEvents] = useState();
   const [priceExtra, setPriceExtra] = useState([]);
   const handleChangePrice = () => {
     if (!hotelId) {
@@ -85,26 +95,24 @@ const AdminEditRoomDetail = () => {
     if (!priceEvents) {
       return toast.error("Please choose price");
     }
-    if(priceEvents<=0){
+    if (priceEvents <= 0) {
       return toast.error("Invalid price");
     }
     if (daysChoosed.length === 0) {
       return toast.error("Please choose days");
     }
-    if(startDate.$d.getTime() > endDate.$d.getTime() ){
+    if (startDate.$d.getTime() > endDate.$d.getTime()) {
       return toast.error("Start date must be before end date");
-
     }
 
     // const dayOfWeek = moment(startDate).format("dddd");
     const newStartDate = startDate.startOf("day").toDate();
     const newEndDate = endDate.endOf("day").toDate();
-  //  console.log(eventsDefault);
-  
-   
+    //  console.log(eventsDefault);
+
     const newEvent = eventsDefault.map((event) => {
       // console.log(moment(event.end).format("dddd"));
-      
+
       if (
         event.start >= newStartDate.getTime() &&
         event.end <= newEndDate.getTime()
@@ -112,12 +120,12 @@ const AdminEditRoomDetail = () => {
         if (daysChoosed.includes(moment(event.start).format("dddd"))) {
           // console.log(new Date(event.start));
           // console.log(new Date(event.end));
-          
+
           return {
             ...event,
             title: priceEvents,
-            start:new Date(event.start),
-            end:new Date(event.end),
+            start: new Date(event.start),
+            end: new Date(event.end),
             // end:moment(event.end).format("dddd"),
           };
         } else {
@@ -128,7 +136,7 @@ const AdminEditRoomDetail = () => {
       }
     });
     // console.log(newEvent);
-    
+
     const priceExtraTmp = [];
 
     eventsDefault.forEach((event) => {
@@ -146,9 +154,11 @@ const AdminEditRoomDetail = () => {
     });
     if (priceExtra.length > 0) {
       // console.log(priceExtra);
-      
+
       const filter = priceExtra.filter(
-        (item) => moment(item.start).startOf('day')._d.getTime() !== newStartDate.getTime()
+        (item) =>
+          moment(item.start).startOf("day")._d.getTime() !==
+          newStartDate.getTime()
       );
       setPriceExtra([...filter, ...priceExtraTmp]);
     } else {
@@ -171,37 +181,34 @@ const AdminEditRoomDetail = () => {
       behavior: "smooth", // This enables the smooth scrolling effect
     });
   };
-      
+
   const [data, setData] = useState();
   const [hotelId, setHotelId] = useState();
-    const [showModel, setShowModel] = useState(false);
-    const [servicesDefault, setServicesDefault] = useState([]);
-    const handleAddFa = async () => {
-      if (inputFacility) {
-        const res = await createFacilitiesApi({ name: inputFacility });
-        setInputFacility("");
-        setFacilities([...facilities, res.data._id]);
-        setFacilitiesDefault([...facilitiesDefault, res.data]);
-      } else {
-      }
-    };
-    const handleFaChange = (id) => {
-      const isExist = facilities.find((i) => i === id);
-      if (isExist) {
-        const tmp = facilities.filter((i) => i != id);
-        setFacilities(tmp);
-      } else {
-        return setFacilities([...facilities, id]);
-      }
-    };
-      const [description, setDescription] = useState("");
-      const handleEditorChange = (content) => {
-        setDescription(content);
-      };
-  
-  
-  
-  
+  const [showModel, setShowModel] = useState(false);
+  const [servicesDefault, setServicesDefault] = useState([]);
+  const handleAddFa = async () => {
+    if (inputFacility) {
+      const res = await createFacilitiesApi({ name: inputFacility });
+      setInputFacility("");
+      setFacilities([...facilities, res.data._id]);
+      setFacilitiesDefault([...facilitiesDefault, res.data]);
+    } else {
+    }
+  };
+  const handleFaChange = (id) => {
+    const isExist = facilities.find((i) => i === id);
+    if (isExist) {
+      const tmp = facilities.filter((i) => i != id);
+      setFacilities(tmp);
+    } else {
+      return setFacilities([...facilities, id]);
+    }
+  };
+  const [description, setDescription] = useState("");
+  const handleEditorChange = (content) => {
+    setDescription(content);
+  };
+
   useEffect(() => {
     const alo = async () => {
       const ad = await getAllServicesApi();
@@ -214,7 +221,7 @@ const AdminEditRoomDetail = () => {
     };
     alo();
     ola();
-  }, [showModel]);
+  }, [showModel,showCreateFacility]);
   const handleServiceChange = (serviceId) => {
     setServices((services) => {
       // If the service is already selected, remove it; otherwise, add it
@@ -227,363 +234,328 @@ const AdminEditRoomDetail = () => {
   };
 
   //set gia
-    const [eventsDefault, setEventsDefault] = useState([]);
+  const [eventsDefault, setEventsDefault] = useState([]);
   const [daysChoosed, setDaysChoosed] = useState([]);
-    const handleDayClick = (date) => {
-      const day = moment(date, "ddd").format("dddd");
-  
-      if (daysChoosed.includes(day)) {
-        setDaysChoosed(daysChoosed.filter((d) => d !== day));
-      } else {
-        setDaysChoosed([...daysChoosed, day]);
-      }
-    };
-    const generateEventsWithPrice = (eventsas, price) => {
-        const today = moment(); // Lấy ngày hôm nay
-        const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
-    
-        const events = [];
-    
-        // Duyệt qua từng ngày từ hôm nay đến 1 năm sau
-        let currentDay = today;
-        while (currentDay.isBefore(oneYearFromNow)) {
+  const handleDayClick = (date) => {
+    const day = moment(date, "ddd").format("dddd");
+
+    if (daysChoosed.includes(day)) {
+      setDaysChoosed(daysChoosed.filter((d) => d !== day));
+    } else {
+      setDaysChoosed([...daysChoosed, day]);
+    }
+  };
+  const generateEventsWithPrice = (eventsas, price) => {
+    const today = moment(); // Lấy ngày hôm nay
+    const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
+
+    const events = [];
+
+    // Duyệt qua từng ngày từ hôm nay đến 1 năm sau
+    let currentDay = today;
+    while (currentDay.isBefore(oneYearFromNow)) {
+      events.push({
+        title: price, // Gán title là "100 VND"
+        start: currentDay.startOf("day").toDate(), // Thời gian bắt đầu là 00:00 của ngày
+        end: currentDay.endOf("day").toDate(), // Thời gian kết thúc là 23:59 của ngày
+      });
+
+      // Tiến đến ngày tiếp theo
+      currentDay = currentDay.add(1, "day");
+    }
+
+    return events;
+  };
+  function removePhoto(ev, filename) {
+    ev.preventDefault();
+    setPhotos([...photos.filter((photo) => photo !== filename)]);
+  }
+  useEffect(() => {
+    const tmp = stateRoom?.rooms?.find((item) => item.slug === slug);
+    // console.log(stateRoom);
+
+    if (tmp) {
+      setData(tmp);
+      setPrice(tmp?.price);
+      setMaxPeople(tmp?.maxPeople);
+      setRoomType(tmp?.RoomType);
+      setHotelId(tmp?.hotel);
+      setServices(tmp?.services?.map((item) => item._id));
+      setFacilities(tmp?.facilities?.map(i=>i._id));
+      setDescription(tmp?.description);
+      setPhotos(tmp?.photos);
+      setPriceExtra(tmp?.priceExtra);
+      // console.log(tmp?.priceExtra);
+
+      //set price
+      const today = moment(); // Lấy ngày hôm nay
+      const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
+
+      const events = [];
+      let currentDay = today;
+
+      while (currentDay.isBefore(oneYearFromNow)) {
+        // const ex= tmp?.priceExtra.find(i=>moment(i.start)=== currentDay.startOf("day")._)
+        // console.log(currentDay.startOf("day")._d);
+        // console.log(currentDay);
+        const ex = tmp?.priceExtra.find((i, ind) => {
+          const startDate = new Date(i.start);
+          // console.log(startDate);
+
+          // console.log(currentDay);
+
+          if (startDate.getTime() === currentDay.startOf("day")._d.getTime()) {
+            // console.log(currentDay.startOf("day")._d,i);
+            return {
+              title: i.title,
+              start: currentDay.startOf("day")._d,
+              end: currentDay.endOf("day")._d,
+            };
+          }
+          return null;
+        });
+        // console.log(ex);
+
+        // console.log(ex);
+        if (ex) {
+          // console.log(ex,1);
+          // console.log(new Date(ex.start).startOf("day")._d);
+
           events.push({
-            title: price, // Gán title là "100 VND"
+            title: ex?.title, // Gán title là "100 VND"
+            start: moment(ex.start).startOf("day")._d, // Thời gian bắt đầu là 00:00 của ngày
+            end: moment(ex.start).endOf("day")._d, // Thời gian kết thúc là 23:59 của ngày
+          });
+        } else {
+          events.push({
+            title: tmp?.price, // Gán title là "100 VND"
             start: currentDay.startOf("day").toDate(), // Thời gian bắt đầu là 00:00 của ngày
             end: currentDay.endOf("day").toDate(), // Thời gian kết thúc là 23:59 của ngày
           });
-    
-          // Tiến đến ngày tiếp theo
-          currentDay = currentDay.add(1, "day");
         }
-    
-        return events;
-      };
-      function removePhoto(ev, filename) {
-        ev.preventDefault();
-        setPhotos([...photos.filter((photo) => photo !== filename)]);
+
+        // Tiến đến ngày tiếp theo
+        currentDay = currentDay.add(1, "day");
       }
-    useEffect(() => {
-      const tmp = stateRoom?.rooms?.find((item) => item.slug === slug);
-      // console.log(stateRoom);
-      
-      if (tmp) {
-        setData(tmp);
-        setPrice(tmp?.price);
-        setMaxPeople(tmp?.maxPeople);
-        setRoomType(tmp?.RoomType);
-        setHotelId(tmp?.hotel);
-        setServices(tmp?.services?.map((item) => item._id));      
-        setFacilities(tmp?.facilities);
-        setDescription(tmp?.description);
-        setPhotos(tmp?.photos);
-        setPriceExtra(tmp?.priceExtra)
-        // console.log(tmp?.priceExtra);
-        
-        //set price
-            const today = moment(); // Lấy ngày hôm nay
-            const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
-        
-            const events = [];
-            let currentDay = today;
-            
-              
-              
-    
-            while (currentDay.isBefore(oneYearFromNow)) {
-              // const ex= tmp?.priceExtra.find(i=>moment(i.start)=== currentDay.startOf("day")._)
-              // console.log(currentDay.startOf("day")._d);
-              // console.log(currentDay);
-              const ex = tmp?.priceExtra.find((i,ind) => {
-                const startDate = new Date(i.start)
-                // console.log(startDate);
-                
-                // console.log(currentDay);
-               
-                
-                if(startDate.getTime()===currentDay.startOf('day')._d.getTime()){
-                  // console.log(currentDay.startOf("day")._d,i);
-                  return {
-                    title: i.title,
-                    start: currentDay.startOf("day")._d,
-                    end: currentDay.endOf("day")._d,
-                  }
+      setEventsDefault(events);
+    }
+  }, [slug, stateRoom]);
+  // console.log(eventsDefault);
 
-                  
-                }
-                return null;
-              });
-              // console.log(ex);
-              
-              
-              // console.log(ex);
-              if(ex){
-                // console.log(ex,1);
-                // console.log(new Date(ex.start).startOf("day")._d);
-                
-                
-                events.push({
-                  title: ex?.title, // Gán title là "100 VND"
-                  start: moment(ex.start).startOf('day')._d, // Thời gian bắt đầu là 00:00 của ngày
-                  end: moment(ex.start).endOf('day')._d, // Thời gian kết thúc là 23:59 của ngày
-                });
-          
-              }
-              else{
-                events.push({
-                  title: tmp?.price, // Gán title là "100 VND"
-                  start: currentDay.startOf("day").toDate(), // Thời gian bắt đầu là 00:00 của ngày
-                  end: currentDay.endOf("day").toDate(), // Thời gian kết thúc là 23:59 của ngày
-                });
-              }
-              
-        
-              // Tiến đến ngày tiếp theo
-              currentDay = currentDay.add(1, "day");
-            }
-            setEventsDefault(events)
+  //model chang price
+  const [modelChangePrice, setModelChangePrice] = useState(false);
+  const [infoChangePrice, setInfoChangePrice] = useState();
+  const [priceChange, setPriceChange] = useState();
+  const handleSelectSlot = (slotInfo) => {
+    if (!hotelId) {
+      return toast.error("Please choose hotel");
+    }
+    const newDate = moment().startOf("day"); // Get today's date with time set to 00:00:00
 
-        
+    // Compare only the dates (ignoring time)
+
+    if (moment(slotInfo?.start).startOf("day").isBefore(newDate)) {
+      setInfoChangePrice(null);
+      setModelChangePrice(false);
+      setPriceChange();
+      return toast.error("Do not choose day in the past");
+    }
+
+    setInfoChangePrice(slotInfo);
+    setModelChangePrice(true);
+  };
+  const handlePriceChangeOne = () => {
+    if (!priceChange) {
+      return toast.error("Please enter price");
+    }
+    if (priceChange <= 0) {
+      return toast.error("Invalid price");
+    }
+    const newDate = moment().startOf("day"); // Get today's date with time set to 00:00:00
+
+    if (moment(infoChangePrice?.start).startOf("day").isBefore(newDate)) {
+      setInfoChangePrice(null);
+      setModelChangePrice(false);
+      setPriceChange();
+      return toast.error("Please choose date in the future");
+    }
+    // console.log(infoChangePrice?.start,1);
+
+    const newEvent = eventsDefault.map((event, index) => {
+      if (infoChangePrice?.start.getTime() == event.start.getTime()) {
+        // console.log(event,1);
+
+        return {
+          ...event,
+          title: priceChange,
+        };
       }
-    }, [slug, stateRoom]);
-    // console.log(eventsDefault);
+      return event;
+    });
 
-    //model chang price
-      const [modelChangePrice, setModelChangePrice] = useState(false);
-      const [infoChangePrice, setInfoChangePrice] = useState();
-      const [priceChange, setPriceChange] = useState();
-      const handleSelectSlot = (slotInfo) => {
-        if (!hotelId) {
-          return toast.error("Please choose hotel");
-        }
-        const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
-    
-        // Compare only the dates (ignoring time)
-          
-        if( moment(slotInfo?.start).startOf('day').isBefore(newDate)){
-          setInfoChangePrice(null)
-          setModelChangePrice(false);
-          setPriceChange()
-          return toast.error("Please choose date in the future");
-         
-        }
-    
-    
-        
-        setInfoChangePrice(slotInfo)
-        setModelChangePrice(true);
-      };
-      const handlePriceChangeOne = ()=>{
-        if(!priceChange){
-          return toast.error("Please enter price");
-        }
-        if(priceChange<=0){
-          return toast.error("Invalid price");
-        }
-        const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
-        
-        if(  moment(infoChangePrice?.start).startOf('day').isBefore(newDate)){
-          setInfoChangePrice(null)
-          setModelChangePrice(false);
-          setPriceChange()
-          return toast.error("Please choose date in the future");
-         
-        }
-        // console.log(infoChangePrice?.start,1);
-        
-        const newEvent = eventsDefault.map((event,index) => {
-         
-          
-          if(infoChangePrice?.start.getTime() == event.start.getTime()){   
-            // console.log(event,1);
-                 
-            return {
-              ...event,
-              title: priceChange,
-            };
-          }
-          return event
-          
-        }
-        )     
-       
-        const existExtra = priceExtra.find((item)=> moment(item.start).startOf('day')._d.getTime() ===infoChangePrice?.start.getTime())
-        if(existExtra){
-          const newPriceExtra = priceExtra.map((item)=>{
-            if(moment(item.start).startOf('day')._d.getTime() === infoChangePrice?.start.getTime()){
-              return {
-                ...item,
-                title: priceChange
-              }
-            }
-            return item
-          })
-          console.log(newPriceExtra,1);
-          
-                setPriceExtra(newPriceExtra)
-    
-        }
-          else{
-            // console.log(moment(infoChangePrice.start).endOf('day')._d);
-            
-            const newPriceExtra = [...priceExtra,{
-              start: infoChangePrice.start,
-              end: moment(infoChangePrice.start).endOf('day')._d,
-              title: priceChange
-            }]
-            // console.log(newPriceExtra,2);
-            // console.log(infoChangePrice);
-            
-                  setPriceExtra(newPriceExtra)
-    
-          }
-          toast.success("save changes successfully!");
-
-          // console.log(newEvent);
-          
-    
-        setEventsDefault(newEvent)
-        setInfoChangePrice(null)
-        setModelChangePrice(false);
-        setPriceChange()
-    
-    
-    
-      }
-      const handlePriceChangeMulti = () =>{
-        if(!priceChange){
-          return toast.error("Please enter price");
-        }
-        if(priceChange<=0){
-          return toast.error("Invalid price");
-        }
-        const newEvent = eventsDefault.map((event) => {
-          if (event.start.getTime() >= infoChangePrice?.start.getTime() && event.end.getTime() <= infoChangePrice?.end.getTime()) {
-          
-            
-            return {
-              ...event,
-              title: priceChange,
-            };
-          }
-          return event;
-        }
-        );
-        // console.log(newEvent);
-        
-        const timeShots = infoChangePrice.slots.map((item) => {
-          return item.getTime()
-        });
-        console.log(timeShots);
-        
-        const existExtra = priceExtra.map((item)=> {
-         
-    
-          
-          if(timeShots?.includes(moment(item.start).startOf('day')._d.getTime())){      
-          
-              
-            return {
-              ...item,
-              title: priceChange
-            }
-          }
-          else{
-            return item
-          }
-        })
-        // console.log(existExtra);
-        
-        const noTimeShots = timeShots.filter((item)=> {
-            if(!existExtra.find((i)=> moment(i.start).startOf('day')._d.getTime() === item)){
-              return item
-            }
-        })
-        // console.log(moment(noTimeShots[0]).startOf("day").toDate());
-        
-        const newPriceExtra = noTimeShots.map((item)=> {
+    const existExtra = priceExtra.find(
+      (item) =>
+        moment(item.start).startOf("day")._d.getTime() ===
+        infoChangePrice?.start.getTime()
+    );
+    if (existExtra) {
+      const newPriceExtra = priceExtra.map((item) => {
+        if (
+          moment(item.start).startOf("day")._d.getTime() ===
+          infoChangePrice?.start.getTime()
+        ) {
           return {
-            
+            ...item,
             title: priceChange,
-            start:moment(item).startOf("day").toDate(),
-            end: moment(item).endOf("day").toDate(),
-          }
-        })    
-        setPriceExtra([...existExtra,...newPriceExtra])
-    
-      
-        
-        
-    
-    
-        setEventsDefault(newEvent);
-    
-        setPriceChange();
-        setInfoChangePrice(null);
-        setModelChangePrice(false);
-        toast.success("save changes successfully!");
-      
-        
+          };
+        }
+        return item;
+      });
+      console.log(newPriceExtra, 1);
+
+      setPriceExtra(newPriceExtra);
+    } else {
+      // console.log(moment(infoChangePrice.start).endOf('day')._d);
+
+      const newPriceExtra = [
+        ...priceExtra,
+        {
+          start: infoChangePrice.start,
+          end: moment(infoChangePrice.start).endOf("day")._d,
+          title: priceChange,
+        },
+      ];
+      // console.log(newPriceExtra,2);
+      // console.log(infoChangePrice);
+
+      setPriceExtra(newPriceExtra);
+    }
+    toast.success("save changes successfully!");
+
+    // console.log(newEvent);
+
+    setEventsDefault(newEvent);
+    setInfoChangePrice(null);
+    setModelChangePrice(false);
+    setPriceChange();
+  };
+  const handlePriceChangeMulti = () => {
+    if (!priceChange) {
+      return toast.error("Please enter price");
+    }
+    if (priceChange <= 0) {
+      return toast.error("Invalid price");
+    }
+    const newEvent = eventsDefault.map((event) => {
+      if (
+        event.start.getTime() >= infoChangePrice?.start.getTime() &&
+        event.end.getTime() <= infoChangePrice?.end.getTime()
+      ) {
+        return {
+          ...event,
+          title: priceChange,
+        };
       }
+      return event;
+    });
+    // console.log(newEvent);
 
-      const navigate = useNavigate()
-      const dispatch = useDispatch()
+    const timeShots = infoChangePrice.slots.map((item) => {
+      return item.getTime();
+    });
+    console.log(timeShots);
 
+    const existExtra = priceExtra.map((item) => {
+      if (timeShots?.includes(moment(item.start).startOf("day")._d.getTime())) {
+        return {
+          ...item,
+          title: priceChange,
+        };
+      } else {
+        return item;
+      }
+    });
+    // console.log(existExtra);
 
-      const handleSaveRoom = async()=>{
-        // console.log(photos);
-        if(!data || !data?.hotel){
-          return toast.error("Hotel no exists!")
-        }
-        if(!price){
-          return toast.error("Please enter price")
-        }
-        if(!roomType){
-          return toast.error("Please enter price")
-        }
-        
-        if (!maxPeople) {
-          return toast.error("Please enter max people");
-        }
-        if(maxPeople<=0)   return toast.error("Invalid number of room capacity");
+    const noTimeShots = timeShots.filter((item) => {
+      if (
+        !existExtra.find(
+          (i) => moment(i.start).startOf("day")._d.getTime() === item
+        )
+      ) {
+        return item;
+      }
+    });
+    // console.log(moment(noTimeShots[0]).startOf("day").toDate());
+
+    const newPriceExtra = noTimeShots.map((item) => {
+      return {
+        title: priceChange,
+        start: moment(item).startOf("day").toDate(),
+        end: moment(item).endOf("day").toDate(),
+      };
+    });
+    setPriceExtra([...existExtra, ...newPriceExtra]);
+
+    setEventsDefault(newEvent);
+
+    setPriceChange();
+    setInfoChangePrice(null);
+    setModelChangePrice(false);
+    toast.success("save changes successfully!");
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSaveRoom = async () => {
+    // console.log(photos);
+    if (!data || !data?.hotel) {
+      return toast.error("Hotel no exists!");
+    }
     if (!price) {
       return toast.error("Please enter price");
     }
-    if(price<=0)   return toast.error("Invalid Price");
-        if (services.length === 0) {
-          return toast.error("Please choose at least 1 services");
-        }
-        if (facilities.length === 0) {
-          return toast.error("Please choose at least 1 facilities");
-        }
-        
-        let dataUpdate = {
-          hotel:data.hotel.id,
-          RoomType:roomType,
-          maxPeople:maxPeople,
-          photos:photos,
-          services:services,
-          facilities:facilities,
-          price:price,
-          priceExtra:priceExtra
-        }
-        // console.log(data);
-        
+    if (!roomType) {
+      return toast.error("Please enter price");
+    }
 
-        const res= await updateRoomApi(dataUpdate,data._id)
-        if(res.success){
-          toast.success("Update successfully!")
-          dispatch(getAllRoomsAction())
-          navigate("/dashboard-view-room")
-          
-          
-        }
-        else{
-          toast.error("Hotel not found or data unchanged")
-        }
-                
-      }
-    
+    if (!maxPeople) {
+      return toast.error("Please enter max people");
+    }
+    if (maxPeople <= 0) return toast.error("Invalid number of room capacity");
+    if (!price) {
+      return toast.error("Please enter price");
+    }
+    if (price <= 0) return toast.error("Invalid Price");
+    if (services.length === 0) {
+      return toast.error("Please choose at least 1 services");
+    }
+    if (facilities.length === 0) {
+      return toast.error("Please choose at least 1 facilities");
+    }
+
+    let dataUpdate = {
+      hotel: data.hotel.id,
+      RoomType: roomType,
+      maxPeople: maxPeople,
+      photos: photos,
+      services: services,
+      facilities: facilities,
+      price: price,
+      priceExtra: priceExtra,
+    };
+    // console.log(data);
+
+    const res = await updateRoomApi(dataUpdate, data._id);
+    if (res.success) {
+      toast.success("Update successfully!");
+      dispatch(getAllRoomsAction());
+      navigate("/dashboard-view-room");
+    } else {
+      toast.error("Hotel not found or data unchanged");
+    }
+  };
 
   return (
     <>
@@ -591,8 +563,12 @@ const AdminEditRoomDetail = () => {
         <h2 className="font-[600] flex  leading-[40px] text-gray-600 text-[36px]">
           Edit Room Detail
         </h2>
-        <p onClick={handleSaveRoom} className="cursor-pointer bg-gray-500 text-lg text-white px-4 py-2 flex items-center justify-between rounded-3xl">Save</p>
-
+        <p
+          onClick={handleSaveRoom}
+          className="cursor-pointer bg-gray-500 text-lg text-white px-4 py-2 flex items-center justify-between rounded-3xl"
+        >
+          Save
+        </p>
       </div>
       <div className="w-full  px-6 py-6  ">
         <div className="w-full  border border-gray-300 rounded-2xl py-4 px-4">
@@ -604,35 +580,35 @@ const AdminEditRoomDetail = () => {
               </Tooltip>
             </div>
             <div className="grid gap-2 mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4">
-                          <label className="border border-gray-300 border-dashed cursor-pointer bg-transparent rounded-2xl p-8 flex items-center  text-2xl text-gray-600">
-                            <input
-                              type="file"
-                              multiple
-                              className="hidden"
-                              onChange={addPhotoByFile}
-                            />
-                            <IoCloudUploadOutline />
-                            Upload
-                          </label>
-            
-                          {photos.length > 0 &&
-                            photos.map((item, index) => (
-                              <>
-                                <div key={index} className="h-32 relative flex ">
-                                  <img
-                                    src={item}
-                                    className="rounded-2xl w-full object-cover"
-                                  />
-                                  <span
-                                    onClick={(ev) => removePhoto(ev, item)}
-                                    className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition duration-300"
-                                  >
-                                    X
-                                  </span>
-                                </div>
-                              </>
-                            ))}
-                        </div>
+              <label className="border border-gray-300 border-dashed cursor-pointer bg-transparent rounded-2xl p-8 flex items-center  text-2xl text-gray-600">
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={addPhotoByFile}
+                />
+                <IoCloudUploadOutline />
+                Upload
+              </label>
+
+              {photos.length > 0 &&
+                photos.map((item, index) => (
+                  <>
+                    <div key={index} className="h-32 relative flex ">
+                      <img
+                        src={item}
+                        className="rounded-2xl w-full object-cover"
+                      />
+                      <span
+                        onClick={(ev) => removePhoto(ev, item)}
+                        className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition duration-300"
+                      >
+                        X
+                      </span>
+                    </div>
+                  </>
+                ))}
+            </div>
           </div>
 
           <div className="w-full  mb-4 border-gray-300 pb-4 border-b">
@@ -659,7 +635,9 @@ const AdminEditRoomDetail = () => {
                     </option>
                   ))}
                 </select> */}
-                <div className="w-full px-4 py-2 border border-gray-400 rounded-3xl">{data?.hotel?.name}</div>
+                <div className="w-full px-4 py-2 border border-gray-400 rounded-3xl">
+                  {data?.hotel?.name}
+                </div>
               </div>
 
               <div className="flex flex-col gap-2 ">
@@ -721,52 +699,42 @@ const AdminEditRoomDetail = () => {
 
               {servicesDefault?.length > 0 && (
                 <>
-                                    <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
-
+                  <Services
+                    handleServiceChange={handleServiceChange}
+                    setServicesDefault={setServicesDefault}
+                    servicesDefault={servicesDefault}
+                    services={services}
+                  />
                 </>
               )}
             </div>
           </div>
 
           <div className="mb-4 border-gray-300 pb-4 border-b w-full">
-                      <div className="flex items-center justify-between">
-                        <div className="flex mb-3 items-center gap-4">
-                          <h2 className="font-medium text-lg ">Facilities</h2>
-                          <Tooltip title="Should choose room type first">
-                            <FaQuestionCircle size={23} />
-                          </Tooltip>
-                        </div>
-                        <div className="flex items-center gap-x-2">
-                          <input
-                            value={inputFacility}
-                            onChange={(e) => setInputFacility(e.target.value)}
-                            type="text"
-                            className="px-4 py-2 border border-gray-400 rounded-3xl"
-                            placeholder="Enter name "
-                          />
-                          <div
-                            onClick={() => handleAddFa()}
-                            className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
-                          >
-                            Add facility
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4 flex-wrap">
-                        {facilitiesDefault?.map((item, index) => (
-                          <>
-                            <label className="flex cursor-pointer items-center">
-                              <input
-                                type="checkbox"
-                                checked={facilities.includes(item._id)}
-                                onChange={() => handleFaChange(item._id)}
-                              />
-                              <span className="ml-2">{item.name}</span>
-                            </label>
-                          </>
-                        ))}
-                      </div>
-                    </div>
+            <div className="flex mb-3 items-center gap-4">
+              <h2 className="font-medium text-lg ">Facilities</h2>
+            </div>
+            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+              <div
+                onClick={() => setShowCreateFacility(true)}
+                className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
+              >
+                <IoCloudUploadOutline />
+                Create facility
+              </div>
+
+              {facilitiesDefault?.length > 0 && (
+                <>
+                  <Facilities
+                    handleFaChange={handleFaChange}
+                    facilities={facilities}
+                    setFacilitiesDefault={setFacilitiesDefault}
+                    facilitiesDefault={facilitiesDefault}
+                  />
+                </>
+              )}
+            </div>
+          </div>
 
           {/* <div className="mb-4 border-gray-300 pb-4 border-b w-full">
                       <h2 className="font-medium text-lg mb-2">Short Description</h2>
@@ -792,7 +760,7 @@ const AdminEditRoomDetail = () => {
                       />
                     </div> */}
 
-                    <div className="mb-4  w-full">
+          <div className="mb-4  w-full">
             <div className="flex mb-3 items-center gap-4">
               <h2 className="font-medium text-lg ">Price extra</h2>
               <Tooltip title="Nên set theo ngày việt nam">
@@ -949,97 +917,92 @@ const AdminEditRoomDetail = () => {
           <ModelCreateService setShowModel={setShowModel} />
         </>
       )}
+      {showCreateFacility && (
+        <>
+          <ModelCreateFacility setShowCreateFacility={setShowCreateFacility} />
+        </>
+      )}
 
       {modelChangePrice && (
-              <>
-                <div className="fixed top-0  left-0 w-full bg-[#0000004b] h-screen z-50">
-                  <div className=" mx-auto mt-36 p-4  w-[40%] overflow-y-scroll  bg-white  shadow-sm">
-                    <div className="flex w-full justify-end ">
-                      <RxCross1
-                        size={25}
-                        className="cursor-pointer"
-                        onClick={() => {
-                          setModelChangePrice(false)
-                          setInfoChangePrice(null);
-                        }}
-                      />
-                    </div>
-                    
-      
-                      {
-                        
-                        infoChangePrice?.slots.length ===1 && (
-                         <>
-                          <div className=" flex mt-4 itmes-center gap-4">
-                            <p className="text-lg">Checked day:</p>
-                            <p className="text-lg">
-                              {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
-                            </p>
-                          </div>
-                          <div className="w-full  mt-4 flex items-center">
-                          <input
-                            type="number"
-                            className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
-                            placeholder="Price"
-                            value={priceChange}
-                            onChange={(e) => setPriceChange(e.target.value)}
-                            min={0}
-                          />
-                          <div className="px-4 py-2 border bg-gray-100 text-gray-500">
-                            VND
-                          </div>
-                        </div>
-                        <div onClick={handlePriceChangeOne} className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white">
-                          <p className="w-full text-center">Save</p>
-      
-                        </div>
-                          
-      
-                          
-                         </>
-                        )
-                      }
-                      {
-                       
-                        infoChangePrice?.slots.length >1 && (
-                          <>
-                           <div className=" flex mt-4 itmes-center gap-4">
-                             <p className="text-lg">Checked day:</p>
-                             <p className="text-lg">
-                             {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} - {moment(infoChangePrice?.end).subtract(1,'day').format("DD/MM/YYYY")}
-                             </p>
-                           </div>
-                           <div className="w-full  mt-4 flex items-center">
-                           <input
-                             type="number"
-                             className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
-                             placeholder="Price"
-                             value={priceChange}
-                             onChange={(e) => setPriceChange(e.target.value)}
-                             min={0}
-                           />
-                           <div className="px-4 py-2 border bg-gray-100 text-gray-500">
-                             VND
-                           </div>
-                         </div>
-                         <div
-                          onClick={handlePriceChangeMulti} 
-                          className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white">
-                           <p className="w-full text-center">Save</p>
-       
-                         </div>
-                           
-       
-                           
-                          </>
-                         )
-                      }
-                
-                 
+        <>
+          <div className="fixed top-0  left-0 w-full bg-[#0000004b] h-screen z-50">
+            <div className=" mx-auto mt-36 p-4  w-[40%] overflow-y-scroll  bg-white  shadow-sm">
+              <div className="flex w-full justify-end ">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setModelChangePrice(false);
+                    setInfoChangePrice(null);
+                  }}
+                />
+              </div>
+
+              {infoChangePrice?.slots.length === 1 && (
+                <>
+                  <div className=" flex mt-4 itmes-center gap-4">
+                    <p className="text-lg">Checked day:</p>
+                    <p className="text-lg">
+                      {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
+                    </p>
                   </div>
-                </div>
-              </>
-            )}
+                  <div className="w-full  mt-4 flex items-center">
+                    <input
+                      type="number"
+                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
+                      placeholder="Price"
+                      value={priceChange}
+                      onChange={(e) => setPriceChange(e.target.value)}
+                      min={0}
+                    />
+                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
+                      VND
+                    </div>
+                  </div>
+                  <div
+                    onClick={handlePriceChangeOne}
+                    className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white"
+                  >
+                    <p className="w-full text-center">Save</p>
+                  </div>
+                </>
+              )}
+              {infoChangePrice?.slots.length > 1 && (
+                <>
+                  <div className=" flex mt-4 itmes-center gap-4">
+                    <p className="text-lg">Checked day:</p>
+                    <p className="text-lg">
+                      {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} -{" "}
+                      {moment(infoChangePrice?.end)
+                        .subtract(1, "day")
+                        .format("DD/MM/YYYY")}
+                    </p>
+                  </div>
+                  <div className="w-full  mt-4 flex items-center">
+                    <input
+                      type="number"
+                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
+                      placeholder="Price"
+                      value={priceChange}
+                      onChange={(e) => setPriceChange(e.target.value)}
+                      min={0}
+                    />
+                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
+                      VND
+                    </div>
+                  </div>
+                  <div
+                    onClick={handlePriceChangeMulti}
+                    className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white"
+                  >
+                    <p className="w-full text-center">Save</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

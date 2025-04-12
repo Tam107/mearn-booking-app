@@ -8,5 +8,6 @@ const router = express.Router();
 router.get("/getAll", getAllRooms);
 router.post("/create", createRoom);
 router.patch("/edit/:id",updateRoom)
+router.delete("/delete/:id/:hotelId",deleteRoom)
 
 export default router;

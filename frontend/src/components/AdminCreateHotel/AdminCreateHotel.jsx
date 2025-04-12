@@ -406,7 +406,7 @@ const AdminCreateHotel = () => {
             
           </div>
 
-          <div className="mb-4 w-full flex flex-col ">
+          <div className="my-4 w-full flex flex-col ">
               <div className="flex mb-2 items-center justify-between">
               <p htmlFor="" className="font-[400] text-[25px]">
                 Rooms Type

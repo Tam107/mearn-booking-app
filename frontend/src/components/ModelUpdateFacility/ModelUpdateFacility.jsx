@@ -3,19 +3,17 @@ import iconMap from '../../data/iconMap'; // import the iconMap
 import { RxCross1 } from "react-icons/rx";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
-import { createServicesApi, editServicesApi } from "../../../Axios/client/api";
+import { createServicesApi, editFacilitiesApi, editServicesApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 
-const ModelUpdateService = ({ setServicesDefault,servicesDefault,setShowModel,data }) => {
+const ModelUpdateFacility = ({ setFacilitiesDefault,facilitiesDefault,setShowModel,data }) => {
   const [icon, setIcon] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [description,setDescription] = useState()
   const [name,setName] = useState()
 
   useEffect(()=>{
     setIcon(data?.icon)
     setName(data?.name)
-    setDescription(data?.description)
     setDropdownOpen(false)
   },[data])
 
@@ -40,23 +38,24 @@ const ModelUpdateService = ({ setServicesDefault,servicesDefault,setShowModel,da
         // console.log(name,icon,description);
 
         let dataBody = {
-          icon,description
+          icon
         }
+
         if (name!= data.name) dataBody.name=name
         
-        const res =await editServicesApi(data._id,dataBody)
+        const res =await editFacilitiesApi(data._id,dataBody)
         if(res.success){
-            toast.success("Edit service successfully!")
+            toast.success("Edit facility successfully!")
             setShowModel(false)
             setName('')
             setIcon('')
-            const tmp = servicesDefault.map(i=>{
+            const tmp = facilitiesDefault.map(i=>{
                 if(i._id===res.data._id){
                     return res.data
                 }
                 return i
             })
-            setServicesDefault(tmp)
+            setFacilitiesDefault(tmp)
 
             
         }
@@ -125,22 +124,12 @@ const ModelUpdateService = ({ setServicesDefault,servicesDefault,setShowModel,da
               )}
             </div>
           </div>
-          <div className="flex items-center justify-between">
-          <input
-              type="text"
-              placeholder="Short Description"
-              value={description}
-              onChange={e=>setDescription(e.target.value)}
-              className=" py-2 w-[49%] px-4 border border-gray-400 rounded-3xl"
-            />
-          <div onClick={handleClick} className=" w-[50%] cursor-pointer my-4 bg-gray-400 px-4 py-2 rounded-3xl flex items-center justify-center text-white ">Add Service</div>
+          <div onClick={handleClick} className=" w-full cursor-pointer my-4 bg-gray-400 px-4 py-2 rounded-3xl flex items-center justify-center text-white ">Add Service</div>
 
-
-          </div>
         </div>
       </div>
     </>
   );
 };
 
-export default ModelUpdateService;
+export default ModelUpdateFacility;

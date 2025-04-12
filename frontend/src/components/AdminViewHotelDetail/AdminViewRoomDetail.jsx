@@ -5,7 +5,10 @@ import { CiCircleChevUp } from "react-icons/ci";
 import { FaQuestionCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router";
-import { getAllFacilitiesApi, getAllServicesApi } from "../../../Axios/client/api";
+import {
+  getAllFacilitiesApi,
+  getAllServicesApi,
+} from "../../../Axios/client/api";
 import iconMap from "../../data/iconMap";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -20,31 +23,37 @@ const CustomEvent = ({ event }) => {
 };
 const AdminViewRoomDetail = () => {
   const { slug } = useParams(); // Get the slug parameter from the URL
-    const [eventsDefault, setEventsDefault] = useState([]);
-  
+  const [eventsDefault, setEventsDefault] = useState([]);
+
   const stateRooms = useSelector((state) => state.RoomReducer);
   const [data, setData] = useState({});
-    const [servicesDefault, setServicesDefault] = useState([]);
-    const [facilitiesDefault, setFacilitiesDefault] = useState([]);
-    const [servicesId,setServicesId] = useState([]);
-    useEffect(() => {
-      const alo = async () => {
-        const ad = await getAllServicesApi();
-     
-        setServicesDefault(ad.data);
-      };
-      const ola = async () => {
-        const ad = await getAllFacilitiesApi();
-  
-        setFacilitiesDefault(ad.data ? ad.data : []);
-      };
-      alo();
-      ola();
-    }, []);
+  const [servicesDefault, setServicesDefault] = useState([]);
+  const [facilitiesDefault, setFacilitiesDefault] = useState([]);
+  const [servicesId, setServicesId] = useState([]);
+  const [facilitiesId, setFacilitiesId] = useState([]);
+
+  useEffect(() => {
+    const alo = async () => {
+      const ad = await getAllServicesApi();
+
+      setServicesDefault(ad.data);
+    };
+    const ola = async () => {
+      const ad = await getAllFacilitiesApi();
+
+      setFacilitiesDefault(ad.data ? ad.data : []);
+    };
+    alo();
+    ola();
+  }, []);
   useEffect(() => {
     const tmp = stateRooms?.rooms?.find((i) => i.slug === slug);
+    console.log(tmp);
+
     setServicesId(tmp?.services.map((item) => item._id));
     setData(tmp);
+    setFacilitiesId(tmp?.facilities.map((i) => i._id));
+
     //set price
     const today = moment(); // Lấy ngày hôm nay
     const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
@@ -54,8 +63,7 @@ const AdminViewRoomDetail = () => {
     // tmp?.priceExtra?.forEach((item) => {
     //   const startDate = moment(item.start);
     //   console.log(startDate);
-      
-      
+
     // });
     while (currentDay.isBefore(oneYearFromNow)) {
       // const ex= tmp?.priceExtra.find(i=>moment(i.start)=== currentDay.startOf("day")._)
@@ -63,38 +71,34 @@ const AdminViewRoomDetail = () => {
       // console.log(currentDay);
       const ex = tmp?.priceExtra.find((i) => {
         const startDate = moment(i.start);
-        if(startDate.isSame(currentDay.startOf('day').toDate(), 'day')){
+        if (startDate.isSame(currentDay.startOf("day").toDate(), "day")) {
           console.log(startDate);
-          return i
+          return i;
         }
         return null;
       });
-      
+
       // console.log(ex);
-      if(ex){
+      if (ex) {
         // console.log(ex);
-        
+
         events.push({
           title: ex?.title, // Gán title là "100 VND"
           start: ex?.start, // Thời gian bắt đầu là 00:00 của ngày
           end: ex?.end, // Thời gian kết thúc là 23:59 của ngày
         });
-  
-      }
-      else{
+      } else {
         events.push({
           title: tmp?.price, // Gán title là "100 VND"
           start: currentDay.startOf("day").toDate(), // Thời gian bắt đầu là 00:00 của ngày
           end: currentDay.endOf("day").toDate(), // Thời gian kết thúc là 23:59 của ngày
         });
       }
-      
 
       // Tiến đến ngày tiếp theo
       currentDay = currentDay.add(1, "day");
     }
-    setEventsDefault(events)
-
+    setEventsDefault(events);
   }, [stateRooms?.rooms, slug]);
   console.log(data);
   const handleUp = () => {
@@ -105,14 +109,18 @@ const AdminViewRoomDetail = () => {
     });
   };
 
-
   return (
     <>
       <div className="w-full flex items-center justify-between py-6 px-6">
         <h2 className="font-[600] flex  leading-[40px] text-gray-600 text-[36px]">
           View Room Detail
         </h2>
-        <Link to={`/dashboard-edit-roomDetail/${data?.slug}`} className="cursor-pointer bg-gray-500 text-lg text-white px-4 py-2 flex items-center justify-between rounded-3xl">Edit Room</Link>
+        <Link
+          to={`/dashboard-edit-roomDetail/${data?.slug}`}
+          className="cursor-pointer bg-gray-500 text-lg text-white px-4 py-2 flex items-center justify-between rounded-3xl"
+        >
+          Edit Room
+        </Link>
       </div>
 
       <div className="w-full  px-6 py-6  ">
@@ -125,8 +133,6 @@ const AdminViewRoomDetail = () => {
               </Tooltip>
             </div>
             <div className="grid gap-2 mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4">
-              
-
               {data?.photos?.length > 0 &&
                 data?.photos.map((item, index) => (
                   <>
@@ -135,15 +141,10 @@ const AdminViewRoomDetail = () => {
                         src={item}
                         className="rounded-2xl w-full object-cover"
                       />
-                    
                     </div>
                   </>
                 ))}
-                {data?.photos?.length === 0 && (
-                  <>
-                    NO IMG
-                  </>
-                )}
+              {data?.photos?.length === 0 && <>NO IMG</>}
             </div>
           </div>
 
@@ -161,10 +162,8 @@ const AdminViewRoomDetail = () => {
                 </p>
                 <input
                   value={data?.hotel?.name}
-
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                >
-                </input>
+                ></input>
               </div>
 
               <div className="flex flex-col gap-2 ">
@@ -175,7 +174,6 @@ const AdminViewRoomDetail = () => {
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                   type="number"
                   value={data?.price}
-                  
                   placeholder="Price"
                 />
               </div>
@@ -188,7 +186,6 @@ const AdminViewRoomDetail = () => {
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                   type="text"
                   value={data?.RoomType}
-              
                   placeholder="Room Type"
                 />
               </div>
@@ -201,7 +198,6 @@ const AdminViewRoomDetail = () => {
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                   type="number"
                   value={data?.maxPeople}
-                 
                   placeholder="2-4 guests"
                 />
               </div>
@@ -216,14 +212,11 @@ const AdminViewRoomDetail = () => {
               </Tooltip>
             </div>
             <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-              
-
-            {servicesDefault?.length > 0 && (
+              {servicesDefault?.length > 0 && (
                 <>
                   {servicesDefault.map((service, index) => (
                     <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
                       <input
-                     
                         type="checkbox"
                         className="mr-2"
                         checked={servicesId?.includes(service._id)}
@@ -244,31 +237,56 @@ const AdminViewRoomDetail = () => {
           </div>
 
           <div className="mb-4 border-gray-300 pb-4 border-b w-full">
-            <div className="flex items-center justify-between">
-              <div className="flex mb-3 items-center gap-4">
-                <h2 className="font-medium text-lg ">Facilities</h2>
-                <Tooltip title="Should choose room type first">
-                  <FaQuestionCircle size={23} />
-                </Tooltip>
-              </div>
-              <div className="flex items-center gap-x-2">
-               
-              </div>
+            <div className="flex mb-3 items-center gap-4">
+              <h2 className="font-medium text-lg ">Facilities</h2>
             </div>
-            <div className="flex items-center gap-4 flex-wrap">
-              {facilitiesDefault?.map((item, index) => (
+            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+              {facilitiesDefault?.length > 0 && (
                 <>
-                  <label className="flex cursor-pointer items-center">
-                    <input
-                      type="checkbox"
-                      checked={data?.facilities.includes(item._id)}
-                      onChange={() => handleFaChange(item._id)}
-                    />
-                    <span className="ml-2">{item.name}</span>
-                  </label>
+                  {facilitiesDefault.map((data, index) => (
+                    <label className="cursor-pointer border p-4 flex rounded-2xl items-center">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={facilitiesId?.includes(data._id)}
+                      />
+
+                      <span className={data?.icon ? "mr-2" : ""}>
+                        {iconMap[data?.icon]
+                          ? React.createElement(iconMap[data?.icon])
+                          : null}
+                      </span>
+
+                      <span>{data?.name}</span>
+                    </label>
+                  ))}
                 </>
-              ))}
+              )}
             </div>
+
+            {/* <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+              {facilitiesDefault?.length > 0 && (
+                <>
+                  {facilitiesDefault.map((data, index) => (
+                    <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={facilitiesId?.includes(data._id)}
+                      />
+
+                      <span className="mr-2">
+                        {iconMap[data?.icon]
+                          ? React.createElement(iconMap[data?.icon])
+                          : null}
+                      </span>
+
+                      <span>{data.name}</span>
+                    </label>
+                  ))}
+                </>
+              )}
+            </div> */}
           </div>
 
           <div className="mb-4 border-gray-300 pb-4 border-b w-full">
@@ -276,7 +294,6 @@ const AdminViewRoomDetail = () => {
             <Editor
               apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
               value={data?.description}
-             
               init={{
                 valid_elements: "*[*]",
                 height: 400,
@@ -322,7 +339,6 @@ const AdminViewRoomDetail = () => {
                   event: CustomEvent, // Ghi đè cách hiển thị sự kiện
                 }}
               />
-              
             </div>
           </div>
         </div>

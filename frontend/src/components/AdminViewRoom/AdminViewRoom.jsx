@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useEffect } from "react";
-import { Space, Table } from "antd";
+import { Popconfirm, Space, Table } from "antd";
 import {Link} from "react-router-dom"
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import { deleteRoomApi } from "../../../Axios/client/api";
+import { getAllHotelsAction } from "../../redux/actions/HotelAction";
+import toast from "react-hot-toast";
 
 const AdminViewRoom = () => {
 
@@ -38,6 +41,21 @@ const AdminViewRoom = () => {
   
   ,[hotelSelectedId])
 
+  const confirm = async(e) => {
+    console.log(e);
+    const res = await deleteRoomApi(e._id,e.hotel._id)
+    if(res.success){
+      toast.success('Delete success');
+      dispatch(getAllRoomsAction())
+      dispatch(getAllHotelsAction())
+    }
+    else{
+      toast.error(res.message)
+    }
+    
+
+  }
+
 
   const columns = [
     {
@@ -62,12 +80,10 @@ const AdminViewRoom = () => {
     },
    },
    {
-    title:"Price Extra",
-    dataIndex:"priceExtra",
-    key:"priceExtra",
-    render: (priceExtra,index) => (
-      <p>{priceExtra.length>0 ?'a':0}</p>
-    ), 
+    title:"Capacity",
+    dataIndex:"maxPeople",
+    key:"maxPeople",
+   
    },
    {
     title: 'City',
@@ -90,11 +106,21 @@ const AdminViewRoom = () => {
       <Space size="middle">
         <Link to={'/dashboard-view-roomDetail/'+record.slug}>View</Link>
         <Link to={`/dashboard-edit-roomDetail/${record.slug}`}>Edit</Link>
-        <Link>Delete</Link>
-      </Space>
+        <Popconfirm
+            title="Delete the room?"
+            description="Are you sure to delete this room?"
+            onConfirm={()=>{confirm(record)}}
+            // onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <p className="text-[#1777FF] cursor-pointer hover:text-[#69b1ff]">Delete</p>
+          </Popconfirm>      </Space>
     ),
     },
   ];
+
+  
   
   
   

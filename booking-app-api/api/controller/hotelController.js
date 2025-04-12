@@ -219,7 +219,7 @@ export const deleteHotel = async (req, res, next) => {
         }
        
     } catch (err) {
-        next(err);
+        // next(err);
         res.json({
             success: false,
             message: "Error in BE",

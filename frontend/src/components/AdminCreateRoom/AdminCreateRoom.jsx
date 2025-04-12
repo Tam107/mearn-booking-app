@@ -25,6 +25,8 @@ import { useNavigate } from "react-router";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 import { RxCross1 } from "react-icons/rx";
 import Services from "../Services/Services";
+import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
+import Facilities from "../Facilities/Facilities";
 const localizer = momentLocalizer(moment);
 function getStartOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
@@ -67,10 +69,12 @@ const AdminCreateRoom = () => {
   const [showModel, setShowModel] = useState(false);
   const [services, setServices] = useState([]);
   const [description, setDescription] = useState("");
-  const [inputFacility, setInputFacility] = useState("");
   const [facilities, setFacilities] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [modelChangePrice, setModelChangePrice] = useState(false);
+
+  // handle facilities
+  const [showCreateFacility, setShowCreateFacility] = useState(false);
 
   const handleEditorChange = (content) => {
     setDescription(content);
@@ -87,7 +91,7 @@ const AdminCreateRoom = () => {
     };
     alo();
     ola();
-  }, [showModel]);
+  }, [showModel,showCreateFacility]);
 
   // console.log(facilitiesDefault);
   // chuc nang price
@@ -165,15 +169,15 @@ const AdminCreateRoom = () => {
     });
   };
 
-  const handleAddFa = async () => {
-    if (inputFacility) {
-      const res = await createFacilitiesApi({ name: inputFacility });
-      setInputFacility("");
-      setFacilities([...facilities, res.data._id]);
-      setFacilitiesDefault([...facilitiesDefault, res.data]);
-    } else {
-    }
-  };
+  // const handleAddFa = async () => {
+  //   if (inputFacility) {
+  //     const res = await createFacilitiesApi({ name: inputFacility });
+  //     setInputFacility("");
+  //     setFacilities([...facilities, res.data._id]);
+  //     setFacilitiesDefault([...facilitiesDefault, res.data]);
+  //   } else {
+  //   }
+  // };
   const handleFaChange = (id) => {
     const isExist = facilities.find((i) => i === id);
     if (isExist) {
@@ -258,16 +262,13 @@ const AdminCreateRoom = () => {
     if (!priceEvents) {
       return toast.error("Please choose price");
     }
-    if(priceEvents<=0)  return toast.error("Invalid price");
+    if (priceEvents <= 0) return toast.error("Invalid price");
     if (daysChoosed.length === 0) {
       return toast.error("Please choose days");
     }
-    if(startDate.$d.getTime() > endDate.$d.getTime() ){
+    if (startDate.$d.getTime() > endDate.$d.getTime()) {
       return toast.error("Start date must be before end date");
-
     }
-    
-    
 
     // const dayOfWeek = moment(startDate).format("dddd");
     const newStartDate = startDate.startOf("day").toDate();
@@ -331,21 +332,21 @@ const AdminCreateRoom = () => {
   // console.log(priceExtra);
 
   const handleCreateRoom = async () => {
-    console.log(1);
+    
     if (!hotelId) {
       return toast.error("Please select a home to create a room.");
     }
-    if (!roomType || roomType.trim().length ===0) {
+    if (!roomType || roomType.trim().length === 0) {
       return toast.error("Please enter a room type");
     }
     if (!maxPeople) {
       return toast.error("Invalid number of room capacity");
     }
-    if(maxPeople<=0)   return toast.error("Invalid number of room capacity");
+    if (maxPeople <= 0) return toast.error("Invalid number of room capacity");
     if (!price) {
       return toast.error("Please enter price");
     }
-    if(price<=0)   return toast.error("Invalid Price");
+    if (price <= 0) return toast.error("Invalid Price");
     if (services.length === 0) {
       return toast.error("Please choose at least 1 services");
     }
@@ -389,144 +390,127 @@ const AdminCreateRoom = () => {
     if (!hotelId) {
       return toast.error("Please choose hotel");
     }
-    const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
+    const newDate = moment().startOf("day"); // Get today's date with time set to 00:00:00
 
     // Compare only the dates (ignoring time)
-      
-    if( moment(slotInfo?.start).startOf('day').isBefore(newDate)){
-      setInfoChangePrice(null)
+
+    if (moment(slotInfo?.start).startOf("day").isBefore(newDate)) {
+      setInfoChangePrice(null);
       setModelChangePrice(false);
-      setPriceChange()
-      return toast.error("Please choose date in the future");
-     
+      setPriceChange();
+      return toast.error("Do not choose day in the past");
     }
 
-
-    
-    setInfoChangePrice(slotInfo)
+    setInfoChangePrice(slotInfo);
     setModelChangePrice(true);
   };
-  const handlePriceChangeOne = ()=>{
-    if(!priceChange){
+  const handlePriceChangeOne = () => {
+    if (!priceChange) {
       return toast.error("Please enter price");
     }
-    if(priceChange<=0)  return toast.error("Invalid price");
-    const newDate = moment().startOf('day'); // Get today's date with time set to 00:00:00
-    
-    if(  moment(infoChangePrice?.start).startOf('day').isBefore(newDate)){
-      setInfoChangePrice(null)
+    if (priceChange <= 0) return toast.error("Invalid price");
+    const newDate = moment().startOf("day"); // Get today's date with time set to 00:00:00
+
+    if (moment(infoChangePrice?.start).startOf("day").isBefore(newDate)) {
+      setInfoChangePrice(null);
       setModelChangePrice(false);
-      setPriceChange()
+      setPriceChange();
       return toast.error("Please choose date in the future");
-     
     }
     // console.log(infoChangePrice?.start,1);
-    
-    const newEvent = eventsDefault.map((event,index) => {
-     
-      
-      if(infoChangePrice?.start.getTime() == event.start.getTime()){   
-        console.log(event,1);
-             
-        return {
-          ...event,
-          title: priceChange,
-        };
-      }
-      return event
-      
-    }
-    )     
-    const existExtra = priceExtra.find((item)=> item.start=== infoChangePrice?.start)
-    if(existExtra){
-      const newPriceExtra = priceExtra.map((item)=>{
-        if(item.start === infoChangePrice?.start){
-          return {
-            ...item,
-            title: priceChange
-          }
-        }
-        return item
-      })
-            setPriceExtra(newPriceExtra)
 
-    }
-      else{
-        const newPriceExtra = [...priceExtra,{
-          ...infoChangePrice,
-          title: priceChange
-        }]
-              setPriceExtra(newPriceExtra)
+    const newEvent = eventsDefault.map((event, index) => {
+      if (infoChangePrice?.start.getTime() == event.start.getTime()) {
+        console.log(event, 1);
 
-      }
-      toast.success("save changes successfully!");
-
-    setEventsDefault(newEvent)
-    setInfoChangePrice(null)
-    setModelChangePrice(false);
-    setPriceChange()
-
-
-
-  }
-  // console.log(eventsDefault);
-  
-  const handlePriceChangeMulti = () =>{
-    if(!priceChange){
-      return toast.error("Please enter price");
-    }
-    if(priceChange<=0)  return toast.error("Invalid price");
-    const newEvent = eventsDefault.map((event) => {
-      if (event.start.getTime() >= infoChangePrice?.start.getTime() && event.end.getTime() <= infoChangePrice?.end.getTime()) {
-      
-        
         return {
           ...event,
           title: priceChange,
         };
       }
       return event;
-    }
-    );
-    const timeShots = infoChangePrice.slots.map((item) => {
-      return item.getTime()
     });
-    const existExtra = priceExtra.map((item)=> {
+    const existExtra = priceExtra.find(
+      (item) => item.start === infoChangePrice?.start
+    );
+    if (existExtra) {
+      const newPriceExtra = priceExtra.map((item) => {
+        if (item.start === infoChangePrice?.start) {
+          return {
+            ...item,
+            title: priceChange,
+          };
+        }
+        return item;
+      });
+      setPriceExtra(newPriceExtra);
+    } else {
+      const newPriceExtra = [
+        ...priceExtra,
+        {
+          ...infoChangePrice,
+          title: priceChange,
+        },
+      ];
+      setPriceExtra(newPriceExtra);
+    }
+    toast.success("save changes successfully!");
+
+    setEventsDefault(newEvent);
+    setInfoChangePrice(null);
+    setModelChangePrice(false);
+    setPriceChange();
+  };
+  // console.log(eventsDefault);
+
+  const handlePriceChangeMulti = () => {
+    if (!priceChange) {
+      return toast.error("Please enter price");
+    }
+    if (priceChange <= 0) return toast.error("Invalid price");
+    const newEvent = eventsDefault.map((event) => {
+      if (
+        event.start.getTime() >= infoChangePrice?.start.getTime() &&
+        event.end.getTime() <= infoChangePrice?.end.getTime()
+      ) {
+        return {
+          ...event,
+          title: priceChange,
+        };
+      }
+      return event;
+    });
+    const timeShots = infoChangePrice.slots.map((item) => {
+      return item.getTime();
+    });
+    const existExtra = priceExtra.map((item) => {
       // console.log(item.start);
       // console.log(infoChangePrice.slots,2);
 
-      
-      if(timeShots?.includes(item.start.getTime())){        
+      if (timeShots?.includes(item.start.getTime())) {
         return {
           ...item,
-          title: priceChange
-        }
+          title: priceChange,
+        };
+      } else {
+        return item;
       }
-      else{
-        return item
+    });
+    const noTimeShots = timeShots.filter((item) => {
+      if (!existExtra.find((i) => i.start.getTime() === item)) {
+        return item;
       }
-    })
-    const noTimeShots = timeShots.filter((item)=> {
-        if(!existExtra.find((i)=> i.start.getTime() === item)){
-          return item
-        }
-    })
+    });
     console.log(moment(noTimeShots[0]).startOf("day").toDate());
-    
-    const newPriceExtra = noTimeShots.map((item)=> {
+
+    const newPriceExtra = noTimeShots.map((item) => {
       return {
-        
         title: priceChange,
-        start:moment(item).startOf("day").toDate(),
+        start: moment(item).startOf("day").toDate(),
         end: moment(item).endOf("day").toDate(),
-      }
-    })    
-    setPriceExtra([...existExtra,...newPriceExtra])
-
-  
-    
-    
-
+      };
+    });
+    setPriceExtra([...existExtra, ...newPriceExtra]);
 
     setEventsDefault(newEvent);
 
@@ -534,24 +518,23 @@ const AdminCreateRoom = () => {
     setInfoChangePrice(null);
     setModelChangePrice(false);
     toast.success("save changes successfully!");
-  
-    
-  }
+  };
   // console.log(priceExtra);
-  
-
 
   return (
     <>
       <div className="w-full pt-6 px-6">
-        <div
-         
-          className="flex w-full items-center justify-between"
-        >
-          <h2  onClick={handleCreateRoom} className="font-[600] leading-[40px] text-gray-600 text-[36px]">
+        <div className="flex w-full items-center justify-between">
+          <h2
+            onClick={handleCreateRoom}
+            className="font-[600] leading-[40px] text-gray-600 text-[36px]"
+          >
             Create new room
           </h2>
-          <div onClick={handleCreateRoom} className=" cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-4">
+          <div
+            onClick={handleCreateRoom}
+            className=" cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-4"
+          >
             <TiPlusOutline color="white" size={20} />
             <p className="text-white text-md">Add a new room</p>
           </div>
@@ -600,7 +583,7 @@ const AdminCreateRoom = () => {
 
           <div className="w-full  mb-4 border-gray-300 pb-4 border-b">
             <div className="flex mb-3 items-center gap-4">
-              <h2 className="font-medium text-lg ">Room Deatails</h2>
+              <h2 className="font-medium text-lg ">Room Details</h2>
               <Tooltip title="Nghĩ span giúp Vĩnh">
                 <FaQuestionCircle size={23} />
               </Tooltip>
@@ -608,14 +591,14 @@ const AdminCreateRoom = () => {
             <div className="grid gap-4 grid-cols-4">
               <div className="flex flex-col gap-2 ">
                 <p className="text-lg">
-                  Hotel <span className="text-red-500">*</span>{" "}
+                  Home <span className="text-red-500">*</span>{" "}
                 </p>
                 <select
                   value={hotelId}
                   onChange={(e) => setHotelId(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
                 >
-                  <option value="">Select hotel</option>
+                  <option value="">Select home</option>
                   {stateHotels?.hotels?.map((i, index) => (
                     <option key={index} value={i._id}>
                       {i.name}
@@ -683,8 +666,13 @@ const AdminCreateRoom = () => {
 
               {servicesDefault?.length > 0 && (
                 <>
-                  <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
-                  </>
+                  <Services
+                    handleServiceChange={handleServiceChange}
+                    setServicesDefault={setServicesDefault}
+                    servicesDefault={servicesDefault}
+                    services={services}
+                  />
+                </>
               )}
             </div>
           </div>
@@ -693,27 +681,13 @@ const AdminCreateRoom = () => {
             <div className="flex items-center justify-between">
               <div className="flex mb-3 items-center gap-4">
                 <h2 className="font-medium text-lg ">Facilities</h2>
-                <Tooltip title="Should choose room type first">
+                {/* <Tooltip title="Should choose room type first">
                   <FaQuestionCircle size={23} />
-                </Tooltip>
+                </Tooltip> */}
               </div>
-              <div className="flex items-center gap-x-2">
-                <input
-                  value={inputFacility}
-                  onChange={(e) => setInputFacility(e.target.value)}
-                  type="text"
-                  className="px-4 py-2 border border-gray-400 rounded-3xl"
-                  placeholder="Enter name "
-                />
-                <div
-                  onClick={() => handleAddFa()}
-                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
-                >
-                  Add facility
-                </div>
-              </div>
+             
             </div>
-            <div className="flex items-center gap-4 flex-wrap">
+            {/* <div className="flex items-center gap-4 flex-wrap">
               {facilitiesDefault?.map((item, index) => (
                 <>
                   <label className="flex cursor-pointer items-center">
@@ -726,32 +700,23 @@ const AdminCreateRoom = () => {
                   </label>
                 </>
               ))}
+            </div> */}
+            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+              <div
+                onClick={() => setShowCreateFacility(true)}
+                className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
+              >
+                <IoCloudUploadOutline />
+                Create facility
+              </div>
+
+              {facilitiesDefault?.length > 0 && (
+                <>
+                  <Facilities handleFaChange={handleFaChange} facilities={facilities} setFacilitiesDefault={setFacilitiesDefault} facilitiesDefault={facilitiesDefault}/>
+                  </>
+              )}
             </div>
           </div>
-
-          {/* <div className="mb-4 border-gray-300 pb-4 border-b w-full">
-            <h2 className="font-medium text-lg mb-2">Short Description</h2>
-            <Editor
-              apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
-              value={description}
-              onEditorChange={handleEditorChange}
-              init={{
-                valid_elements: "*[*]",
-                height: 400,
-                menubar: true,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                  "textcolor", // Thêm plugin textcolor để hỗ trợ màu chữ
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic forecolor backcolor | \
-                         alignleft aligncenter alignright alignjustify | \
-                         bullist numlist outdent indent | removeformat | help",
-              }}
-            />
-          </div> */}
 
           <div className="mb-4  w-full">
             <div className="flex mb-3 items-center gap-4">
@@ -909,6 +874,11 @@ const AdminCreateRoom = () => {
           <ModelCreateService setShowModel={setShowModel} />
         </>
       )}
+      {showCreateFacility && (
+            <>
+              <ModelCreateFacility setShowCreateFacility={setShowCreateFacility} />
+            </>
+        )}
 
       {modelChangePrice && (
         <>
@@ -919,24 +889,21 @@ const AdminCreateRoom = () => {
                   size={25}
                   className="cursor-pointer"
                   onClick={() => {
-                    setModelChangePrice(false)
+                    setModelChangePrice(false);
                     setInfoChangePrice(null);
                   }}
                 />
               </div>
-              
 
-                {
-                  
-                  infoChangePrice?.slots.length ===1 && (
-                   <>
-                    <div className=" flex mt-4 itmes-center gap-4">
-                      <p className="text-lg">Checked day:</p>
-                      <p className="text-lg">
-                        {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
-                      </p>
-                    </div>
-                    <div className="w-full  mt-4 flex items-center">
+              {infoChangePrice?.slots.length === 1 && (
+                <>
+                  <div className=" flex mt-4 itmes-center gap-4">
+                    <p className="text-lg">Checked day:</p>
+                    <p className="text-lg">
+                      {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
+                    </p>
+                  </div>
+                  <div className="w-full  mt-4 flex items-center">
                     <input
                       type="number"
                       className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
@@ -949,53 +916,49 @@ const AdminCreateRoom = () => {
                       VND
                     </div>
                   </div>
-                  <div onClick={handlePriceChangeOne} className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white">
+                  <div
+                    onClick={handlePriceChangeOne}
+                    className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white"
+                  >
                     <p className="w-full text-center">Save</p>
-
                   </div>
-                    
-
-                    
-                   </>
-                  )
-                }
-                {
-                 
-                  infoChangePrice?.slots.length >1 && (
-                    <>
-                     <div className=" flex mt-4 itmes-center gap-4">
-                       <p className="text-lg">Checked day:</p>
-                       <p className="text-lg">
-                       {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} - {moment(infoChangePrice?.end).subtract(1,'day').format("DD/MM/YYYY")}
-                       </p>
-                     </div>
-                     <div className="w-full  mt-4 flex items-center">
-                     <input
-                       type="number"
-                       className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
-                       placeholder="Price"
-                       value={priceChange}
-                       onChange={(e) => setPriceChange(e.target.value)}
-                       min={0}
-                     />
-                     <div className="px-4 py-2 border bg-gray-100 text-gray-500">
-                       VND
-                     </div>
-                   </div>
-                   <div onClick={handlePriceChangeMulti} className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white">
-                     <p className="w-full text-center">Save</p>
- 
-                   </div>
-                     
- 
-                     
-                    </>
-                   )
-                }
-          
-           
+                </>
+              )}
+              {infoChangePrice?.slots.length > 1 && (
+                <>
+                  <div className=" flex mt-4 itmes-center gap-4">
+                    <p className="text-lg">Checked day:</p>
+                    <p className="text-lg">
+                      {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} -{" "}
+                      {moment(infoChangePrice?.end)
+                        .subtract(1, "day")
+                        .format("DD/MM/YYYY")}
+                    </p>
+                  </div>
+                  <div className="w-full  mt-4 flex items-center">
+                    <input
+                      type="number"
+                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
+                      placeholder="Price"
+                      value={priceChange}
+                      onChange={(e) => setPriceChange(e.target.value)}
+                      min={0}
+                    />
+                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
+                      VND
+                    </div>
+                  </div>
+                  <div
+                    onClick={handlePriceChangeMulti}
+                    className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white"
+                  >
+                    <p className="w-full text-center">Save</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
+          
         </>
       )}
     </>
