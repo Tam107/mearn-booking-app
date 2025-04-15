@@ -6,7 +6,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { createServicesApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 
-const ModelCreateService = ({ setShowModel }) => {
+const ModelCreateService = ({ setShowModel,setServices,services}) => {
   const [icon, setIcon] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [description,setDescription] = useState()
@@ -34,6 +34,11 @@ const ModelCreateService = ({ setShowModel }) => {
             setShowModel(false)
             setName('')
             setIcon('')
+            if(setServices){
+              console.log(123);
+              
+              setServices([...services,res.data._id])
+            }
 
             
         }

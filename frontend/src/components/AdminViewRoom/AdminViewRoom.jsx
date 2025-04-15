@@ -83,7 +83,7 @@ const AdminViewRoom = () => {
     title:"Capacity",
     dataIndex:"maxPeople",
     key:"maxPeople",
-   
+    
    },
    {
     title: 'City',

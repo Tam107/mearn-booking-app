@@ -390,6 +390,34 @@ const createPolicyApi = async(data)=>{
         }
     }
 }
+const deletePolicyApi = async(data)=>{
+   
+    try {
+        const URL_LOGIN ='/policy/delete/'+ data
+        const response = await axios.delete(URL_LOGIN)
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const editPolicyApi = async(id,data)=>{
+   
+    try {
+        const URL_LOGIN ='/policy/edit/'+ id
+        const response = await axios.patch(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 
 export {
     registerUser,
@@ -418,5 +446,7 @@ export {
     editServicesApi,
     deleteRoomApi,
     deleteFacilitiesApi,
-    editFacilitiesApi
+    editFacilitiesApi,
+    deletePolicyApi,
+    editPolicyApi
 }

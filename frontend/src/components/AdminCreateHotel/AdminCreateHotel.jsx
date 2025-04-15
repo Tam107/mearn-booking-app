@@ -23,11 +23,15 @@ import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 import { useNavigate } from "react-router";
 import { FaQuestionCircle } from "react-icons/fa";
 import Services from "../Services/Services";
+import EditorTiny from "../EditorTiny/EditorTiny";
+import Policy from "../Policy/Policy";
+import ModelCreatePolicy from "../ModelCreatePolicy/ModelCreatePolicy";
 
 const AdminCreateHotel = () => {
   const dispatch = useDispatch()
   // popup model
   const [showModel, setShowModel] = useState(false);
+  const [showModelPolicy,setShowModelPolicy] = useState(false);
 
   // default values
   const typeDefault = ["Hotel", "Villa", "House", "Flat"];
@@ -172,26 +176,26 @@ const AdminCreateHotel = () => {
   useEffect(()=>{
      
       getPolicy()
-  },[typePolicy])
+  },[typePolicy,showModelPolicy])
 
-  const handleAddPolicy =async ()=>{
+  // const handleAddPolicy =async ()=>{
     
-    if(typePolicy){
-      if(inputPolicy){
-        const tmp = await createPolicyApi({name:inputPolicy,type:typePolicy})
-         if(tmp.success){
-          setPolicy([...policy,tmp.data])
-          setInputPolicy("")
-        }else{
-          return toast.error(tmp.message)
-        }
+  //   if(typePolicy){
+  //     if(inputPolicy){
+  //       const tmp = await createPolicyApi({name:inputPolicy,type:typePolicy})
+  //        if(tmp.success){
+  //         setPolicy([...policy,tmp.data])
+  //         setInputPolicy("")
+  //       }else{
+  //         return toast.error(tmp.message)
+  //       }
        
-      }
-    }
-    else{
-      return toast.error("Please choose type policy first")
-    }
-  }
+  //     }
+  //   }
+  //   else{
+  //     return toast.error("Please choose type policy first")
+  //   }
+  // }
   
   
 
@@ -216,6 +220,15 @@ const AdminCreateHotel = () => {
     if (!city) {
       return toast.error("Please choose a city for your home.");
     }
+    if (!cheapestPrice) {
+      console.log(cheapestPrice);
+      
+     
+      return toast.error("please enter price"); // here
+    }
+    else{
+      if(cheapestPrice<0) return toast.error("Invalid price")
+    }
     if (!address || address.trim().length===0 ) {
       return toast.error("Address cannot be empty");
     }
@@ -224,13 +237,7 @@ const AdminCreateHotel = () => {
       return toast.error("At least one room type is required");
     }
 
-    if (!cheapestPrice) {
-     
-      return toast.error("please enter price"); // here
-    }
-    else{
-      if(cheapestPrice<0) return toast.error("Invalid price")
-    }
+    
     if (!services.length > 0) {
       return toast.error("Please select at least one service offered at this accommodation");
     }
@@ -499,28 +506,7 @@ const AdminCreateHotel = () => {
             <p htmlFor="" className="font-[400] text-[25px]">
               Description
             </p>
-            <Editor
-              apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
-              value={description}
-              onEditorChange={handleEditorChange}
-              init={{
-                 valid_elements: '*[*]',
-                height: 400,
-                menubar: true,
-                plugins: [
-                  
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                  "textcolor", // Thêm plugin textcolor để hỗ trợ màu chữ
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic forecolor backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help",
-              }}
-              
-            />
+           <EditorTiny handleEditorChange={handleEditorChange} description={description}/>
           </div>
 
           <div className="mb-4 w-full flex flex-col ">
@@ -557,18 +543,8 @@ const AdminCreateHotel = () => {
                 <Tooltip title="Choose the type of policy before add ">
                   <FaQuestionCircle size={23} />
                 </Tooltip>
-               <div className="flex items-center gap-2"> <input value={inputPolicy} onChange={e=>setInputPolicy(e.target.value)}  type="text" className="px-4 py-2 border border-gray-400 rounded-3xl" placeholder="Enter policy " />
-                  <div
-                  onClick={handleAddPolicy}
-                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
-                >
-                  Add new
-                </div>
-                </div>
-              </div>
-            </div>
-              <div>
-                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
+              
+                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className=" px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
                   <option disabled  value="" className="text-gray-200">Select type of policy</option>
                   {typePolicyDefault?.map((i,ind)=>(
                     <>
@@ -576,24 +552,36 @@ const AdminCreateHotel = () => {
                     </>
                   ))}
                 </select>
+                
+              </div>
+            </div>
+              <div>
+                {/* <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
+                  <option disabled  value="" className="text-gray-200">Select type of policy</option>
+                  {typePolicyDefault?.map((i,ind)=>(
+                    <>
+                      <option key={ind} value={i}>{i}</option>
+                    </>
+                  ))}
+                </select> */}
 
               </div>
-              <div className="mt-2 flex gap-4 items-center flex-wrap">
-                {
-                  policy?.map(i=>(
-                    <>
-                       <label className="flex cursor-pointer items-center">
-                    <input
-                      type="checkbox"
-                      checked={policyChecked.includes(i._id)}
-                      onChange={() => handlePolicyChange(i._id)}
-                    />
-                    <span className="ml-2">{i.name}</span>
-                  </label>
-                    </>
-                  ))
-                }
+              <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+              <div
+                onClick={() => setShowModelPolicy(true)}
+                className="cursor-pointer h-20 border p-4 flex rounded-2xl gap-2 items-center"
+              >
+                <IoCloudUploadOutline />
+                Create policy
               </div>
+
+              {policy?.length > 0 && (
+                <>
+                  <Policy typePolicyDefault={typePolicyDefault} handlePolicyChange={handlePolicyChange} policy={policy} setPolicy={setPolicy} policyChecked={policyChecked}/>
+                </>
+              )}
+            </div>
+             
           </div>
 
           
@@ -639,7 +627,13 @@ const AdminCreateHotel = () => {
 
       {showModel && (
         <>
-          <ModelCreateService setShowModel={setShowModel}/>
+          <ModelCreateService services={services} setServices={setServices} setShowModel={setShowModel}/>
+          
+        </>
+      )}
+      {showModelPolicy && (
+        <>
+          <ModelCreatePolicy typePolicyDefault={typePolicyDefault} setTypePolicy={setTypePolicy} typePolicy={typePolicy} policyChecked={policyChecked} setPolicyChecked={setPolicyChecked} setShowModel={setShowModelPolicy}/>
           
         </>
       )}

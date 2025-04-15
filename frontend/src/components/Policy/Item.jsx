@@ -2,22 +2,23 @@ import React, { useState } from 'react'
 import iconMap from '../../data/iconMap'
 import { Tooltip } from 'antd'
 import { MdOutlineDeleteOutline, MdOutlineEdit } from 'react-icons/md'
-import { deleteServicesApi } from '../../../Axios/client/api'
+import { deletePolicyApi, deleteServicesApi } from '../../../Axios/client/api'
 import toast from 'react-hot-toast'
 import ModelUpdateService from '../ModelUpdateService/ModelUpdateService'
+import ModelUpdatePolicy from './ModelUpdatePolicy'
 
-const Item = ({ services, handleServiceChange, servicesDefault,service,setServicesDefault}) => {
+const Item = ({ typePolicyDefault,policy, setPolicy, policyChecked,data,handlePolicyChange}) => {
   const [hover, setHover] = useState(false)
   const [showEdit,setShowEdit] = useState(false)
 
   const handleDelete =async (event) => {
-    const res=  await deleteServicesApi(service._id)
+    const res=  await deletePolicyApi(data._id)
     if(res.success){
         toast.success(res.message)        
-        const tmp = servicesDefault.filter(i=>{
-          if(i._id !== service._id) return i
+        const tmp = policy.filter(i=>{
+          if(i._id !== data._id) return i
         })
-        setServicesDefault(tmp)
+        setPolicy(tmp)
     }
     else{
       toast.error("False")
@@ -42,32 +43,32 @@ const Item = ({ services, handleServiceChange, servicesDefault,service,setServic
        
       >
         <input
-            onChange={() => handleServiceChange(service?._id)}
+            onChange={() => handlePolicyChange(data?._id)}
             type="checkbox"
           className="mr-2"
-          checked={services?.includes(service?._id)}
+          checked={policyChecked?.includes(data?._id)}
         />
 
         <span className="mr-2">
-          {iconMap[service?.icon]
-            ? React.createElement(iconMap[service?.icon])
+          {iconMap[data?.icon]
+            ? React.createElement(iconMap[data?.icon])
             : null}
         </span>
 
-        <span className="text-sm overflow-hidden line-clamp-3">{service?.name}</span> {/* Thêm overflow-hidden và truncate */}
+        <span className="text-sm overflow-auto line-clamp-3">{data?.name}</span> {/* Thêm overflow-hidden và truncate */}
 
         
       </label>
       {hover && (
           <div className="absolute top-1 right-1 flex items-center gap-2">
             <Tooltip
-              title="Edit service"
+              title="Edit policy"
               className="w-5 h-5 z-50 rounded-full bg-green-500 hover:bg-green-600 transition duration-200 flex items-center justify-center text-white"
             >
               <MdOutlineEdit onClick={handleUpdate} size={5} />
             </Tooltip>
             <Tooltip
-              title="Delete service"
+              title="Delete policy"
               className="w-5 h-5 z-50 rounded-full bg-red-400 hover:bg-red-500 transition duration-200 flex items-center justify-center text-white"
             >
               <MdOutlineDeleteOutline onClick={handleDelete} size={10} />
@@ -79,7 +80,7 @@ const Item = ({ services, handleServiceChange, servicesDefault,service,setServic
         {
           showEdit && (<>
           
-            <ModelUpdateService setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} data={service} setShowModel={setShowEdit}/>
+            <ModelUpdatePolicy typePolicyDefault={typePolicyDefault}  setPolicy={setPolicy} policy={policy} data={data} setShowModel={setShowEdit}/>
           </>)
         }
       

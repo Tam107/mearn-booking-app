@@ -4,12 +4,13 @@ import { HiOutlineBuildingLibrary } from "react-icons/hi2";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { useSelector } from "react-redux";
 import iconMap from "../../data/iconMap";
-import { FaAngleRight } from "react-icons/fa";
+import { FaAngleRight, FaQuestionCircle } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
+import { Tooltip } from "antd";
 
 const InfoHotel = ({ data }) => {
-   const [showDes,setShowDes] = useState(false)
-  
+  const [showDes, setShowDes] = useState(false);
+
   const [roomType, setRoomType] = useState("");
   const [dataRoom, setDataRoom] = useState({});
   console.log(dataRoom);
@@ -26,7 +27,6 @@ const InfoHotel = ({ data }) => {
     setDataRoom(room);
   }, [stateRoom.rooms, roomType]);
 
-
   // console.log(data);
 
   return (
@@ -40,17 +40,22 @@ const InfoHotel = ({ data }) => {
                   Entire rental unit hosted by Ghazal
                 </h3> */}
 
-                <select
-                  value={roomType}
-                  onChange={(e) => setRoomType(e.target.value)}
-                  className="w-full px-2 py-2 border border-gray-400 rounded-3xl"
-                >
-                  {data?.roomType?.map((type, index) => (
-                    <option key={index} value={type.RoomType}>
-                      {type.RoomType}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center gap-4">
+                  <select
+                    value={roomType}
+                    onChange={(e) => setRoomType(e.target.value)}
+                    className="w-full px-2 py-2 border border-gray-400 rounded-3xl"
+                  >
+                    {data?.roomType?.map((type, index) => (
+                      <option key={index} value={type.RoomType}>
+                        {type.RoomType}
+                      </option>
+                    ))}
+                  </select>
+                  <Tooltip title="Change the room type">
+                    <FaQuestionCircle size={35} />
+                  </Tooltip>
+                </div>
 
                 {/* <div className="flex items-center gap-2">
                   <p className="font-[400] text-[14px] leading-[20px]">
@@ -68,6 +73,7 @@ const InfoHotel = ({ data }) => {
               </div>
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
+              <h3 className="font-[500] text-xl mb-3">Services</h3>
               <div className="grid grid-cols-2">
                 {dataRoom?.services?.map((service, index) => (
                   <div key={index} className="w-full flex items-center gap-3">
@@ -86,6 +92,7 @@ const InfoHotel = ({ data }) => {
             </div>
             <div className="pb-4 border-b-gray-200 border-b-1 pt-4">
               <div className="w-full">
+                <h3 className="font-[500] text-xl mb-3">About me</h3>
                 <div
                   dangerouslySetInnerHTML={{
                     __html:
@@ -95,7 +102,10 @@ const InfoHotel = ({ data }) => {
                   }}
                 />
                 {data?.description?.length > 500 && (
-                  <div onClick={()=>setShowDes(true)} className="flex cursor-pointer items-center gap-1 my-1 ">
+                  <div
+                    onClick={() => setShowDes(true)}
+                    className="flex cursor-pointer items-center gap-1 my-1 "
+                  >
                     <p className="font-[500] underline">Show more</p>
                     <FaAngleRight />
                   </div>
@@ -122,7 +132,6 @@ const InfoHotel = ({ data }) => {
                 </div>
               </div>
             </div>
-            
           </div>
           <div className="w-[360px]">
             <div className="w-full bg-white shadow-xl border border-gray-200 rounded-xl p-6">
@@ -247,106 +256,150 @@ const InfoHotel = ({ data }) => {
               </p>
             </div>
           </div>
-          
         </div>
         <div className="pb-6 border-t-gray-200 border-b-gray-200 border-t-1 border-b-1  pt-4">
-            <div className="w-full flex flex-col gap-4">
-                <h3 className="font-[500] text-[24px] leading-[32px]">
-                What this place offers
-
-                </h3>
-                <div className="grid gap-2 grid-cols-3">
-                  {
-                    dataRoom?.facilities?.map(i=>(
-                      <>
-                        <p className="text-md">{i.name}</p>
-                      </>
-                    ))
-                  }
-                </div>
-
-              </div>
+          <div className="w-full flex flex-col gap-4">
+            <h3 className="font-[500] text-[24px] leading-[32px]">
+              What this place offers
+            </h3>
+            <div className="grid gap-2 grid-cols-3">
+              {dataRoom?.facilities?.map((i) => (
+                <>
+                  <div className="w-full flex items-center gap-3">
+                  {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}                    <div className="py-2">
+                      <h4 className="font-[500] text-[16px] leading-[24px]">
+                        {i?.name}
+                      </h4>
+                    </div>
+                  </div>{" "}
+                </>
+              ))}
             </div>
-            <div className="pb-6 border-b-gray-200 border-b-1  pt-4">
-            <div className="w-full flex flex-col gap-4">
-                <h3 className="font-[500] text-[24px] leading-[32px]">
-                Things to know
-
-                </h3>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-[500] text-lg mb-4">House rules
-                    </h4>
-                    <div className="flex flex-col gap-2">
-                      {
-                          data?.policy?.map(i=>{
-                            if(i.type === 'House rules'){
-                              return <>
-                                <p className="text-md">{i.name}</p>
-                              </>
-                            }
-                          })
-                      }
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-[500] mb-4 text-lg">Safety & property
-                    </h4>
-                    <div className="flex flex-col gap-2">
-                      {
-                          data?.policy?.map(i=>{
-                            if(i.type === 'Safety & property'){
-                              return <>
-                                <p className="text-md">{i.name}</p>
-                              </>
-                            }
-                          })
-                      }
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-[500] mb-4 text-lg">Cancellation policy
-
-                    </h4>
-                    <div className="flex flex-col gap-2">
-                      {
-                          data?.policy?.map(i=>{
-                            if(i.type === 'Cancellation policy'){
-                              return <>
-                                <p className="text-md">{i.name}</p>
-                              </>
-                            }
-                          })
-                      }
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-      </div>
-      {
-        showDes===true && (
-        <>
-        
-        <div className="w-full fixed top-0 left-0 h-screen z-50 bg-[#00000042]">
-
-        <div className="mx-auto p-6 w-[60%] h-[60%]   rounded-3xl my-40 bg-white">
-        <div className="w-full flex items-center sticky justify-end">
-            <RxCross1
-              className="cursor-pointer"
-              onClick={() => setShowDes(false)}
-              size={20}
-            />
           </div>
-          <div className="overflow-y-scroll h-full"
-                  dangerouslySetInnerHTML={{
-                    __html:data?.description}}
+        </div>
+        <div className="pb-6 border-b-gray-200 border-b-1  pt-4">
+          <div className="w-full flex flex-col gap-4">
+            <h3 className="font-[500] text-[24px] leading-[32px]">
+              Things to know
+            </h3>
+            <div className="flex items-start justify-between">
+              <div>
+                <h4 className="font-[500] text-lg mb-4">House rules</h4>
+                <div className="flex flex-col gap-2">
+                  {data?.policy?.map((i) => {
+                    if (i.type === "House rules") {
+                      console.log(i?.icon, "icon");
+
+                      return (
+                        <>
+                          <div className="w-full flex items-center gap-3">
+                          {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}
+
+                            <div className="py-2">
+                              <h4 className=" text-[16px] leading-[24px]">
+                                {i?.name}
+                              </h4>
+                            </div>
+                          </div>{" "}
+                        </>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-[500] mb-4 text-lg">Safety & property</h4>
+                <div className="flex flex-col gap-2">
+                  {data?.policy?.map((i) => {
+                    if (i.type === "Safety & property") {
+                      return (
+                        <>
+                        <div className="w-full flex items-center gap-3">
+                        {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}
+
+                          <div className="py-2">
+                            <h4 className=" text-[16px] leading-[24px]">
+                              {i?.name}
+                            </h4>
+                          </div>
+                        </div>{" "}
+                      </>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-[500] mb-4 text-lg">Cancellation policy</h4>
+                <div className="flex flex-col gap-2">
+                  {data?.policy?.map((i) => {
+                    if (i.type === "Cancellation policy") {
+                      return (
+                        <>
+                          <div className="w-full flex items-center gap-3">
+                          {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}
+
+                            <div className="py-2">
+                              <h4 className=" text-[16px] leading-[24px]">
+                                {i?.name}
+                              </h4>
+                            </div>
+                          </div>{" "}
+                        </>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showDes === true && (
+        <>
+          <div className="w-full fixed top-0 left-0 h-screen z-50 bg-[#00000042]">
+            <div className="mx-auto p-6 w-[60%] h-[60%]   rounded-3xl my-40 bg-white">
+              <div className="w-full flex items-center sticky justify-end">
+                <RxCross1
+                  className="cursor-pointer"
+                  onClick={() => setShowDes(false)}
+                  size={20}
                 />
-        </div>
-        </div>
-        </>)
-      }
+              </div>
+              <div
+                className="overflow-y-scroll h-full"
+                dangerouslySetInnerHTML={{
+                  __html: data?.description,
+                }}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

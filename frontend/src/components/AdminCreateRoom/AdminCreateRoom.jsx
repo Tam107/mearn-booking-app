@@ -871,12 +871,12 @@ const AdminCreateRoom = () => {
       </div>
       {showModel && (
         <>
-          <ModelCreateService setShowModel={setShowModel} />
+          <ModelCreateService services={services} setServices={setServices} setShowModel={setShowModel} />
         </>
       )}
       {showCreateFacility && (
             <>
-              <ModelCreateFacility setShowCreateFacility={setShowCreateFacility} />
+              <ModelCreateFacility facilities={facilities} setFacilities={setFacilities} setShowCreateFacility={setShowCreateFacility} />
             </>
         )}
 

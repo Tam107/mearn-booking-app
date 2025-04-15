@@ -2,7 +2,6 @@ import { Form, TimePicker, Tooltip } from "antd";
 import React, { useState, useEffect, useRef } from "react";
 import { Country, State, City } from "country-state-city";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { Editor } from "@tinymce/tinymce-react";
 
 import dayjs from "dayjs";
 
@@ -25,6 +24,9 @@ import { updateHotelAction } from "../../redux/actions/HotelAction";
 import { FaQuestionCircle } from "react-icons/fa";
 import Services from "../Services/Services";
 import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
+import EditorTiny from "../EditorTiny/EditorTiny";
+import ModelCreatePolicy from "../ModelCreatePolicy/ModelCreatePolicy";
+import Policy from "../Policy/Policy";
 
 const AdminViewEditHotel = () => {
     const {slug} = useParams()
@@ -32,6 +34,8 @@ const AdminViewEditHotel = () => {
   const dispatch = useDispatch()
   // popup model
   const [showModel, setShowModel] = useState(false);
+    const [showModelPolicy,setShowModelPolicy] = useState(false);
+  
 
   // default values
   const typeDefault = ["Hotel", "Villa", "House", "Flat"];
@@ -269,6 +273,7 @@ ola()},[typePolicy])
       photos,
       services,
       description,
+      policy:policyChecked
 
     };
   
@@ -485,25 +490,8 @@ ola()},[typePolicy])
             <p htmlFor="" className="font-[400] text-[25px]">
               Description
             </p>
-            <Editor
-              apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
-              value={description}
-              onEditorChange={handleEditorChange}
-              init={{
-                height: 400,
-                menubar: true,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                  "textcolor", // Thêm plugin textcolor để hỗ trợ màu chữ
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic forecolor backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help",
-              }}
-            />
+            <EditorTiny handleEditorChange={handleEditorChange} description={description}/>
+
           </div>
 
           <div className="mb-4 w-full flex flex-col ">
@@ -541,18 +529,8 @@ ola()},[typePolicy])
                 <Tooltip title="Choose the type of policy before add ">
                   <FaQuestionCircle size={23} />
                 </Tooltip>
-               <div className="flex items-center gap-2"> <input value={inputPolicy} onChange={e=>setInputPolicy(e.target.value)}  type="text" className="px-4 py-2 border border-gray-400 rounded-3xl" placeholder="Enter policy " />
-                  <div
-                  // onClick={handleAddPolicy}
-                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
-                >
-                  Add new
-                </div>
-                </div>
-              </div>
-            </div>
-              <div>
-                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
+              
+                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className=" px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
                   <option disabled  value="" className="text-gray-200">Select type of policy</option>
                   {typePolicyDefault?.map((i,ind)=>(
                     <>
@@ -560,16 +538,43 @@ ola()},[typePolicy])
                     </>
                   ))}
                 </select>
+                
+              </div>
+            </div>
+              <div>
+                {/* <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
+                  <option disabled  value="" className="text-gray-200">Select type of policy</option>
+                  {typePolicyDefault?.map((i,ind)=>(
+                    <>
+                      <option key={ind} value={i}>{i}</option>
+                    </>
+                  ))}
+                </select> */}
 
               </div>
-              <div className="mt-2 flex gap-4 items-center flex-wrap">
+              <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+              <div
+                onClick={() => setShowModelPolicy(true)}
+                className="cursor-pointer h-20 border p-4 flex rounded-2xl gap-2 items-center"
+              >
+                <IoCloudUploadOutline />
+                Create policy
+              </div>
+
+              {policy?.length > 0 && (
+                <>
+                  <Policy typePolicyDefault={typePolicyDefault} handlePolicyChange={handlePolicyChange} policy={policy} setPolicy={setPolicy} policyChecked={policyChecked}/>
+                </>
+              )}
+            </div>
+              {/* <div className="mt-2 flex gap-4 items-center flex-wrap">
                 {
                   policy?.map(i=>(
                     <>
                        <label className="flex cursor-pointer items-center">
                     <input
                       type="checkbox"
-                      checked={policyChecked?.includes(i._id)}
+                      checked={policyChecked.includes(i._id)}
                       onChange={() => handlePolicyChange(i._id)}
                     />
                     <span className="ml-2">{i.name}</span>
@@ -577,7 +582,7 @@ ola()},[typePolicy])
                     </>
                   ))
                 }
-              </div>
+              </div> */}
           </div>
 
           
@@ -629,7 +634,13 @@ ola()},[typePolicy])
 
       {showModel && (
         <>
-          <ModelCreateService setShowModel={setShowModel}/>
+          <ModelCreateService setServices={setServices} services={services} setShowModel={setShowModel}/>
+          
+        </>
+      )}
+      {showModelPolicy && (
+        <>
+          <ModelCreatePolicy typePolicyDefault={typePolicyDefault} setTypePolicy={setTypePolicy} typePolicy={typePolicy} policyChecked={policyChecked} setPolicyChecked={setPolicyChecked} setShowModel={setShowModelPolicy}/>
           
         </>
       )}

@@ -54,8 +54,8 @@ const Item = ({ setFacilitiesDefault,facilitiesDefault, data,handleFaChange,faci
               : null}
           </span>
 
-          <span className="text-sm">{data?.name}</span>
-        </label>
+          <span className="text-sm overflow-hidden line-clamp-3">{data?.name}</span> {/* Thêm overflow-hidden và truncate */}
+          </label>
         {hover && (
           <div className="absolute top-1 right-1 flex items-center gap-2">
             <Tooltip

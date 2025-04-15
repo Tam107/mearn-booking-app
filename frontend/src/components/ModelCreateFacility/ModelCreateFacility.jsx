@@ -6,7 +6,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { createFacilitiesApi, createServicesApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 
-const ModelCreateFacility = ({ setShowCreateFacility }) => {
+const ModelCreateFacility = ({ setShowCreateFacility ,setFacilities,facilities}) => {
   const [icon, setIcon] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -31,6 +31,9 @@ const ModelCreateFacility = ({ setShowCreateFacility }) => {
             setShowCreateFacility(false)
             setName('')
             setIcon('')
+            if(setFacilities){
+              setFacilities([...facilities,res.data._id])
+            }
 
             
         }

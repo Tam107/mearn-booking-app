@@ -166,7 +166,7 @@ export const updateHotel = async (req, res, next) => {
         const roomType= hotel.roomType;
         const updatedHotel = await Hotel.findByIdAndUpdate(req.body._id
             , { $set: req.body }
-            , { new: true })
+            , { new: true }).populate('services').populate('policy').populate('roomType'); 
         console.log(updatedHotel);
         
         if (!updatedHotel) {

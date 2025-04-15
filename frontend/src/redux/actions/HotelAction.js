@@ -93,6 +93,8 @@ export const updateHotelAction = (hotelData)=>async(dispatch)=>{
     
             })
             const data = await updateHotelApi(hotelData)
+            console.log(data.data);
+            
             if(data.success){
                 dispatch({
                     type:"updateHotelSuccess",
