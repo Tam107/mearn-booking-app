@@ -20,7 +20,7 @@ const ModelCreateFacility = ({ setShowCreateFacility ,setFacilities,facilities})
 
 
         if(!name){
-            return toast.error("Name must not be empty")
+            return toast.error("Please enter the facility name")
             
         }
        let data = {name:name}

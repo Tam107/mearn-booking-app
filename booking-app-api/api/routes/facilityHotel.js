@@ -36,7 +36,7 @@ router.post("/create",async(req,res)=>{
                     
                     return res.json({
                         success: false,
-                        message: "Existed facility!"
+                        message: "This facility already exists"
                     })
                 }
         
