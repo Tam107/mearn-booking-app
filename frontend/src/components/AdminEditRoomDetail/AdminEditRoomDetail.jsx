@@ -517,7 +517,7 @@ const AdminEditRoomDetail = () => {
       return toast.error("Please enter price");
     }
     if (!roomType) {
-      return toast.error("Please enter price");
+      return toast.error("Please enter a valid room type");
     }
 
     if (!maxPeople) {

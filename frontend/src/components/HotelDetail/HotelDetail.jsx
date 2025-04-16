@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
 const HotelDetail = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   //  const [dataRoom,setDataRoom]=useState({});
   const { slug } = useParams();
   const [data, setData] = useState({});

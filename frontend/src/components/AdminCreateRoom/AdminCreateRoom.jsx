@@ -339,14 +339,15 @@ const AdminCreateRoom = () => {
     if (!roomType || roomType.trim().length === 0) {
       return toast.error("Please enter a room type");
     }
+    if (!price) {
+      return toast.error("Price can not be empty");
+    }
+    if (price <= 0) return toast.error("Invalid Price");
     if (!maxPeople) {
       return toast.error("Invalid number of room capacity");
     }
     if (maxPeople <= 0) return toast.error("Invalid number of room capacity");
-    if (!price) {
-      return toast.error("Please enter price");
-    }
-    if (price <= 0) return toast.error("Invalid Price");
+   
     if (services.length === 0) {
       return toast.error("Please choose at least 1 services");
     }

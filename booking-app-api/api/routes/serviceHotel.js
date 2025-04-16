@@ -46,7 +46,7 @@ router.post("/create", async (req, res) => {
             
             return res.json({
                 success: false,
-                message: "Existed service!"
+                message: "Existed service"
             })
         }
         const ser = new ServiceHotel(req.body)
