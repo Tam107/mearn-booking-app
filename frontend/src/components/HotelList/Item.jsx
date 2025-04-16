@@ -106,17 +106,19 @@ const Item = ({ i }) => {
                 })}
               </p>
               <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
-                {i?.services.map((service, index) => {
-                  const isLastItem = index === i.services.length - 1;
-                  
-                  return (
-                    <span key={index}>
-                      {service.name}
-                      {!isLastItem && " · "}
-                    </span>
-                  );
-                })}
-              </p>
+  {i?.services.map((service, index) => {
+    const isLastItem = index === i.services.length - 1;
+
+    return (
+      <span>
+          {service.name.length > 15
+            ? `${service.name.slice(0, 15)}...`
+            : service.name}
+          {!isLastItem && " · "}
+        </span>
+    );
+  })}
+</p>
 
             </div>
           </div>

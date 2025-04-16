@@ -132,7 +132,9 @@ const AdminViewHotel = () => {
                   wordWrap: "break-word",
                 }}
               >
-                {service.name}
+                {service.name.length > 15
+              ? `${service.name.slice(0, 15)}...`
+              : service.name}
               </p>
             ))}
           </>

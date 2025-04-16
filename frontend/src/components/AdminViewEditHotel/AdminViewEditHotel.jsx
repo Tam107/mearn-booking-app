@@ -201,7 +201,7 @@ const AdminViewEditHotel = () => {
     }
 
   }
-ola()},[typePolicy])
+ola()},[typePolicy,showModelPolicy])
 
   const handleServiceChange = (serviceId) => {
     setServices((services) => {

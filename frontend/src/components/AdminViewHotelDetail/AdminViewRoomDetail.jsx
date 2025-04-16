@@ -13,6 +13,8 @@ import iconMap from "../../data/iconMap";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import Services from "../Services/Services";
+import Facilities from "../Facilities/Facilities";
 const localizer = momentLocalizer(moment);
 const CustomEvent = ({ event }) => {
   return (
@@ -214,23 +216,12 @@ const AdminViewRoomDetail = () => {
             <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
               {servicesDefault?.length > 0 && (
                 <>
-                  {servicesDefault.map((service, index) => (
-                    <label className="cursor-pointer border p-4 flex rounded-2xl gap-2 items-center">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={servicesId?.includes(service._id)}
-                      />
-
-                      <span className="mr-2">
-                        {iconMap[service.icon]
-                          ? React.createElement(iconMap[service.icon])
-                          : null}
-                      </span>
-
-                      <span>{service.name}</span>
-                    </label>
-                  ))}
+                 <Services
+                      isView = {true}
+                      setServicesDefault={setServicesDefault}
+                      servicesDefault={servicesDefault}
+                      services={servicesId}
+                    />
                 </>
               )}
             </div>
@@ -243,23 +234,13 @@ const AdminViewRoomDetail = () => {
             <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
               {facilitiesDefault?.length > 0 && (
                 <>
-                  {facilitiesDefault.map((data, index) => (
-                    <label className="cursor-pointer border p-4 flex rounded-2xl items-center">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={facilitiesId?.includes(data._id)}
-                      />
-
-                      <span className={data?.icon ? "mr-2" : ""}>
-                        {iconMap[data?.icon]
-                          ? React.createElement(iconMap[data?.icon])
-                          : null}
-                      </span>
-
-                      <span>{data?.name}</span>
-                    </label>
-                  ))}
+                    <Facilities
+                    isView={true}
+                    // handleFaChange={handleFaChange}
+                    facilities={facilitiesId}
+                    setFacilitiesDefault={setFacilitiesDefault}
+                    facilitiesDefault={facilitiesDefault}
+                  />
                 </>
               )}
             </div>
@@ -287,29 +268,6 @@ const AdminViewRoomDetail = () => {
                 </>
               )}
             </div> */}
-          </div>
-
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
-            <h2 className="font-medium text-lg mb-2">Short Description</h2>
-            <Editor
-              apiKey="izl72j5zg9fjcr0551e6p3vrd6gpctfwcer7okoq9iqtsxk4" // Optional: API key if you want to use TinyMCE Cloud
-              value={data?.description}
-              init={{
-                valid_elements: "*[*]",
-                height: 400,
-                menubar: true,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                  "textcolor", // Thêm plugin textcolor để hỗ trợ màu chữ
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic forecolor backcolor | \
-                         alignleft aligncenter alignright alignjustify | \
-                         bullist numlist outdent indent | removeformat | help",
-              }}
-            />
           </div>
 
           <div className="mb-4  w-full">

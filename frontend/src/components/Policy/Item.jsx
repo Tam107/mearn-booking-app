@@ -55,8 +55,7 @@ const Item = ({ typePolicyDefault,policy, setPolicy, policyChecked,data,handlePo
             : null}
         </span>
 
-        <span className="text-sm overflow-auto line-clamp-3">{data?.name}</span> {/* Thêm overflow-hidden và truncate */}
-
+        <span className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">{data?.name}</span>
         
       </label>
       {hover && (
