@@ -43,7 +43,7 @@ const HotelSchema = new mongoose.Schema({
    
     roomType:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Room",  // Trỏ tới mô hình ServiceHotel
+        ref: "Room",  
     }],
  
 

@@ -20,8 +20,8 @@ const Header = () => {
     }
   });
   const navStyle = (isActive) =>
-    `flex hover:bg-[#F3F4F6] hover:rounded-full duration-200 transition font-[400] text-[16px] leading-[24px] cursor-pointer py-[8px] rounded-[999px]  px-[20px]  ${
-      isActive ? "font-[500] text-[#374151]  bg-[#F3F4F6]" : "text-[#6B7280]"
+    `flex hover:bg-[#F3F4F6] hover:rounded-full text-sm duration-200 transition font-[400] text-[16px] leading-[24px] cursor-pointer py-[8px] rounded-[999px]  px-[20px]  ${
+      isActive ? " text-[#374151]  bg-[#F3F4F6]" : "text-[#6B7280]"
     }`;
   return (
     <>
@@ -31,7 +31,7 @@ const Header = () => {
             active ? " bg-gray-200" : ""
           } fixed top-0 w-full z-50 transition duration-200`}
         >
-          <div className="w-11/12 mx-auto">
+          <div className=" mx-auto">
             <div
               className={`hidden md:h-[50px] md:px-6 md:my-[20px] md:flex items-center justify-between`}
             >

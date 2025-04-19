@@ -418,6 +418,68 @@ const editPolicyApi = async(id,data)=>{
         }
     }
 }
+const createOtpPayment = async(data)=>{
+   
+    try {
+        const URL_LOGIN ='/booking/create'
+        const response = await axios.post(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const getBookingApi = async(id)=>{
+   
+    try {
+        const URL_LOGIN ='/booking/get/'+id
+        const response = await axios.get(URL_LOGIN)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const updateBookingApi = async(id,data)=>{
+   
+    try {
+        const URL_LOGIN ='/booking/update/'+id
+        const response = await axios.patch(URL_LOGIN,data)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
+const getPayPalClientApi = async()=>{
+   
+    try {
+        const URL_LOGIN ='/config/paypal'
+        const response = await axios.get(URL_LOGIN)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+
 
 export {
     registerUser,
@@ -448,5 +510,9 @@ export {
     deleteFacilitiesApi,
     editFacilitiesApi,
     deletePolicyApi,
-    editPolicyApi
+    editPolicyApi,
+    createOtpPayment,
+    getBookingApi,
+    updateBookingApi,
+    getPayPalClientApi
 }

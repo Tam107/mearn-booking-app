@@ -5,17 +5,20 @@ import { FaRegShareFromSquare } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import ImageHotel from "./ImageHotel";
 import InfoHotel from "./InfoHotel";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const HotelDetail = () => {
   const [open, setOpen] = useState(false);
   //  const [dataRoom,setDataRoom]=useState({});
   const { slug } = useParams();
   const [data, setData] = useState({});
+ 
+  
   const stateHotels = useSelector((state) => state.HotelReducer);
   // const [roomType, setRoomType] = useState('');
- 
+ const navigate = useNavigate()
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,9 +28,16 @@ const HotelDetail = () => {
       // Normalize the slug to match the format in the database
 
       const hotel = stateHotels.hotels.find((hotel) => hotel.slug === slug);
+      if(hotel){
+        setData(hotel || {}); // If no hotel is found, set data as empty object
+        setOpen(false);
+      }
+      else{
+        toast.error("Not found homes")
+        navigate("/homes")
+      }
 
-      setData(hotel || {}); // If no hotel is found, set data as empty object
-      setOpen(false);
+     
     }
   }, [slug, stateHotels.hotels]);
 

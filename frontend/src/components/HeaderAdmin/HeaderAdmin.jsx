@@ -28,6 +28,7 @@ const HeaderAdmin = () => {
             />
           </div>
           <div className="flex items-center">
+          {/* <DashboardIcon className="text-indigo-600" /> */}
             <Tooltip title="User" arrow>
               <PersonOutlineIcon
                 className="text-gray-600 cursor-pointer"
