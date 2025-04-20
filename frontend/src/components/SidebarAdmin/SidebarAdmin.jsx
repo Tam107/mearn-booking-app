@@ -12,6 +12,9 @@ import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link, useLocation } from "react-router-dom";
 import { LuHotel } from "react-icons/lu";
+import { MdPayment } from "react-icons/md";
+import { CiViewList } from "react-icons/ci";
+import { FaList } from "react-icons/fa";
 
 const SidebarAdmin = () => {
   const location = useLocation();
@@ -55,11 +58,11 @@ const SidebarAdmin = () => {
                   LISTS
                 </p>
                 <div className="flex flex-col">
-                  <Link to="/users" style={{ textDecoration: "none" }}>
-                    <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                      <PersonOutlineIcon className="text-indigo-600" />
+                  <Link to="/dashboard-view-orders" style={{ textDecoration: "none" }}>
+                  <li className={navStyle("/dashboard-view-orders")}>
+                      <FaList size={20} className="text-indigo-600" />
                       <span className="text-sm font-semibold text-gray-600">
-                        Users
+                        Orders
                       </span>
                     </li>
                   </Link>

@@ -8,6 +8,7 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Tooltip } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import { MdPayment } from 'react-icons/md';
 const HeaderAdmin = () => {
   return (
     <>
@@ -27,15 +28,7 @@ const HeaderAdmin = () => {
               fontSize="large"
             />
           </div>
-          <div className="flex items-center">
-          {/* <DashboardIcon className="text-indigo-600" /> */}
-            <Tooltip title="User" arrow>
-              <PersonOutlineIcon
-                className="text-gray-600 cursor-pointer"
-                fontSize="large"
-              />
-            </Tooltip>
-          </div>
+         
           <div className="flex items-center">
             <Tooltip title="Store" arrow>
               <StoreIcon

@@ -73,8 +73,15 @@ const Booking = () => {
     // console.log(res);
 
     if (res.success) {
-      setData(res.data);
+      if(res.data.status ==="Pending" || res.status==="Confirm"){
+        // toast.error("No booking founld");
+        navigate("/order/"+res.data._id)
+      }
+      else{
+        setData(res.data);
       fetchPrice(res.data);
+      }
+      
     } else {
       toast.error("No booking founld");
       navigate("/homes")

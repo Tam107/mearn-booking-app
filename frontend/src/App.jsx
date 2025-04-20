@@ -30,6 +30,10 @@ import PageNotFound from './components/PageNotFound/PageNotFound.jsx';
 import AdminEditRoomPage from './pages/AdminEditRoomPage/AdminEditRoomPage.jsx';
 import BookingPage from './pages/BookingPage/BookingPage.jsx';
 import PaymentPage from './pages/PaymentPage/PaymentPage.jsx';
+import OrderSuccessPage from './pages/OrderSuccessPage/OrderSuccessPage.jsx';
+import OrderListPage from './pages/OrderListPage/OrderListPage.jsx';
+import OrderDetailPage from './pages/OrderDetailPage/OrderDetailPage.jsx';
+import AdminViewOrdersPage from './pages/AdminViewOrdersPage/AdminViewOrdersPage.jsx';
 
 function App() {
 
@@ -74,10 +78,14 @@ function App() {
        <Route path='/dashboard-hotel/:slug' element={<AdminViewEditHotelPage/>}/>
        <Route path='/dashboard-view-roomDetail/:slug' element={<AdminViewRoomDetailPage/>}/>
        <Route path='/dashboard-edit-roomDetail/:slug' element={<AdminEditRoomPage/>}/>
+       <Route path='/dashboard-view-orders/' element={<AdminViewOrdersPage/>}/>
        
        <Route path="/homes" element={<HotelListPage />} />
        <Route path="/booking/:id" element={<BookingPage />} />
        <Route path="/payment/:id" element={<PaymentPage />} />
+       <Route path="/orderSuccess/:id" element={<OrderSuccessPage />} />
+       <Route path="/orderList" element={<OrderListPage />} />
+       <Route path="/order/:id" element={<OrderDetailPage />} />
        <Route path="*" element={<PageNotFound />} />
        
        {/* <Route path="/hotel" element={<HotelDetailPage/>}/> */}

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { CiBellOn } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
 import { AiOutlineHeart } from "react-icons/ai";
 import WishList from "../WishList/WishList";
+import { LuShoppingCart } from "react-icons/lu";
 
 const Header = () => {
   const [active, setActive] = useState(false);
@@ -19,10 +20,15 @@ const Header = () => {
       setActive(false);
     }
   });
+  const navigate = useNavigate()
+  
   const navStyle = (isActive) =>
     `flex hover:bg-[#F3F4F6] hover:rounded-full text-sm duration-200 transition font-[400] text-[16px] leading-[24px] cursor-pointer py-[8px] rounded-[999px]  px-[20px]  ${
       isActive ? " text-[#374151]  bg-[#F3F4F6]" : "text-[#6B7280]"
     }`;
+    const handleOrder =()=>{
+      navigate("/orderlist")
+    }
   return (
     <>
       <div className="relative mb-[90px]">
@@ -71,8 +77,8 @@ const Header = () => {
                 Hot Deal{" "}
               </NavLink>
 
-              <div className="flex items-center">
-                <CiBellOn size={28} />
+              <div className="flex gap-2 items-center">
+                <LuShoppingCart className="cursor-pointer" onClick={handleOrder} size={28} />
                 <div
                   onClick={() => {
                     setOpenWishList(true);

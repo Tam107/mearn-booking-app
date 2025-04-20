@@ -27,7 +27,13 @@ const BookingSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    payAt: Date
+    payAt: Date,
+    totalPrice:Number,
+    totalPriceUSD:Number,
+    status:{
+        type:String,
+        default:"Request"
+    }
 
 }, {
     timestamps: true

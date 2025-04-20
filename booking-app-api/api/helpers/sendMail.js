@@ -17,7 +17,8 @@ export const sendMail =async (options)=>{
         from: process.env.SMPT_MAIL, 
         to: options.email, // list of receivers
         subject:options.subject, // Subject line
-        text:options.text, // plain text body
+        text: options.text || "", // Nội dung dạng văn bản thuần
+        html: options.html || "",
       
     };
 

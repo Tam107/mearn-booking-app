@@ -463,6 +463,36 @@ const updateBookingApi = async(id,data)=>{
         }
     }
 }
+const getBookingByEmailApi = async(email)=>{
+   
+    try {
+        const URL_LOGIN ='/booking/getByEmail/'+email
+        const response = await axios.get(URL_LOGIN)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
+const getAllBookinglApi = async(email)=>{
+   
+    try {
+        const URL_LOGIN ='/booking/getAll'
+        const response = await axios.get(URL_LOGIN)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 
 const getPayPalClientApi = async()=>{
    
@@ -514,5 +544,7 @@ export {
     createOtpPayment,
     getBookingApi,
     updateBookingApi,
-    getPayPalClientApi
+    getPayPalClientApi,
+    getBookingByEmailApi,
+    getAllBookinglApi
 }

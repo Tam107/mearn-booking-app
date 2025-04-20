@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getBookingApi, getPayPalClientApi } from "../../../Axios/client/api";
 import Payment from "../../components/Payment/Payment";
 // import Booking from "../../components/Booking/Booking";
@@ -11,6 +11,7 @@ const PaymentPage = () => {
     const [numberOfDays, setNumberOfDays] = useState(0);
     const [clientID, setClientId] = useState(null);
      const [totalPrice, setTotalPrice] = useState(0);
+     const navigate  = useNavigate()
      const getPaypalClientId = async () => {
       const res = await getPayPalClientApi();
       // console.log(res.data);
@@ -77,6 +78,11 @@ const PaymentPage = () => {
             toast.error("Fill the information first");
             navigate(`/booking/${id}`)
           }
+          if(res.data.status ==="Pending" || res.status==="Confirm"){
+            // toast.error("No booking founld");
+            navigate("/order/"+res.data._id)
+            return;
+          }
           // console.log(res.data,111);
           
           setData(res.data);
@@ -97,7 +103,7 @@ const PaymentPage = () => {
       <Header />
       <div className="bg-[#F7F9FA]">
         {/* <Booking/> */}
-        <Payment clientID={clientID} data={data} totalPrice={totalPrice} numberOfDays={numberOfDays}/>
+        <Payment id={id} clientID={clientID} data={data} totalPrice={totalPrice} numberOfDays={numberOfDays}/>
       </div>
     </>
   );

@@ -2,17 +2,47 @@ import { Carousel } from "antd";
 import React, { useEffect, useState } from "react";
 import iconMap from "../../data/iconMap";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { getPayPalClientApi } from "../../../Axios/client/api";
+import {  updateBookingApi } from "../../../Axios/client/api";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
-const Payment = ({ data ,numberOfDays,totalPrice,clientID}) => {
+const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
  
-    const exchangeRate = 23500; // Tỷ giá cố định
+    const exchangeRate = 25000; // Tỷ giá cố định
     const totalPriceInUSD = (totalPrice / exchangeRate).toFixed(2); // Chuyển đổi sang USD
 
+    const [disableButton,setDisablueButton] = useState(false)
     
-    console.log(clientID);
+     const navigate = useNavigate()
     
+  const handleSuccess =async (details)=>{
+    // console.log("vao đây");
+    
+  setDisablueButton(true)
+    let newData = data
+    newData.paymentMethod = "paypal"
+    newData.isPaid= true
+    newData.payAt = new Date()
+    newData.totalPrice= totalPrice
+    newData.totalPriceUSD= totalPriceInUSD
+    newData.status = "Pending"
+    
+    // console.log(newData);
+
+    const res = await updateBookingApi(id,newData)
+    if (res.success) {
+        toast.success("update ok");
+        setDisablueButton(false);
+        navigate(`/orderSuccess/${id}`)
   
+      } else {
+        setDisablueButton(false);
+        return toast.error(res.message);
+      }
+  
+      setDisablueButton(false);
+    
+  }
 
   return (
     <>
@@ -41,7 +71,7 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID}) => {
                     <PayPalScriptProvider options={{
     clientId: clientID, // Client ID từ môi trường Sandbox
     currency: "USD", // Đơn vị tiền tệ
-    intent: "authorize", // Chỉ ủy quyền, không thực hiện thanh toán thật
+    intent: "capture", // Chỉ ủy quyền, không thực hiện thanh toán thật
   }}>
                       <PayPalButtons
                       createOrder={(dataOrder, actions) => {
@@ -58,12 +88,13 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID}) => {
                       }}
                       onApprove={(dataOrder, actions) => {
                         return actions.order.capture().then((details) => {
-                          console.log("Payment successful:", details);
-                          // Xử lý thông tin đơn hàng sau khi thanh toán thành công
+                          // console.log("Payment successful:", details);
+                          handleSuccess(details); // Gọi hàm xử lý sau khi thanh toán thành công
                         });
                       }}
                       // createOrder={createOrder}
                       // onApprove={onApprove}
+                    //   disabled={disableButton}
                       />
                     </PayPalScriptProvider>
                   </>
