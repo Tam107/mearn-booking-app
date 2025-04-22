@@ -27,6 +27,7 @@ const FindOrder = () => {
     }
     else{
         setIsLoading(false); // Kết thúc loading
+        setData({})
         return toast.error("No Booking found")
     }
     
