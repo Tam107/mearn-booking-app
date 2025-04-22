@@ -3,7 +3,9 @@ import { CiSearch } from "react-icons/ci";
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoPersonAddOutline } from "react-icons/io5";
-
+import Img1 from "../../assets/anh1.png"
+import Img2 from "../../assets/anh2.png"
+import Img3 from "../../assets/anh3.png"
 const Hero = () => {
   return (
     <>
@@ -19,11 +21,11 @@ const Hero = () => {
                         </div>
                         <div className='w-[60%] h-full gap-4 flex justify-between'>
                             <div className='flex w-[50%] pb-10 justify-between flex-col gap-4'>
-                                <img className='object-cover h-[50%] w-full ' src="https://s3-alpha-sig.figma.com/img/f94f/883e/52efc69f0b5c2a1adad3ce755867e62a?Expires=1742169600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=KX3IFspU3RnfkAa4mSRSCf6xoackrKCuSi7oQ3y30AUWGymoY1a7novrgm2YytUmgTdF5id7BTOaG-jcehRpH5-R-RaP6hR3rrLInWVQw8dvqLr~iWzVuW7~yM8hpkOsQxMnnVTC78uaJG8qGYBHX6rMXCrYAv~d0G2zZjQ3PLtiKL5YhofehM9m5wI3bjUMPDQeWdriMNDSQ~9uHICw7P-63yKUNgR4AIkhDgMBbtcVzUhJtJwnDQOkk-sJ99KHuSXs8Yehsuxyjz8L1xXwhqM0K0ekTMOdwDmu4HnOs2DAXJItSYe4k3O40-O3nzJfq8wj1NvDmfjC4piX5lpCcA__" alt="" />
-                                <img className='object-cover h-[50%] w-full ' src="https://s3-alpha-sig.figma.com/img/5923/7610/d708c24de25fb990425147fc652b611e?Expires=1742169600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=CkjKNKPHeQmWH77oFdp2sCOBdGagbicoPMSDnIur9EG9D7H3cXO1kK0Tg5pI8GGbpG0bH17HHV2ZhuIPq~ePZtoPJk8MuFB1Z8NGvsg-23d4Qmy8WP81m45BrLYCBjVARyVHi3IRHCEcTjgTBbGL7uscl0cUXzvcI~LMn~~sDYiTp660tTJJJ4ixS5gqesH~HceRXfPQeW52HgkkHZ5RuxjQRk8pq~8fgkWPouU-QQZBgGgWdJog5oSZByNsrpHMwhkpVGPhYiFAD2nKuyHWpElzggGEoCmM22iEB8a5mnkLtQ4Nt0CcqBigAVrqTCZzZx67ADwHaKZR1b4yTIjjdQ__" alt="" />
+                                <img className='object-cover h-[50%] w-full ' src={Img3} alt="" />
+                                <img className='object-cover h-[50%] w-full ' src={Img2} alt="" />
                             </div>
                             <div className='w-[50%] h-[100%] relative'>
-                                <img className='object-cover w-full h-[80%] absolute bottom-0' src="https://s3-alpha-sig.figma.com/img/5bcf/6ba0/bd86f76521827c1e8e704fe0def314bb?Expires=1742169600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=o~~WlCxqlVdyz5CNTkVKIclONUAWoPmz4nSCdQLrsT4YZTCwEkkCAi0lIcY9eSSqvlRKy9wfglTZIGvHJuJcqhwLOmwclSe73iH-Y~KX2szFjKQCb9g5offnNDuaN8LWRfykFLAO~Ks7nZCGqtzDpIPhbvvAhxpd5u-t1FIT~eLW1b6-KI8LNTWCbmHYKuzaJZhAX6TKGneoSeY1PIGUMJAJzyXBvGMzFgBL72L9dKEwpnHroDrGpmjVvCenOBKU5BfRTr53NYjUPFPJdX~EGG~QKmAMN4jCNTFQveI7JCOYARvMXWRFtPHkGdh8FpnHIAwtbLkmrTpqJTGdT4NUGA__" alt="" />
+                                <img className='object-cover w-full h-[80%] absolute bottom-0' src={Img1} alt="" />
                             </div>
                         </div>  
                     </div>
