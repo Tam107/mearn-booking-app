@@ -260,7 +260,7 @@ const AdminCreateRoom = () => {
       return toast.error("Please choose end date");
     }
     if (!priceEvents) {
-      return toast.error("Please choose price");
+      return toast.error("Price cannot be empty");
     }
     if (priceEvents <= 0) return toast.error("Invalid price");
     if (daysChoosed.length === 0) {

@@ -85,34 +85,37 @@ router.delete("/delete/:id", async (req, res) => {
 })
 router.patch('/edit/:id', async (req, res) => {
     try {
-        // console.log(req.params.id);
-        // console.log(req.body);
-
-        if(!req.body.name){
-            const updatedSer = await Policy.findByIdAndUpdate(req.params.id
-                , { $set: req.body }
-                , { new: true })
+       if(!req.body.name){
     
-            if (!updatedSer) {
-                res.json({
-                    success: false,
-                    message: "No policy found"
-                })
-                return;
-            }
-            return res.json({
-                success: true,
-                message: "Update policy succesfully",
-                data:updatedSer
-            })
-        }
+        
+                   const updatedSer = await Policy.findByIdAndUpdate(req.params.id
+                       , { $set: req.body }
+                       , { new: true })
+           
+                   if (!updatedSer) {
+                       res.json({
+                           success: false,
+                           message: "No policy found"
+                       })
+                       return;
+                   }
+                   return res.json({
+                       success: true,
+                       message: "Update policy succesfully",
+                       data:updatedSer
+                   })
+               }
+       
+              
+
+       
 
         const serviceName = req.body.name.trim().toLowerCase();
 
         // Sử dụng $regex để tìm kiếm không phân biệt chữ hoa chữ thường và giữ nguyên dữ liệu trong cơ sở dữ liệu
         const Exist = await Policy.find({
             name: { $regex: `^${serviceName}$`, $options: 'i' },
-            type:req.body.type // So sánh chính xác, không phân biệt chữ hoa chữ thường
+            type:req.body.typePolicy // So sánh chính xác, không phân biệt chữ hoa chữ thường
           });
         if (Exist.length>0) {
             // console.log(Exist);

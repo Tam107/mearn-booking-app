@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message } from "antd";
-import { getAllBookinglApi } from "../../../Axios/client/api";
+import { getAllBookinglApi, updateStatusBookingApi } from "../../../Axios/client/api";
 
 const AdminViewOrders = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [loadingRow, setLoadingRow] = useState(null); // Lưu trạng thái loading của từng hàng
   const fetchApi = async () => {
     setLoading(true);
     const res = await getAllBookinglApi();
@@ -22,9 +22,20 @@ const AdminViewOrders = () => {
     fetchApi();
   }, []);
 
-  const handleConfirm = (record) => {
+  const handleConfirm = async(record) => {
     // Xử lý hành động xác nhận
-    message.success(`Confirmed booking with ID: ${record._id}`);
+    // message.success(`Confirmed booking with ID: ${record._id}`);
+    setLoadingRow(record._id); // Đặt trạng thái loading cho hàng hiện tại
+    const res = await updateStatusBookingApi(record._id);
+    if (res.success) {
+      const updatedData = data.map((item) =>
+        item._id === res.data._id ? res.data : item
+      );
+      setData(updatedData);
+    }
+    setLoadingRow(null); // Đặt lại trạng thái loading
+
+    
     // Thêm logic xử lý API nếu cần
   };
 
@@ -90,9 +101,9 @@ const AdminViewOrders = () => {
       render: (status) => (
         <span
           className={`px-3 py-1 rounded-full text-white ${
-            status.toLowerCase() === "pending"
+            status?.toLowerCase() === "pending"
               ? "bg-yellow-500"
-              : status.toLowerCase() === "confirm"
+              : status?.toLowerCase() === "confirm"
               ? "bg-green-500"
               : "bg-gray-500"
           }`}
@@ -104,15 +115,17 @@ const AdminViewOrders = () => {
     {
       title: "Action",
       key: "action",
-    
       render: (_, record) => (
         <Button
           type="primary"
           size="small"
           onClick={() => handleConfirm(record)}
           className="bg-blue-500 hover:bg-blue-600"
+          disabled={
+            record.status?.toLowerCase() === "confirm" || loadingRow === record._id
+          } // Vô hiệu hóa nếu đã xác nhận hoặc đang loading
         >
-          Confirm Payment
+          {loadingRow === record._id ? "Processing..." : "Confirm Payment"}
         </Button>
       ),
     },

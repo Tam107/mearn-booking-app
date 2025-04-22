@@ -15,7 +15,7 @@ const OrderSuccessPage = () => {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
-    navigate('/'); // Điều hướng về trang chủ
+    navigate('/homes'); // Điều hướng về trang chủ
   };
 
   const [data, setData] = useState();
@@ -66,7 +66,7 @@ const OrderSuccessPage = () => {
           >
             Explore more stays
           </button><button
-            onClick={handleGoHome}
+            onClick={()=>{navigate(`/order/${id}`)}}
             className="mt-6 cursor-pointer bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition duration-300"
           >
             View Order

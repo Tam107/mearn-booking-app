@@ -73,18 +73,16 @@ const Booking = () => {
     // console.log(res);
 
     if (res.success) {
-      if(res.data.status ==="Pending" || res.status==="Confirm"){
+      if (res.data.status === "Pending" || res.status === "Confirm") {
         // toast.error("No booking founld");
-        navigate("/order/"+res.data._id)
-      }
-      else{
+        navigate("/order/" + res.data._id);
+      } else {
         setData(res.data);
-      fetchPrice(res.data);
+        fetchPrice(res.data);
       }
-      
     } else {
       toast.error("No booking founld");
-      navigate("/homes")
+      navigate("/homes");
     }
   };
 
@@ -92,7 +90,7 @@ const Booking = () => {
     fetchApi();
   }, [id]);
 
-  const handlePayment = async() => {
+  const handlePayment = async () => {
     setDisablueButton(true);
     if (!name) {
       setDisablueButton(false);
@@ -124,18 +122,17 @@ const Booking = () => {
       checkOut: data?.checkOut,
       roomType: data?.roomType._id,
       guests: data?.guests,
-      stepPayment:true
+      stepPayment: true,
     };
     if (!isGuest) dataPayment.nameGuest = nameGuest;
     if (request) dataPayment.request = request;
 
     const res = await updateBookingApi(id, dataPayment);
-    
+
     if (res.success) {
       toast.success("update ok");
       setDisablueButton(false);
-      navigate(`/payment/${id}`)
-
+      navigate(`/payment/${id}`);
     } else {
       setDisablueButton(false);
       return toast.error(res.message);
@@ -487,7 +484,7 @@ const Booking = () => {
                           size: 20,
                         })}
                         <div className="py-2">
-                          <h4 className="font-[500] text-[16px] leading-[24px]">
+                          <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                             {service.name}
                           </h4>
                         </div>
@@ -502,7 +499,7 @@ const Booking = () => {
                             size: 20,
                           })}
                         <div className="py-2">
-                          <h4 className="font-[500] text-[16px] leading-[24px]">
+                          <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                             {service.name}
                           </h4>
                         </div>
@@ -522,32 +519,30 @@ const Booking = () => {
                 You got it all covered! You get the most flexibility for your
                 booking with this room option.
               </p>
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <h4 className="font-[500] text-lg mb-4">House rules</h4>
                   <div className="flex flex-col gap-2">
                     {data?.roomType?.hotel?.policy?.map((i) => {
                       if (i.type === "House rules") {
-                        // console.log(i?.icon, "icon");
-
                         return (
-                          <>
-                            <div className="w-full flex items-center gap-3">
-                              {i.icon && (
-                                <>
-                                  {React.createElement(iconMap[i?.icon], {
-                                    size: 20,
-                                  })}
-                                </>
-                              )}
-
-                              <div className="py-2">
-                                <h4 className=" text-[16px] leading-[24px]">
-                                  {i?.name}
-                                </h4>
-                              </div>
-                            </div>{" "}
-                          </>
+                          <div
+                            key={i.name}
+                            className="w-full flex items-center gap-3"
+                          >
+                            {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}
+                            <div className="py-2 w-full">
+                              <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                                {i?.name}
+                              </h4>
+                            </div>
+                          </div>
                         );
                       }
                     })}
@@ -559,23 +554,23 @@ const Booking = () => {
                     {data?.roomType?.hotel?.policy?.map((i) => {
                       if (i.type === "Safety & property") {
                         return (
-                          <>
-                            <div className="w-full flex items-center gap-3">
-                              {i.icon && (
-                                <>
-                                  {React.createElement(iconMap[i?.icon], {
-                                    size: 20,
-                                  })}
-                                </>
-                              )}
-
-                              <div className="py-2">
-                                <h4 className=" text-[16px] leading-[24px]">
-                                  {i?.name}
-                                </h4>
-                              </div>
-                            </div>{" "}
-                          </>
+                          <div
+                            key={i.name}
+                            className="w-full flex items-center gap-3"
+                          >
+                            {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}
+                            <div className="py-2 w-full">
+                              <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                                {i?.name}
+                              </h4>
+                            </div>
+                          </div>
                         );
                       }
                     })}
@@ -589,23 +584,23 @@ const Booking = () => {
                     {data?.roomType?.hotel?.policy?.map((i) => {
                       if (i.type === "Cancellation policy") {
                         return (
-                          <>
-                            <div className="w-full flex items-center gap-3">
-                              {i.icon && (
-                                <>
-                                  {React.createElement(iconMap[i?.icon], {
-                                    size: 20,
-                                  })}
-                                </>
-                              )}
-
-                              <div className="py-2">
-                                <h4 className=" text-[16px] leading-[24px]">
-                                  {i?.name}
-                                </h4>
-                              </div>
-                            </div>{" "}
-                          </>
+                          <div
+                            key={i.name}
+                            className="w-full flex items-center gap-3"
+                          >
+                            {i.icon && (
+                              <>
+                                {React.createElement(iconMap[i?.icon], {
+                                  size: 20,
+                                })}
+                              </>
+                            )}
+                            <div className="py-2 w-full">
+                              <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                                {i?.name}
+                              </h4>
+                            </div>
+                          </div>
                         );
                       }
                     })}

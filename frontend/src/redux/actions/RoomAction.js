@@ -45,6 +45,7 @@ export const getAllRoomsAction = ()=>async(dispatch)=>{
         
         if(data.success){
    
+            console.log(data);
             
             // console.log(1);
             dispatch({

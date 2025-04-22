@@ -250,16 +250,14 @@ const InfoHotel = ({ data }) => {
                   Where you’ll sleep
                 </h3>
                 <div className="grid gap-2 grid-cols-2">
-                  {dataRoom?.photos?.map((i, ind) => (
-                    <>
-                      <img
-                        key={ind}
-                        src={i}
-                        className="w-full rounded-2xl aspect-[3/2]"
-                        alt=""
-                      />
-                    </>
-                  ))}
+                {dataRoom?.photos?.slice(0, 4).map((i, ind) => (
+        <img
+          key={ind}
+          src={i}
+          className="w-full rounded-2xl aspect-[3/2]"
+          alt={`Room photo ${ind + 1}`}
+        />
+      ))}
                   {dataRoom?.photos?.length === 0 && <>NO IMAGES</>}
                 </div>
               </div>
@@ -421,13 +419,14 @@ const InfoHotel = ({ data }) => {
                       </>
                     )}{" "}
                     <div className="py-2">
-                      <h4 className="font-[500] text-[16px] leading-[24px]">
+                      <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                         {i?.name}
                       </h4>
                     </div>
                   </div>{" "}
                 </>
               ))}
+              
             </div>
           </div>
         </div>
@@ -456,7 +455,7 @@ const InfoHotel = ({ data }) => {
                             )}
 
                             <div className="py-2">
-                              <h4 className=" text-[16px] leading-[24px]">
+                              <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                                 {i?.name}
                               </h4>
                             </div>
@@ -484,7 +483,7 @@ const InfoHotel = ({ data }) => {
                             )}
 
                             <div className="py-2">
-                              <h4 className=" text-[16px] leading-[24px]">
+                              <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                                 {i?.name}
                               </h4>
                             </div>
@@ -512,7 +511,7 @@ const InfoHotel = ({ data }) => {
                             )}
 
                             <div className="py-2">
-                              <h4 className=" text-[16px] leading-[24px]">
+                              <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                                 {i?.name}
                               </h4>
                             </div>

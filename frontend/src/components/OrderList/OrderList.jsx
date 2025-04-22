@@ -79,6 +79,13 @@ const OrderList = ({data}) => {
                     {/* Trạng thái, giá và nút */}
                   </div>
                 ))}
+                {
+                  data.length==0 && (
+                    <p className="text-center text-gray-600">
+                                You have no bookings at this time.
+                            </p>
+                  )
+                }
               </div>
             </div>
           </div>

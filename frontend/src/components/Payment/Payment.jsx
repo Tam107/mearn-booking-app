@@ -31,7 +31,7 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
 
     const res = await updateBookingApi(id,newData)
     if (res.success) {
-        toast.success("update ok");
+        toast.success("Your payment was successful");
         setDisablueButton(false);
         navigate(`/orderSuccess/${id}`)
   

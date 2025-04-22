@@ -44,7 +44,7 @@ const Item = ({
     <>
       {isView === true ? (
         <>
-          {facilities.includes(data._id) && (
+          {facilities?.includes(data?._id) && (
             <>
               <div
                 onMouseEnter={() => setHover(true)}

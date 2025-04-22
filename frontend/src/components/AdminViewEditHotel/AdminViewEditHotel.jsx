@@ -27,6 +27,7 @@ import ModelCreateService from "../AdminCreateHotel/ModelCreateService";
 import EditorTiny from "../EditorTiny/EditorTiny";
 import ModelCreatePolicy from "../ModelCreatePolicy/ModelCreatePolicy";
 import Policy from "../Policy/Policy";
+import { getAllRoomsAction } from "../../redux/actions/RoomAction";
 
 const AdminViewEditHotel = () => {
     const {slug} = useParams()
@@ -277,7 +278,8 @@ ola()},[typePolicy,showModelPolicy])
 
     };
   
-    dispatch(updateHotelAction(dataHotel))
+    await dispatch(updateHotelAction(dataHotel))
+    dispatch(getAllRoomsAction())
     navigate("/dashboard-view-homes")
 
 

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { getBookingByEmailApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 import OrderList from "../../components/OrderList/OrderList";
+import FindOrder from "../../components/OrderList/FindOrder";
 
 const OrderListPage = () => {
   const stateUser = useSelector((state) => state.UserReducer);
@@ -25,6 +26,9 @@ const OrderListPage = () => {
   useEffect(() => {
     fetchApi();
   }, [stateUser.user]);
+
+  console.log(stateUser);
+  
   
   
 
@@ -34,6 +38,11 @@ const OrderListPage = () => {
       {stateUser.isAuthenticated && (
         <>
           <OrderList data={data}/>
+        </>
+      )}
+      {!stateUser.isAuthenticated && (
+        <>
+          <FindOrder />
         </>
       )}
       <Footer />

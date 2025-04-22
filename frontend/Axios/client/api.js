@@ -463,6 +463,21 @@ const updateBookingApi = async(id,data)=>{
         }
     }
 }
+const updateStatusBookingApi = async(id)=>{
+   
+    try {
+        const URL_LOGIN ='/booking/updateStatus/'+id
+        const response = await axios.patch(URL_LOGIN)
+        return response
+    } catch (error) {
+        console.log(error);
+        
+        return {
+            success: false,
+            message: error?.response?.data?.message||"Error in axios",
+        }
+    }
+}
 const getBookingByEmailApi = async(email)=>{
    
     try {
@@ -546,5 +561,6 @@ export {
     updateBookingApi,
     getPayPalClientApi,
     getBookingByEmailApi,
-    getAllBookinglApi
+    getAllBookinglApi,
+    updateStatusBookingApi
 }

@@ -159,15 +159,40 @@ export const updateHotel = async (req, res, next) => {
     try {
         const hotel = await Hotel.findById(req.body._id);
 
-        // console.log(req.body.services);
+        if (!hotel) {
+            return res.json({
+                success: false,
+                message: "No hotel found with id " + req.body._id,
+            });
+        }
         
+        const oldServices = hotel.services.map((service) => service.toString());
+        const newServices = req.body.services || [];
+        const servicesToAdd = newServices.filter(
+            (service) => !oldServices.includes(service)
+        );
         
-        
-        const roomType= hotel.roomType;
+        const servicesToRemove = oldServices.filter(
+            (service) => !newServices.includes(service)
+        );
+         // Cập nhật các room liên quan
+         const roomIds = hotel.roomType; // Lấy danh sách room của hotel
+         if (servicesToAdd.length > 0) {
+             await Room.updateMany(
+                 { _id: { $in: roomIds } },
+                 { $addToSet: { services: { $each: servicesToAdd } } } // Thêm các services mới
+             );
+         }
+         if (servicesToRemove.length > 0) {
+             await Room.updateMany(
+                 { _id: { $in: roomIds } },
+                 { $pull: { services: { $in: servicesToRemove } } } // Xóa các services bị loại bỏ
+             );
+         }
         const updatedHotel = await Hotel.findByIdAndUpdate(req.body._id
             , { $set: req.body }
             , { new: true }).populate('services').populate('policy').populate('roomType'); 
-        console.log(updatedHotel);
+        // console.log(updatedHotel);
         
         if (!updatedHotel) {
             res.json({

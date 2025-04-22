@@ -44,7 +44,13 @@ const ModelUpdatePolicy = ({
       icon,
       typePolicy,
     };
-    if (name != data.name) dataBody.name = name;
+
+    
+    if (name != data.name) {
+      dataBody.name = name;
+    }
+    console.log(dataBody);
+    
 
     const res = await editPolicyApi(data._id, dataBody);
     if (res.success) {

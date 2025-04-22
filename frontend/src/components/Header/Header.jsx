@@ -20,6 +20,7 @@ const Header = () => {
       setActive(false);
     }
   });
+  const stateUser = useSelector(state=>state.UserReducer)
   const navigate = useNavigate()
   
   const navStyle = (isActive) =>
