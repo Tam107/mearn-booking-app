@@ -10,11 +10,11 @@ const FindOrder = () => {
 
   const [data,setData] = useState({})
   const [isLoading, setIsLoading] = useState(false); // State để kiểm soát trạng thái loading
-
+  const navigate = useNavigate()
   const handleSearch = async() => {
     // console.log("Searching for order:", orderId);
     if (!orderId.trim()) {
-        return toast.error("Please enter a valid order ID");
+        return toast.error("Please enter your booking ID");
       }
       setIsLoading(true); // Bắt đầu loading
 
@@ -28,19 +28,21 @@ const FindOrder = () => {
     else{
         setIsLoading(false); // Kết thúc loading
         setData({})
-        return toast.error("No Booking found")
+
+        toast.error("Booking ID not found")
+     
     }
     
     // Add order lookup logic here
   };
   console.log(data);
-  const navigate = useNavigate()
   const handleViewDetails = ()=>{
     if(stateUser.isAuthenticated){
         navigate("/order/"+data._id)
     }
     else{
-        return toast.error("Please login first")
+        toast.error("Please login first")
+        navigate("/login" )
     }
   }
   
