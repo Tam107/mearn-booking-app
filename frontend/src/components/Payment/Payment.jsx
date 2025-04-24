@@ -264,9 +264,9 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                 You got it all covered! You get the most flexibility for your
                 booking with this room option.
               </p>
-              <div className="grid grid-cols-3">
-                <div>
-                  <h4 className="font-[500] text-lg mb-4">House rules</h4>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="w-full">
+                  <h4 className="font-[500] text-lg mb-4 w-full">House rules</h4>
                   <div className="flex flex-col gap-2">
                     {data?.roomType?.hotel?.policy?.map((i) => {
                       if (i.type === "House rules") {
@@ -274,7 +274,7 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
 
                         return (
                           <>
-                            <div className="w-full flex items-center gap-3">
+                            <div className=" flex items-center gap-3">
                               {i.icon && (
                                 <>
                                   {React.createElement(iconMap[i?.icon], {
@@ -283,8 +283,8 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                                 </>
                               )}
 
-                              <div className="py-2">
-                                <h4 className=" text-[16px] leading-[24px]">
+                              <div className="py-2 text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                                <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                                   {i?.name}
                                 </h4>
                               </div>
@@ -295,7 +295,7 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                     })}
                   </div>
                 </div>
-                <div>
+                <div className="w-full">
                   <h4 className="font-[500] mb-4 text-lg">Safety & property</h4>
                   <div className="flex flex-col gap-2">
                     {data?.roomType?.hotel?.policy?.map((i) => {
@@ -311,8 +311,8 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                                 </>
                               )}
 
-                              <div className="py-2">
-                                <h4 className=" text-[16px] leading-[24px]">
+                              <div className="py-2 text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                                <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                                   {i?.name}
                                 </h4>
                               </div>
@@ -323,11 +323,11 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                     })}
                   </div>
                 </div>
-                <div>
+                <div className="w-full">
                   <h4 className="font-[500] mb-4 text-lg">
                     Cancellation policy
                   </h4>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex w-full flex-col gap-2">
                     {data?.roomType?.hotel?.policy?.map((i) => {
                       if (i.type === "Cancellation policy") {
                         return (
@@ -341,8 +341,8 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                                 </>
                               )}
 
-                              <div className="py-2">
-                                <h4 className=" text-[16px] leading-[24px]">
+                              <div className="py-2 flex-1 text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                                <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                                   {i?.name}
                                 </h4>
                               </div>
