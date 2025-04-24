@@ -92,10 +92,19 @@ const InfoHotel = ({ data }) => {
       setDisablePaymentButton(false);
       return toast.error("Ngày check-in phải trước ngày check-out");
     }
-    if (currenDate.toDateString() > new Date(checkIn).toDateString()) {
-      setDisablePaymentButton(false);
-      return toast.error("Sửa theo ba chọn ngày quá khứ");
-    }
+    currenDate.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây và mili giây về 0
+
+const checkInDate = new Date(checkIn);
+checkInDate.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây và mili giây về 0
+
+if (currenDate.getTime() > checkInDate.getTime()) {
+  setDisablePaymentButton(false);
+  console.log(currenDate.toString());
+  console.log(checkInDate.toString());
+  console.log(currenDate.getTime() > checkInDate.getTime());
+
+  return toast.error("Sửa theo ba chọn ngày quá khứ");
+}
     if (!numberOfGuests) {
       setDisablePaymentButton(false);
       return toast.error("sửa guest theo ba");
@@ -103,6 +112,10 @@ const InfoHotel = ({ data }) => {
     if (numberOfGuests > dataRoom.maxPeople) {
       setDisablePaymentButton(false);
       return toast.error("sửa maxpeople theo ba");
+    }
+    if(numberOfGuests<=0){
+      setDisablePaymentButton(false);
+      return toast.error("sửa guest là âm theo ba");
     }
    
     // if(!stateUser?.isAuthenticated){
@@ -435,7 +448,7 @@ const InfoHotel = ({ data }) => {
             <h3 className="font-[500] text-[24px] leading-[32px]">
               Things to know
             </h3>
-            <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4 justify-between">
               <div>
                 <h4 className="font-[500] text-lg mb-4">House rules</h4>
                 <div className="flex flex-col gap-2">

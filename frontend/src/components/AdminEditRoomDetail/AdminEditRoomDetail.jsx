@@ -246,7 +246,7 @@ const AdminEditRoomDetail = () => {
     }
   };
   const generateEventsWithPrice = (eventsas, price) => {
-    const today = moment(); // Lấy ngày hôm nay
+    const today = moment(tmp.createdAt); // Lấy ngày hôm nay
     const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
 
     const events = [];
@@ -288,7 +288,7 @@ const AdminEditRoomDetail = () => {
       // console.log(tmp?.priceExtra);
 
       //set price
-      const today = moment(); // Lấy ngày hôm nay
+    const today = moment(tmp.createdAt); // Lấy ngày hôm nay
       const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
 
       const events = [];

@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { use } from 'react'
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Item from './Item';
-import { dataHotel } from '../../data/hotelData';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 const RecommendExperience = () => {
-    const data = dataHotel
-    console.log(data)
+    const stateHotels = useSelector(state=>state.HotelReducer)
+    console.log(stateHotels);
+    
     const navigate = useNavigate()
   return (
     <>
@@ -25,23 +26,23 @@ const RecommendExperience = () => {
                                 <div className='py-[12px] px-[24px] rounded-[52px] bg-[#134E4A] text-white'>Hoi An</div>
                                 <div className='py-[12px] px-[24px] rounded-[52px] bg-[#134E4A] text-white'>Halong</div>
                             </div>
-                            <div className='bg-white py-[12px] px-[24px] flex items-center rounded-[66px] border-[1px] border-[#E5E7EB]'>
+                            {/* <div className='bg-white py-[12px] px-[24px] flex items-center rounded-[66px] border-[1px] border-[#E5E7EB]'>
                                 Search More  <IoIosArrowRoundForward className='pl-2' size={30}/>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <br />
                     <div className='w-full'>
                         
                         <div className='grid grid-cols-4 gap-[30px]'>
-                        {data.slice(0, 8).map((i, index) => (
+                        {stateHotels?.hotels?.length>0 && stateHotels?.hotels?.slice(0, 8)?.map((i, index) => (
     <Item key={index} data={i} />
 ))}
                         </div>
                     </div>
                     <br />
                     <div className='w-full flex items-center justify-center'>
-                        <div onClick={()=>{navigate("/hotel")}} className=' cursor-pointer py-[9px] px-[17px] border-[1px] border-[#E5E7EB] bg-white rounded-full'>Find more</div>
+                        <div onClick={()=>{navigate("/homes")}} className=' cursor-pointer py-[9px] px-[17px] border-[1px] border-[#E5E7EB] bg-white rounded-full'>Find more</div>
                     </div>
                 </div>
             </div>

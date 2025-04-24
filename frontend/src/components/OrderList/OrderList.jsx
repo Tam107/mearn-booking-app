@@ -46,7 +46,10 @@ const OrderList = ({data}) => {
                             {order._id}
                           </span>
                         </p>
-                        <div className="flex items-center">
+                        {
+                         order.status!="Request" && (
+                            <>
+                              <div className="flex items-center">
                           <p className="text-lg font-bold border-r pr-1 mr-1  text-gray-800">
                             {new Intl.NumberFormat("vi-VN").format(order?.totalPrice)}{" "} 
                             VND
@@ -57,6 +60,9 @@ const OrderList = ({data}) => {
                             
                           </p>
                         </div>
+                            </>
+                          )
+                        }
                       </div>
                       <div className="flex items-center gap-2 bg-gray-100 p-2 rounded-md mt-2">
                         <FaHotel className="text-blue-500" />

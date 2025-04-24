@@ -96,16 +96,24 @@ const Booking = () => {
       setDisablueButton(false);
       return toast.error("sửa name theo be");
     }
+    if (/\d/.test(name)) {
+      setDisablueButton(false);
+      return toast.error("Name không được chứa số hoặc ký tự đặc biệt.");
+    }
     if (!email) {
       setDisablueButton(false);
       return toast.error("sửa email theo be");
     }
     if (!phoneNumber) {
-      console.log(phoneNumber);
 
       setDisablueButton(false);
       return toast.error("sửa phoneNumber theo be");
     }
+    if ( phoneNumber.length < 7 || phoneNumber.length > 15) {
+      setDisablueButton(false);
+      return toast.error("Số điện thoại phải có độ dài từ 7 đến 15 ký tự.");
+    }
+    
     if (!isGuest) {
       if (!nameGuest) {
         setDisablueButton(false);

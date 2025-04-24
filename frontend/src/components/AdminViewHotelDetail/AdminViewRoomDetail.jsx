@@ -57,9 +57,9 @@ const AdminViewRoomDetail = () => {
     setFacilitiesId(tmp?.facilities.map((i) => i._id));
 
     //set price
-    const today = moment(); // Lấy ngày hôm nay
+    const today = moment(tmp.createdAt); // Lấy ngày hôm nay
     const oneYearFromNow = moment().add(1, "year"); // Lấy ngày 1 năm sau
-
+    
     const events = [];
     let currentDay = today;
     // tmp?.priceExtra?.forEach((item) => {

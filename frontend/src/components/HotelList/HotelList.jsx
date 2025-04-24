@@ -73,7 +73,7 @@ const handleKeyDown = (e) => {
   if (e.key === "Enter" && nameSearch.length > 0) {
     handleSearch(); // Trigger search on "Enter" key press
   }
-  if(nameSearch.length===0){
+  if(nameSearch.length===0 &&filterType.length===0){
     setData(stateHotels?.hotels)
   }
 };
@@ -82,10 +82,12 @@ const handleKeyDown = (e) => {
   const [showFilter, setShowFilter] = useState(false);
   const cities = State.getStatesOfCountry("VN");
   const handleFilter = async()=>{
+
+    const dataTmp = stateHotels?.hotels
     if(filterType.length>0){
 
       let filterData;
-      filterData = data.filter((i) =>
+      filterData = dataTmp.filter((i) =>
       filterType.includes(i.type)
     );
     setData(filterData);
@@ -162,34 +164,7 @@ const handleKeyDown = (e) => {
               </select>
               </div>
               
-              <div className="flex px-4 flex-col border-r border-gray-200">
-                <label htmlFor="" className="px-1 ">
-                  Check in
-                </label>
-               
-                <TimePicker
-                // onChange={(time) => setCheckIn(time)}
-                // value={checkIn}
-                format="HH:mm"
-                placeholder="14:00"
-                className="!px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
-              />
-              </div>
-              <div className="flex px-4 flex-col mr-6">
-                <label htmlFor="" className="px-1 ">
-                  Check out
-                </label>
-
-            
-                 <TimePicker
-                                // onChange={(time) => setCheckOut(time)}
-                                // value={checkOut}
-                                format="HH:mm"
-                                placeholder="12:00"
-                                className="!px-1 !border-none !outline-none !focus:ring-0 !shadow-none"
-                              />
-                
-              </div>
+             
              
               <div onClick={handleSearch} className="flex items-center">
                 <div className="w-[32px] cursor-pointer flex items-center justify-center h-[32px] rounded-full bg-[#DE3151] shadow">
@@ -217,10 +192,11 @@ const handleKeyDown = (e) => {
             onClick={() => {
               setShowFilter(true);
             }}
-            className="border cursor-pointer hover:border-black hover:bg-gray-100 transition duration-300  border-gray-200 rounded-lg flex items-center gap-4 w-fit p-4"
+            className="border relative cursor-pointer hover:border-black hover:bg-gray-100 transition duration-300  border-gray-200 rounded-lg flex items-center gap-4 w-fit p-4"
           >
             <TbFilterSearch />
             <p className="font-[400] text-[16px]">Filter</p>
+            <div className="size-4 rounded-full bg-red-500 text-sm text-white absolute top-1 right-2 flex items-center justify-center">{filterType.length}</div>
           </div>
           </div>
         </div>
@@ -323,49 +299,9 @@ const handleKeyDown = (e) => {
                     <div className="w-full h-[1px] bg-gray-200 mt-8"></div>
                   </div>
 
-                  <div className=" p-6 pt-0">
-                    <h2 className="font-[400] text-[20px]">Star Rating</h2>
-                    <div className="w-full grid grid-cols-5 p-2 rounded-lg border border-gray-200  mt-4">
-                      <div className=" duration-200 transition flex gap-2 justify-center w-full items-center rounded-sm hover:bg-gray-200">
-                        1 <FaStar className="text-amber-500" size={20} />
-                      </div>
-                      <div className=" duration-200 transition flex gap-2 justify-center w-full items-center hover:bg-gray-100">
-                        2 <FaStar className="text-amber-500" size={20} />
-                      </div>
-                      <div className=" duration-200 transition flex gap-2 justify-center w-full items-center hover:bg-gray-200">
-                        3 <FaStar className="text-amber-500" size={20} />
-                      </div>
-                      <div className=" duration-200 transition flex gap-2 justify-center w-full items-center hover:bg-gray-200">
-                        4 <FaStar className="text-amber-500" size={20} />
-                      </div>
-                      <div className=" duration-200 transition flex gap-2 justify-center w-full items-center hover:bg-gray-200">
-                        5 <FaStar className="text-amber-500" size={20} />
-                      </div>
-                    </div>
-                    <div className="w-full h-[1px] bg-gray-200 mt-8"></div>
-                  </div>
+                 
                   
-                  <div className=" p-6 pt-0">
-                    <h2 className="font-[400] text-[20px]">Booking options</h2>
-                    <div className="flex mt-4 items-center gap-2">
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
-                        <AiOutlineThunderbolt size={18} />
-
-                        <p className="text-[16px]">Instant Book</p>
-                      </div>
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
-                        <IoKeyOutline size={18} />
-
-                        <p className="text-[16px]">Self check-in</p>
-                      </div>
-                      <div className="flex items-center rounded-full border justify-center border-gray-200 gap-2 py-2 px-4">
-                        <PiDogLight size={18} />
-
-                        <p className="text-[16px]">Allows pets</p>
-                      </div>
-                    </div>
-                    <div className="w-full h-[1px] bg-gray-200 mt-8"></div>
-                  </div>
+               
                 </div>
                 <div className="w-full p-6 flex rounded-b-4xl items-center justify-between bg-[#FFFFFF] shadow-lg border-t border-t-gray-200">
                   <p className="font-[400] text-[18px]">Clear All</p>
