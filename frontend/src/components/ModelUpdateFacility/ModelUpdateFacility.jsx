@@ -31,10 +31,7 @@ const ModelUpdateFacility = ({ setFacilitiesDefault,facilitiesDefault,setShowMod
             return toast.error("Name must not be empty")
             
         }
-        if(!icon){
-            return toast.error("Icon must not be empty")
-            
-        }
+       
         // console.log(name,icon,description);
 
         let dataBody = {

@@ -61,13 +61,12 @@ const InfoHotel = ({ data }) => {
       setTotalPrice(tmp);
     }
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const stateUser=  useSelector(state=>state.UserReducer)
+  const stateUser = useSelector((state) => state.UserReducer);
   console.log(stateUser);
-  
 
-  const handlePayment =async () => {
+  const handlePayment = async () => {
     setDisablePaymentButton(true);
     const currenDate = new Date();
     // console.log(currenDate.toDateString()> checkIn);
@@ -94,17 +93,17 @@ const InfoHotel = ({ data }) => {
     }
     currenDate.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây và mili giây về 0
 
-const checkInDate = new Date(checkIn);
-checkInDate.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây và mili giây về 0
+    const checkInDate = new Date(checkIn);
+    checkInDate.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây và mili giây về 0
 
-if (currenDate.getTime() > checkInDate.getTime()) {
-  setDisablePaymentButton(false);
-  console.log(currenDate.toString());
-  console.log(checkInDate.toString());
-  console.log(currenDate.getTime() > checkInDate.getTime());
+    if (currenDate.getTime() > checkInDate.getTime()) {
+      setDisablePaymentButton(false);
+      console.log(currenDate.toString());
+      console.log(checkInDate.toString());
+      console.log(currenDate.getTime() > checkInDate.getTime());
 
-  return toast.error("Sửa theo ba chọn ngày quá khứ");
-}
+      return toast.error("Sửa theo ba chọn ngày quá khứ");
+    }
     if (!numberOfGuests) {
       setDisablePaymentButton(false);
       return toast.error("sửa guest theo ba");
@@ -113,33 +112,30 @@ if (currenDate.getTime() > checkInDate.getTime()) {
       setDisablePaymentButton(false);
       return toast.error("sửa maxpeople theo ba");
     }
-    if(numberOfGuests<=0){
+    if (numberOfGuests <= 0) {
       setDisablePaymentButton(false);
       return toast.error("sửa guest là âm theo ba");
     }
-   
+
     // if(!stateUser?.isAuthenticated){
     //   setDisablePaymentButton(false);
     //   return toast.error("Please login first");
     // }
-     let dataPayment = {
-      guests:numberOfGuests,
+    let dataPayment = {
+      guests: numberOfGuests,
       checkIn,
       checkOut,
-      roomType:dataRoom._id
-    }
-    const res = await createOtpPayment(dataPayment)
+      roomType: dataRoom._id,
+    };
+    const res = await createOtpPayment(dataPayment);
     console.log(res);
-    if(res.success){
-      navigate("/booking/"+res.data._id)
+    if (res.success) {
+      navigate("/booking/" + res.data._id);
+      setDisablePaymentButton(false);
+    } else {
+      toast.error(res.message);
       setDisablePaymentButton(false);
     }
-    else{
-      toast.error(res.message)
-      setDisablePaymentButton(false);
-    }
-    
-
 
     // console.log(dataPayment);
 
@@ -263,14 +259,14 @@ if (currenDate.getTime() > checkInDate.getTime()) {
                   Where you’ll sleep
                 </h3>
                 <div className="grid gap-2 grid-cols-2">
-                {dataRoom?.photos?.slice(0, 4).map((i, ind) => (
-        <img
-          key={ind}
-          src={i}
-          className="w-full rounded-2xl aspect-[3/2]"
-          alt={`Room photo ${ind + 1}`}
-        />
-      ))}
+                  {dataRoom?.photos?.slice(0, 4).map((i, ind) => (
+                    <img
+                      key={ind}
+                      src={i}
+                      className="w-full rounded-2xl aspect-[3/2]"
+                      alt={`Room photo ${ind + 1}`}
+                    />
+                  ))}
                   {dataRoom?.photos?.length === 0 && <>NO IMAGES</>}
                 </div>
               </div>
@@ -351,23 +347,20 @@ if (currenDate.getTime() > checkInDate.getTime()) {
                 <>
                   <div className="w-full flex flex-col gap-1 border-b border-gray-200 mb-2 pb-4">
                     <div className="flex items-center justify-between">
-                     
-                      {
-                        numberOfDays - infoPrice.length >0 && (
-                          <>
-                           <p className="font-[400] text-[16px] leading-[24px]">
-                        Normal price days
-                      </p>
-                      <p className="font-[400] text-[16px] leading-[24px]">
-                        {numberOfDays - infoPrice.length} x{" "}
-                        {new Intl.NumberFormat("en-US").format(
-                          dataRoom?.price || 0
-                        )}{" "}
-                        VND
-                      </p>
-                          </>
-                        )
-                      }
+                      {numberOfDays - infoPrice.length > 0 && (
+                        <>
+                          <p className="font-[400] text-[16px] leading-[24px]">
+                            Normal price days
+                          </p>
+                          <p className="font-[400] text-[16px] leading-[24px]">
+                            {numberOfDays - infoPrice.length} x{" "}
+                            {new Intl.NumberFormat("en-US").format(
+                              dataRoom?.price || 0
+                            )}{" "}
+                            VND
+                          </p>
+                        </>
+                      )}
                     </div>
                     {infoPrice.map((i) => (
                       <>
@@ -431,7 +424,7 @@ if (currenDate.getTime() > checkInDate.getTime()) {
                         })}
                       </>
                     )}{" "}
-                    <div className="py-2">
+                    <div className="py-2 break-words overflow-hidden text-ellipsis line-clamp-3">
                       <h4 className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
                         {i?.name}
                       </h4>
@@ -439,105 +432,102 @@ if (currenDate.getTime() > checkInDate.getTime()) {
                   </div>{" "}
                 </>
               ))}
-              
             </div>
           </div>
         </div>
-        <div className="pb-6 border-b-gray-200 border-b-1  pt-4">
-          <div className="w-full flex flex-col gap-4">
-            <h3 className="font-[500] text-[24px] leading-[32px]">
-              Things to know
-            </h3>
-            <div className="flex items-start gap-4 justify-between">
-              <div>
-                <h4 className="font-[500] text-lg mb-4">House rules</h4>
-                <div className="flex flex-col gap-2">
-                  {data?.policy?.map((i) => {
-                    if (i.type === "House rules") {
-                      // console.log(i?.icon, "icon");
-
-                      return (
-                        <>
-                          <div className="w-full flex items-center gap-3">
-                            {i.icon && (
-                              <>
-                                {React.createElement(iconMap[i?.icon], {
-                                  size: 20,
-                                })}
-                              </>
-                            )}
-
-                            <div className="py-2">
-                              <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
-                                {i?.name}
-                              </h4>
-                            </div>
-                          </div>{" "}
-                        </>
-                      );
-                    }
-                  })}
+        <div className="pb-6 max-w-screen border-b-gray-200 border-b-1 pt-4">
+  <div className="w-full flex flex-col gap-4">
+    <h3 className="font-[500] text-[24px] leading-[32px]">
+      Things to know
+    </h3>
+    <div className="grid grid-cols-3 gap-5 ">
+      <div className="w-full">
+        <h4 className="font-[500] text-lg mb-4 w-full">House rules</h4>
+        <div className="flex flex-col gap-2 w-full">
+          {data?.policy?.map((i) => {
+            if (i.type === "House rules") {
+              return (
+                <div className="w-full flex items-center gap-3">
+                  {i.icon && (
+                    <>
+                      {React.createElement(iconMap[i?.icon], {
+                        size: 20,
+                      })}
+                    </>
+                  )}
+                  <div className="py-2 flex-1 text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                    <h4
+                      className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3"
+                     
+                    >
+                      {i?.name}
+                    </h4>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h4 className="font-[500] mb-4 text-lg">Safety & property</h4>
-                <div className="flex flex-col gap-2">
-                  {data?.policy?.map((i) => {
-                    if (i.type === "Safety & property") {
-                      return (
-                        <>
-                          <div className="w-full flex items-center gap-3">
-                            {i.icon && (
-                              <>
-                                {React.createElement(iconMap[i?.icon], {
-                                  size: 20,
-                                })}
-                              </>
-                            )}
-
-                            <div className="py-2">
-                              <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
-                                {i?.name}
-                              </h4>
-                            </div>
-                          </div>{" "}
-                        </>
-                      );
-                    }
-                  })}
-                </div>
-              </div>
-              <div>
-                <h4 className="font-[500] mb-4 text-lg">Cancellation policy</h4>
-                <div className="flex flex-col gap-2">
-                  {data?.policy?.map((i) => {
-                    if (i.type === "Cancellation policy") {
-                      return (
-                        <>
-                          <div className="w-full flex items-center gap-3">
-                            {i.icon && (
-                              <>
-                                {React.createElement(iconMap[i?.icon], {
-                                  size: 20,
-                                })}
-                              </>
-                            )}
-
-                            <div className="py-2">
-                              <h4 className=" text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
-                                {i?.name}
-                              </h4>
-                            </div>
-                          </div>{" "}
-                        </>
-                      );
-                    }
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+              );
+            }
+          })}
         </div>
+      </div>
+      <div className="w-full">
+        <h4 className="font-[500] mb-4 text-lg w-full">Safety & property</h4>
+        <div className="flex flex-col gap-2 w-full">
+          {data?.policy?.map((i) => {
+            if (i.type === "Safety & property") {
+              return (
+                <div className=" flex items-center gap-3">
+                  {i.icon && (
+                    <>
+                      {React.createElement(iconMap[i?.icon], {
+                        size: 20,
+                      })}
+                    </>
+                  )}
+                  <div className="py-2 flex-1 text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                    <h4
+                      className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3"
+                      
+                    >
+                      {i?.name}
+                    </h4>
+                  </div>
+                </div>
+              );
+            }
+          })}
+        </div>
+      </div>
+      <div className="w-full">
+        <h4 className="font-[500] mb-4 text-lg w-full">Cancellation policy</h4>
+        <div className="flex flex-col gap-2 w-full">
+          {data?.policy?.map((i) => {
+            if (i.type === "Cancellation policy") {
+              return (
+                <div className=" flex items-center gap-3 ">
+                  {i.icon && (
+                    <>
+                      {React.createElement(iconMap[i?.icon], {
+                        size: 20,
+                      })}
+                    </>
+                  )}
+                  <div className="py-2 flex-1 text-sm break-words overflow-hidden text-ellipsis line-clamp-3">
+                    <h4
+                      className="text-sm break-words overflow-hidden text-ellipsis line-clamp-3"
+                     
+                    >
+                      {i?.name}
+                    </h4>
+                  </div>
+                </div>
+              );
+            }
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
       {showDes === true && (
         <>

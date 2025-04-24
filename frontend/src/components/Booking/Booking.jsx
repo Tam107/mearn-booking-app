@@ -3,7 +3,7 @@ import { useNavigate, useNavigation, useParams } from "react-router";
 import { getBookingApi, updateBookingApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { Carousel } from "antd";
+import { Carousel, Input } from "antd";
 import iconMap from "../../data/iconMap";
 const Booking = () => {
   const stateUser = useSelector((state) => state.UserReducer);
@@ -94,30 +94,38 @@ const Booking = () => {
     setDisablueButton(true);
     if (!name) {
       setDisablueButton(false);
-      return toast.error("sửa name theo be");
+      return toast.error("Please enter your contact’s name");
     }
     if (/\d/.test(name)) {
       setDisablueButton(false);
-      return toast.error("Name không được chứa số hoặc ký tự đặc biệt.");
+      return toast.error("Invalid contact’s name");
     }
     if (!email) {
       setDisablueButton(false);
-      return toast.error("sửa email theo be");
+      return toast.error("Please enter your email address.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setDisablueButton(false);
+      return toast.error("nvalid email address");
     }
     if (!phoneNumber) {
 
       setDisablueButton(false);
-      return toast.error("sửa phoneNumber theo be");
+      return toast.error("Please enter your phone number");
     }
-    if ( phoneNumber.length < 7 || phoneNumber.length > 15) {
+    if ( phoneNumber.length < 7 || phoneNumber.length > 15 ) {
       setDisablueButton(false);
-      return toast.error("Số điện thoại phải có độ dài từ 7 đến 15 ký tự.");
+      return toast.error("Invalid phone number");
     }
     
     if (!isGuest) {
       if (!nameGuest) {
         setDisablueButton(false);
-        return toast.error("sửa name guest theo be");
+        return toast.error("Please enter guest name");
+      }
+      if (/\d/.test(nameGuest)) {
+        setDisablueButton(false);
+        return toast.error("Invalid guest’s name");
       }
     }
 
@@ -181,7 +189,7 @@ const Booking = () => {
                   <label className="block font-medium mb-1">
                     Contact's Name
                   </label>
-                  <input
+                  <Input
                     type="text"
                     className="w-full border border-gray-300 rounded-md p-2"
                     placeholder="Enter your name"
@@ -193,9 +201,9 @@ const Booking = () => {
                   <label className="block font-medium mb-1">
                     Contact's Email Address
                   </label>
-                  <input
+                  <Input
                     type="email"
-                    className="w-full border border-gray-300 rounded-md p-2"
+                    className="!w-full border !border-gray-300 !rounded-md !p-2"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -205,7 +213,7 @@ const Booking = () => {
                   <label className="block font-medium mb-1">
                     Mobile Number
                   </label>
-                  <input
+                  <Input
                     type="text"
                     className="w-full border border-gray-300 rounded-md p-2"
                     placeholder="Enter your mobile number"
@@ -219,7 +227,7 @@ const Booking = () => {
                       <label className="block font-medium mb-1">
                         Guest's Full Name
                       </label>
-                      <input
+                      <Input
                         type="text"
                         className="w-full border border-gray-300 rounded-md p-2"
                         placeholder="Enter guest name"
