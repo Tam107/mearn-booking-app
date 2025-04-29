@@ -61,8 +61,9 @@ const HotelList = () => {
   const handleCity = (e)=>{
     
     if(e.target.value){
+      const tmp = stateHotels?.hotels
       let filterData;
-      filterData = data.filter((i) =>
+      filterData = tmp?.filter((i) =>
       i.city.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setData(filterData);

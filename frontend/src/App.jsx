@@ -34,6 +34,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage/OrderSuccessPage.jsx';
 import OrderListPage from './pages/OrderListPage/OrderListPage.jsx';
 import OrderDetailPage from './pages/OrderDetailPage/OrderDetailPage.jsx';
 import AdminViewOrdersPage from './pages/AdminViewOrdersPage/AdminViewOrdersPage.jsx';
+import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin.jsx';
 
 function App() {
 
@@ -69,16 +70,46 @@ function App() {
        <Route path="/packageTour/:slug" element={<PackageTourPage/>}/>
        <Route path="/admin-create" element={<AdminCreatePage/>}/>
        <Route path="/loginAdmin" element={<LoginAdminPage />} />
-       <Route path="/dashboard" element={<DashboardPage />} />
-       <Route path="/dashboard-create-bus" element={<AdminCreateBusPage />} />
-       <Route path="/dashboard-create-room" element={<AdminCreateRoomPage />} />
-       <Route path='/dashboard-create-home' element={<AdminCreateHotelPage/>}/>
-       <Route path='/dashboard-view-room' element={<AdminViewRoomPage/>}/>
-       <Route path='/dashboard-view-homes' element={<AdminViewHotelPage/>}/>
-       <Route path='/dashboard-hotel/:slug' element={<AdminViewEditHotelPage/>}/>
-       <Route path='/dashboard-view-roomDetail/:slug' element={<AdminViewRoomDetailPage/>}/>
-       <Route path='/dashboard-edit-roomDetail/:slug' element={<AdminEditRoomPage/>}/>
-       <Route path='/dashboard-view-orders/' element={<AdminViewOrdersPage/>}/>
+       <Route
+    path="/dashboard"
+    element={<PrivateRouteAdmin><DashboardPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-create-bus"
+    element={<PrivateRouteAdmin><AdminCreateBusPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-create-room"
+    element={<PrivateRouteAdmin><AdminCreateRoomPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-create-home"
+    element={<PrivateRouteAdmin><AdminCreateHotelPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-view-room"
+    element={<PrivateRouteAdmin><AdminViewRoomPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-view-homes"
+    element={<PrivateRouteAdmin><AdminViewHotelPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-hotel/:slug"
+    element={<PrivateRouteAdmin><AdminViewEditHotelPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-view-roomDetail/:slug"
+    element={<PrivateRouteAdmin><AdminViewRoomDetailPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-edit-roomDetail/:slug"
+    element={<PrivateRouteAdmin><AdminEditRoomPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-view-orders/"
+    element={<PrivateRouteAdmin><AdminViewOrdersPage /></PrivateRouteAdmin>}
+  />
        
        <Route path="/homes" element={<HotelListPage />} />
        <Route path="/booking/:id" element={<BookingPage />} />

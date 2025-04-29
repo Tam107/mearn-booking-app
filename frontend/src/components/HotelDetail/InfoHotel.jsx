@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FaRegStar } from "react-icons/fa6";
+import { FaRegShareFromSquare, FaRegStar } from "react-icons/fa6";
 import { HiOutlineBuildingLibrary } from "react-icons/hi2";
-import { MdOutlineReportGmailerrorred } from "react-icons/md";
+import { MdApps, MdOutlineReportGmailerrorred } from "react-icons/md";
 import { useSelector } from "react-redux";
 import iconMap from "../../data/iconMap";
-import { FaAngleRight, FaQuestionCircle } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaQuestionCircle, FaRegHeart } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import { Spin, Tooltip } from "antd";
 import { toast } from "react-hot-toast";
@@ -12,6 +12,7 @@ import { createOtpPayment } from "../../../Axios/client/api";
 import { useNavigate } from "react-router";
 
 const InfoHotel = ({ data }) => {
+  const [showImgRoom,setShowImgRoom]  = useState(false)
   const [showDes, setShowDes] = useState(false);
   const [roomType, setRoomType] = useState("");
   const [dataRoom, setDataRoom] = useState({});
@@ -258,7 +259,7 @@ const InfoHotel = ({ data }) => {
                 <h3 className="font-[500] text-[24px] leading-[32px]">
                   Where you’ll sleep
                 </h3>
-                <div className="grid gap-2 grid-cols-2">
+                <div className="grid relative gap-2 grid-cols-2">
                   {dataRoom?.photos?.slice(0, 4).map((i, ind) => (
                     <img
                       key={ind}
@@ -267,7 +268,17 @@ const InfoHotel = ({ data }) => {
                       alt={`Room photo ${ind + 1}`}
                     />
                   ))}
-                  {dataRoom?.photos?.length === 0 && <>NO IMAGES</>}
+                  {dataRoom?.photos?.length === 0 ? <>NO IMAGES</> : (
+                    <>
+                     <div onClick={()=>setShowImgRoom(true)} className=" py-2 px-4 bg-white shadow-md border right-4 bottom-3 absolute rounded-xl flex items-center justify-center gap-2">
+                                  <MdApps size={15} />
+                                  <p className="cursor-pointer font-[500] text-[14px] leading-[20px]">
+                                    Show all photos
+                                  </p>
+                                </div>
+                    </>
+                  )}
+                 
                 </div>
               </div>
             </div>
@@ -550,6 +561,40 @@ const InfoHotel = ({ data }) => {
           </div>
         </>
       )}
+
+      {showImgRoom && (
+              <>
+                <div className="w-full flex flex-col top-0 left-0 fixed h-screen z-50 bg-white">
+                  <div className="flex mt-4 items-center justify-between px-6 w-full sticky">
+                    <FaAngleLeft  onClick={()=>setShowImgRoom(false)} className="cursor-pointer" size={25} />
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <FaRegShareFromSquare size={15} />
+                        Share
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <FaRegHeart size={15} />
+                        Save
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1 overflow-y-auto outline-none">
+                    <div className="px-52 w-full mt-8 ">
+                      <div className="mx-auto w-[70%] mb-8 flex flex-col gap-2">
+                        {dataRoom?.photos?.map((photo, index) => (
+                          <img
+                            key={index}
+                            className="object-cover  w-full rounded-xl"
+                            src={photo}
+                            alt=""
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
     </>
   );
 };

@@ -6,19 +6,23 @@ import { FaRegHeart } from "react-icons/fa";
 import ImageHotel from "./ImageHotel";
 import InfoHotel from "./InfoHotel";
 import { useNavigate, useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { addToWishlist, removeFromWishlist } from "../../redux/actions/WishlistAction";
 
 const HotelDetail = () => {
+  const [click, setClick] = useState(false);
+  const { wishlist } = useSelector((state) => state.WishlistReducer);
   const [open, setOpen] = useState(false);
   //  const [dataRoom,setDataRoom]=useState({});
   const { slug } = useParams();
   const [data, setData] = useState({});
- 
-  
+  const { isAuthenticated } = useSelector((state) => state.UserReducer);
+
   const stateHotels = useSelector((state) => state.HotelReducer);
   // const [roomType, setRoomType] = useState('');
- const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,20 +32,53 @@ const HotelDetail = () => {
       // Normalize the slug to match the format in the database
 
       const hotel = stateHotels.hotels.find((hotel) => hotel.slug === slug);
-      if(hotel){
+      if (hotel) {
         setData(hotel || {}); // If no hotel is found, set data as empty object
         setOpen(false);
-      }
-      else{
-        toast.error("Not found homes")
-        navigate("/homes")
-      }
 
-     
+        if (wishlist && wishlist.find((i) => i._id === hotel._id)) {
+          setClick(true);
+        } else {
+          setClick(false);
+        }
+      } else {
+        toast.error("Not found homes");
+        navigate("/homes");
+      }
     }
-  }, [slug, stateHotels.hotels]);
+  }, [slug, stateHotels.hotels, wishlist]);
+  // useEffect(() => {}, [wishlist]);
+  const removeFromWishlistHandler = (data) => {
+    if (isAuthenticated) {
+      setClick(!click);
+      dispatch(removeFromWishlist(data));
+    } else {
+      toast.error("Please login to use wishlist");
+    }
+  };
+
+  const addToWishlistHandler = (data) => {
+    if (isAuthenticated) {
+      setClick(!click);
+      // console.log(data)
+      dispatch(addToWishlist(data));
+    } else {
+      toast.error("Please login to use wishlist");
+    }
+  };
 
   // console.log(slug);
+  const copyLinkToClipboard = () => {
+    const currentUrl = window.location.href; // Get the current page URL
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        toast.success("Link copied to clipboard!"); // Show success message
+      })
+      .catch(() => {
+        toast.error("Failed to copy link."); // Show error message if copying fails
+      });
+  };
 
   return (
     <>
@@ -81,14 +118,36 @@ const HotelDetail = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
+                  <div onClick={() => copyLinkToClipboard()} className="flex cursor-pointer items-center gap-1">
                     <FaRegShareFromSquare size={15} />
                     Share
                   </div>
-                  <div className="flex items-center gap-1">
-                    <FaRegHeart size={15} />
-                    Save
-                  </div>
+                  {!click ? (
+                    <div
+                      onClick={() => addToWishlistHandler(data)}
+                      className="cursor-pointer flex items-center gap-1"                    >
+                      <FaRegHeart
+                      
+                        title="Add to wishlist"
+                        size={15}
+                      />
+                      Save
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => removeFromWishlistHandler(data)}
+                      className="text-[#FF69B4] cursor-pointer flex items-center gap-1 "
+                    >
+                      <FaRegHeart
+                      
+                        title="Remove from wishlist"
+                        size={15}
+                        color="#FF69B4"
+                      />
+                      Save
+                    </div>
+                  )}
+                
                 </div>
               </div>
             </div>
@@ -100,7 +159,7 @@ const HotelDetail = () => {
               photos={data?.photos}
             />
             <br />
-            <InfoHotel  data={data} />
+            <InfoHotel data={data} />
 
             <div className="mt-4">
               <div className="flex flex-wrap items-stretch justify-start ">
@@ -135,7 +194,11 @@ const HotelDetail = () => {
                         <div>1 week ago</div>
                       </div>
                     </div>
-                    <div>Thời gian lưu trú ở đây rất yên bình và riêng tư. Chủ nhà cũng như những người chăm sóc rất thân thiện và hỗ trợ. Tôi thích nó ở đây 🙂</div>
+                    <div>
+                      Thời gian lưu trú ở đây rất yên bình và riêng tư. Chủ nhà
+                      cũng như những người chăm sóc rất thân thiện và hỗ trợ.
+                      Tôi thích nó ở đây 🙂
+                    </div>
                   </div>
                 </div>
                 <div className="w-[42%] mr-[8%]">
@@ -169,7 +232,11 @@ const HotelDetail = () => {
                         <div>1 week ago</div>
                       </div>
                     </div>
-                    <div>Thời gian lưu trú ở đây rất yên bình và riêng tư. Chủ nhà cũng như những người chăm sóc rất thân thiện và hỗ trợ. Tôi thích nó ở đây 🙂</div>
+                    <div>
+                      Thời gian lưu trú ở đây rất yên bình và riêng tư. Chủ nhà
+                      cũng như những người chăm sóc rất thân thiện và hỗ trợ.
+                      Tôi thích nó ở đây 🙂
+                    </div>
                   </div>
                 </div>
                 <div className="w-[42%] mr-[8%]">
@@ -203,10 +270,13 @@ const HotelDetail = () => {
                         <div>1 week ago</div>
                       </div>
                     </div>
-                    <div>Thời gian lưu trú ở đây rất yên bình và riêng tư. Chủ nhà cũng như những người chăm sóc rất thân thiện và hỗ trợ. Tôi thích nó ở đây 🙂</div>
+                    <div>
+                      Thời gian lưu trú ở đây rất yên bình và riêng tư. Chủ nhà
+                      cũng như những người chăm sóc rất thân thiện và hỗ trợ.
+                      Tôi thích nó ở đây 🙂
+                    </div>
                   </div>
                 </div>
-               
               </div>
             </div>
           </div>

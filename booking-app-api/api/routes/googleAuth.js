@@ -43,6 +43,7 @@ router.get("/oauth", async (req, res) => {
         const userData = await getUserData(tokens.access_token);
 
         let user = await User.findOne({ email: userData.email });
+        
         if (!user) {
             user = new User({
                 username: userData.name,
@@ -51,6 +52,8 @@ router.get("/oauth", async (req, res) => {
                 avatar: userData.picture,
                 password: null,
             });
+            // console.log(user);
+            
             await user.save();
         } else {
             user.username = userData.name;
@@ -59,17 +62,24 @@ router.get("/oauth", async (req, res) => {
         }
 
         user.password = "";
+        // console.log('before token');
+        
         const token = user.getJwtToken();
+        // console.log(token);
+        
         const options = {
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
             httpOnly: true,
             sameSite: "none",
             secure: true,
         };
+        // console.log(options,'options');
+        
         res.status(200)
             .cookie("token", token, options)
             .redirect("http://localhost:5173");
     } catch (error) {
+    
         console.error("Google OAuth error:", error);
         res.redirect("http://localhost:5173/register?error=auth_failed");
     }

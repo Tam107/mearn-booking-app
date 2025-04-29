@@ -33,7 +33,8 @@ const BookingSchema = new mongoose.Schema({
     status:{
         type:String,
         default:"Request"
-    }
+    },
+    guests: Number,
 
 }, {
     timestamps: true

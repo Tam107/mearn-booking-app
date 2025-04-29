@@ -106,7 +106,7 @@ const Booking = () => {
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setDisablueButton(false);
-      return toast.error("nvalid email address");
+      return toast.error("Invalid email address");
     }
     if (!phoneNumber) {
 
@@ -146,7 +146,7 @@ const Booking = () => {
     const res = await updateBookingApi(id, dataPayment);
 
     if (res.success) {
-      toast.success("update ok");
+      toast.success("Continue to Payment");
       setDisablueButton(false);
       navigate(`/payment/${id}`);
     } else {

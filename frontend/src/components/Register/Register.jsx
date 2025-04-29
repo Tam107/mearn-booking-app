@@ -7,6 +7,9 @@ import { registerUser } from '../../../Axios/client/api'
 import toast from 'react-hot-toast'
 
 const Register = ({otp,setOtp}) => {
+    const handleGoogleLogin = () => {
+        window.location.href = "http://localhost:8080/api/auth/login";
+    };
     const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
     function isValidEmail(email) {
@@ -138,13 +141,13 @@ const Register = ({otp,setOtp}) => {
                 <br />
                 <br />
                 <div className='w-[60%]  mx-auto'>
-                     {/* <div className={"px-6 flex items-center rounded-[16px] py-3 bg-[#F3F4F6] w-full"}>
+                     <div onClick={handleGoogleLogin} className={" cursor-pointer px-6 flex items-center rounded-[16px] py-3 bg-[#F3F4F6] w-full"}>
                         <FcGoogle
 
                                 size={20} />
 
                         <p className={"flex-1 flex items-center justify-center font-[500] text-[16px] leading-[24px] text-[#374151]"}>Continue with Google</p>
-                    </div> */}
+                    </div>
                  
                     <br />
                     {/* <div className={"w-full"}>

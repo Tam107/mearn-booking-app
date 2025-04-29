@@ -14,6 +14,7 @@ const RegisterPage = ({otp,setOtp}) => {
 }
 const location = useLocation();
 
+
 useEffect(()=>{check()},[])
 useEffect(() => {
   const params = new URLSearchParams(location.search);

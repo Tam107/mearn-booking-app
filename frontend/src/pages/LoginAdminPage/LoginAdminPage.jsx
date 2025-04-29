@@ -12,7 +12,7 @@ const LoginAdminPage = () => {
     const navigation = useNavigate()
     useEffect(()=>{
         if(stateAdmin.isAdmin){
-            navigation("/")
+            navigation("/dashboard")
         }
     }
     ,[dispatch,stateAdmin])
@@ -54,14 +54,14 @@ const LoginAdminPage = () => {
                             
                         </Form.Item>
 
-                        <div className='flex items-center justify-between '>
+                        {/* <div className='flex items-center justify-between '>
                             <Form.Item name="remember-me" valuePropName="checked" layout='horizontal' >
                                 <Checkbox >Remember me</Checkbox>
                                 
                             </Form.Item>
 
                             <Link className='text-sm font-medium text-blue-600 hover:text-blue-500 mb-[24px]'>Forgot your password?</Link>
-                        </div>
+                        </div> */}
 
                        
 
@@ -69,10 +69,10 @@ const LoginAdminPage = () => {
                             <button className={'group relative bg-blue-500 w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white  hover:bg-blue-700 transition duration-300 ' } htmltype="submit">Login</button>       
                             
                         </Form.Item>
-                        <div className='flex items-center w-full justify-center'>
+                        {/* <div className='flex items-center w-full justify-center'>
                             <h4>Not have any account?</h4>
                             <Link to={"/shop-create"} className='pl-2 text-blue-600'>Sign Up</Link>
-                        </div>
+                        </div> */}
                     </Form>
                 </div>
             </div>

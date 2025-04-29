@@ -1,7 +1,8 @@
 import {createReducer} from "@reduxjs/toolkit"
 
 const initialState = {
-    loading:true   
+    loading:true   ,
+    isAdmin:false
 }
 export const AdminReducer = createReducer(initialState, (builder) => {
     builder
