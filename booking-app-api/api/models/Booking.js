@@ -16,7 +16,6 @@ const BookingSchema = new mongoose.Schema({
     phoneNumber: String,
     request: String,
     isGuest: Boolean,
-    request: String,
     nameGuest:String,
     stepPayment:{
         type:Boolean,
@@ -34,7 +33,6 @@ const BookingSchema = new mongoose.Schema({
         type:String,
         default:"Request"
     },
-    guests: Number,
 
 }, {
     timestamps: true

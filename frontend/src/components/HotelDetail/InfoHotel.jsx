@@ -75,22 +75,19 @@ const InfoHotel = ({ data }) => {
 
     if (!checkIn) {
       setDisablePaymentButton(false);
-      return toast.error("Sửa theo ba checkIn");
+      return toast.error("Please select a check-in date before continuing");
     }
 
-    if (!checkIn) {
-      setDisablePaymentButton(false);
-      return toast.error("Sửa theo ba checkIn");
-    }
+   
 
     if (!checkOut) {
       setDisablePaymentButton(false);
-      return toast.error("Sửa theo ba checkOut");
+      return toast.error("Please select a check-out date before continuing");
     }
 
     if (checkIn >= checkOut) {
       setDisablePaymentButton(false);
-      return toast.error("Ngày check-in phải trước ngày check-out");
+      return toast.error("Check-out date must be after the check-in date");
     }
     currenDate.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây và mili giây về 0
 
@@ -103,20 +100,22 @@ const InfoHotel = ({ data }) => {
       console.log(checkInDate.toString());
       console.log(currenDate.getTime() > checkInDate.getTime());
 
-      return toast.error("Sửa theo ba chọn ngày quá khứ");
+      return toast.error("Selected dates cannot be in the past. Please choose valid future dates");
     }
     if (!numberOfGuests) {
       setDisablePaymentButton(false);
-      return toast.error("sửa guest theo ba");
+      return toast.error("Please enter the number of guest");
     }
+    if (numberOfGuests<=0) {
+      setDisablePaymentButton(false);
+      return toast.error(" Number of guests cannot be negative");
+    }
+   
     if (numberOfGuests > dataRoom.maxPeople) {
       setDisablePaymentButton(false);
-      return toast.error("sửa maxpeople theo ba");
+      return toast.error("The number of guests exceeds the maximum allowed for this room");
     }
-    if (numberOfGuests <= 0) {
-      setDisablePaymentButton(false);
-      return toast.error("sửa guest là âm theo ba");
-    }
+   
 
     // if(!stateUser?.isAuthenticated){
     //   setDisablePaymentButton(false);
@@ -333,7 +332,7 @@ const InfoHotel = ({ data }) => {
                   <input
                     type="number"
                     className="font-[400] text-[14px] leading-[20px] w-full outline-none focus:border-none text-gray-500 block"
-                    placeholder="2 guests"
+                    placeholder={`maximun ${dataRoom?.maxPeople} people`}
                     value={numberOfGuests}
                     onChange={(ev) => setNumberOfGuests(ev.target.value)}
                   />
