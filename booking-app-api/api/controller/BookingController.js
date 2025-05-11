@@ -299,6 +299,7 @@ export const update = async (req, res) => {
                             <li><span>Check-in Date:</span> ${new Date(updatedBooking?.checkIn).toDateString()}</li>
                             <li><span>Check-out Date:</span> ${new Date(updatedBooking?.checkOut).toDateString()}</li>
                             <li><span>Room Type:</span> ${updatedBooking.roomType.RoomType}</li>
+                            <li><span>Home Nmae:</span> ${updatedBooking.roomType.hotel.name}</li>
                             <li><span>Payment Method:</span> ${updatedBooking.paymentMethod || "N/A"}</li>
                             <li><span>Total Amount Paid:</span> $${new Intl.NumberFormat("en-US").format(updatedBooking.totalPriceUSD)}</li>
                             <li><span>Message for Host:</span> ${updatedBooking.request || "N/A"}</li>

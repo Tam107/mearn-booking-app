@@ -53,7 +53,7 @@ export const loginUserValidate = (req,res,next)=>{
     if(!req.body.password){
         res.json({
             success:false,
-            message:"Password does not empty!"
+            message:"Please enter your password."
         })
         return;
     }
