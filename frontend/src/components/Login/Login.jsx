@@ -22,6 +22,10 @@ const Login = () => {
     }, [location]);
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        if(!email){
+            
+        }
        
         const res = await loginApi({email, password});
         if (!res.success) {

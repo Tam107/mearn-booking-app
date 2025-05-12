@@ -45,7 +45,7 @@ export const registerUserValidate = (req,res,next)=>{
 export const loginUserValidate = (req,res,next)=>{
     if(!req.body.email){
         res.json({
-            message:"Email does not empty!",
+            message:"Please enter your email.",
             success:false
         })
         return;
