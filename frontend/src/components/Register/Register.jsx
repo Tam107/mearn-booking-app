@@ -5,10 +5,11 @@ import {RxAvatar} from "react-icons/rx"
 import { Link, useLocation, useNavigate } from 'react-router'
 import { registerUser } from '../../../Axios/client/api'
 import toast from 'react-hot-toast'
+// import {REDIRECT_URI} from "../../../config/env.js"
 
 const Register = ({otp,setOtp}) => {
     const handleGoogleLogin = () => {
-        window.location.href = "../../../../backend/auth/login";
+        window.location.href = "http://localhost:8080/api/auth/oauth";
     };
     const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route

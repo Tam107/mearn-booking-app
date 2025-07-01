@@ -49,17 +49,17 @@ app.use(cors({
 }))
 
 // route
-app.use("/backend/users", usersRoute);
-app.use("/backend/hotels", hotelsRoute);
-app.use("/backend/rooms", roomsRoute);
-app.use("/backend/admin", adminsRoute);
-app.use("/backend/auth", googleAuthRoute);
-app.use("/backend/servicesHotel", serviceHotelRoute);
-app.use("/backend/facilityHotel", facilityHotel);
-app.use("/backend/upload", uploadRoute);
-app.use("/backend/policy", policyRoute);
-app.use("/backend/booking", BookingRoute);
-app.use("/backend/config/paypal", (req,res)=>{
+app.use("/api/users", usersRoute);
+app.use("/api/hotels", hotelsRoute);
+app.use("/api/rooms", roomsRoute);
+app.use("/api/admin", adminsRoute);
+app.use("/api/auth", googleAuthRoute);
+app.use("/api/servicesHotel", serviceHotelRoute);
+app.use("/api/facilityHotel", facilityHotel);
+app.use("/api/upload", uploadRoute);
+app.use("/api/policy", policyRoute);
+app.use("/api/booking", BookingRoute);
+app.use("/api/config/paypal", (req,res)=>{
     res.send(CLIENT_ID_PAYPAL)
 });
 
@@ -79,5 +79,6 @@ app.use((error, req, res, next)=>{
 
 app.listen(PORT, () => {
     console.log(`App listening on 8080`);
+    console.log("PORT: ",PORT)
     swaggerDocs(app, PORT); // Initialize Swagger
 });

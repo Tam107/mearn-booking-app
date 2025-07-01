@@ -5,7 +5,7 @@ import {FaTwitter} from "react-icons/fa";
 import {Link, useLocation, useNavigate} from 'react-router';
 import {Form, Input} from 'antd';
 import Store from '../../redux/store';
-import {loginApi} from '../../../Axios/client/api';
+import {getUserApi, loginApi} from '../../../Axios/client/api';
 import {loginUserAction} from '../../redux/actions/UserAction';
 import toast from 'react-hot-toast';
 
@@ -42,7 +42,7 @@ const Login = () => {
     }
 
     const handleGoogleLogin = () => {
-        window.location.href = "../../../../backend/auth/login";
+        window.location.href = "http://localhost:8080/api/auth/login";
     };
 
     useEffect(() => {
