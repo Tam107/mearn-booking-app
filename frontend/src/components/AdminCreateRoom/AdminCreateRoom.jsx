@@ -407,7 +407,7 @@ const AdminCreateRoom = () => {
   };
   const handlePriceChangeOne = () => {
     if (!priceChange) {
-      return toast.error("Please enter price");
+      return toast.error("Price cannot be empty");
     }
     if (priceChange <= 0) return toast.error("Invalid price");
     const newDate = moment().startOf("day"); // Get today's date with time set to 00:00:00

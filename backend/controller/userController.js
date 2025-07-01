@@ -204,7 +204,7 @@ export const login = async (req, res, next) => {
         if(!user){
             return res.status(400).json({
                 success:false,
-                message:"User doesn't exists!"
+                message:"Invalid username or password. Please try again."
             })
         }
 
@@ -214,7 +214,7 @@ export const login = async (req, res, next) => {
         if(!isPass){
             return res.status(400).json({
                 success:false,
-                message:"Password is not correct!"
+                message:"Invalid username or password. Please try again."
             })
         }
         sendToken(user, 201,res)
