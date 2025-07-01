@@ -37,7 +37,7 @@ const Login = () => {
     }
 
     const handleGoogleLogin = () => {
-        window.location.href = "http://localhost:8080/api/auth/login";
+        window.location.href = "../../../../backend/auth/login";
     };
 
     useEffect(() => {

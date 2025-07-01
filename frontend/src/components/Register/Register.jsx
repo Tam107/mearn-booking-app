@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 
 const Register = ({otp,setOtp}) => {
     const handleGoogleLogin = () => {
-        window.location.href = "http://localhost:8080/api/auth/login";
+        window.location.href = "../../../../backend/auth/login";
     };
     const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route

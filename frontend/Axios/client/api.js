@@ -361,7 +361,7 @@ const updateRoomApi = async(data,id)=>{
 const getPolicyApi = async(data)=>{
     try {
         const URL_LOGIN =`/policy/get`
-        // console.log(data,"api");
+        // console.log(data,"backend");
         
         const response = await axios.post(URL_LOGIN,data)
      

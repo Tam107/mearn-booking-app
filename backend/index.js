@@ -1,0 +1,83 @@
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import usersRoute from "./routes/users.js"; // Keep .jsx if necessary
+import serviceHotelRoute from "./routes/serviceHotel.js"; // Keep .jsx if necessary
+import facilityHotel from "./routes/facilityHotel.js"; // Keep .jsx if necessary
+import uploadRoute from "./routes/upload.js"; // Keep .jsx if necessary
+import policyRoute from "./routes/policy.js"; // Keep .jsx if necessary
+import BookingRoute from "./routes/Booking.js"; // Keep .jsx if necessary
+import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
+import adminsRoute from "./routes/admin.js"; // Keep .jsx if necessary
+import roomsRoute from "./routes/rooms.js";
+import swaggerDocs from "./swagger.js";
+import cookieParser from "cookie-parser"; // Keep .jsx if necessary
+import cors from "cors";
+import googleAuthRoute from "./routes/googleAuth.js";
+import {PORT, MONGO_URI, CLIENT_ID_PAYPAL} from "./config/env.js";
+
+
+const app = express();
+dotenv.config();
+
+// Set strictQuery option
+mongoose.set('strictQuery', true); // or false, depending on your needs
+
+const connect = async () => {
+    try {
+        await mongoose.connect(MONGO_URI);
+        console.log("Connected to MongoDB");
+    } catch (e) {
+        console.log("Error connecting to mongoose", e);
+    }
+};
+// Call the connect function
+connect();
+
+mongoose.connection.on("disconnected",()=>{
+    console.log(" Disconnected to MongoDB");
+} );
+
+//middleware
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
+
+// route
+app.use("/backend/users", usersRoute);
+app.use("/backend/hotels", hotelsRoute);
+app.use("/backend/rooms", roomsRoute);
+app.use("/backend/admin", adminsRoute);
+app.use("/backend/auth", googleAuthRoute);
+app.use("/backend/servicesHotel", serviceHotelRoute);
+app.use("/backend/facilityHotel", facilityHotel);
+app.use("/backend/upload", uploadRoute);
+app.use("/backend/policy", policyRoute);
+app.use("/backend/booking", BookingRoute);
+app.use("/backend/config/paypal", (req,res)=>{
+    res.send(CLIENT_ID_PAYPAL)
+});
+
+
+app.use((error, req, res, next)=>{
+    const errorStatus = error.status || 500;
+    const errorMessage = error.message || "Something went wrong";
+    return res.status(errorStatus).json({
+        success: false,
+        status: errorStatus,
+        message: errorMessage,
+        // stack: error.stack,
+    });
+})
+
+
+
+app.listen(PORT, () => {
+    console.log(`App listening on 8080`);
+    swaggerDocs(app, PORT); // Initialize Swagger
+});
