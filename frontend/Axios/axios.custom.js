@@ -5,11 +5,12 @@ import axios from "axios"
 //   if (parts.length === 2) return parts.pop().split(';').shift(); // Get the cookie value
 // };
 // document.cookie = `cardId=${getCookie("cardId")}; path=/`;
+const baseURI = import.meta.env.VITE_REDIRECT_URI;
 
+// console.log("Base uri",baseURI)
 // Set config defaults when creating the instance
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    
+    baseURL: baseURI,
   });
   
 // document.cookie = `cardID=${localStorage.getItem("cardId")}; path=/`;

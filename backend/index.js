@@ -14,8 +14,7 @@ import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser"; // Keep .jsx if necessary
 import cors from "cors";
 import googleAuthRoute from "./routes/googleAuth.js";
-import {PORT, MONGO_URI, CLIENT_ID_PAYPAL} from "./config/env.js";
-
+import {PORT, MONGO_URI, CLIENT_ID_PAYPAL, PORT_FRONTEND} from "./config/env.js";
 
 const app = express();
 dotenv.config();
@@ -44,7 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:PORT_FRONTEND,
     credentials:true
 }))
 
@@ -76,9 +75,9 @@ app.use((error, req, res, next)=>{
 })
 
 
-
 app.listen(PORT, () => {
     console.log(`App listening on 8080`);
     console.log("PORT: ",PORT)
+    console.log("PORT_FRONTEND: ",PORT_FRONTEND)
     swaggerDocs(app, PORT); // Initialize Swagger
 });

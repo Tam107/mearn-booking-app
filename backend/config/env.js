@@ -23,7 +23,8 @@ export const {
     GG_CLIENT_ID,
     GG_CLIENT_SECRET,
     GG_REDIRECT_URI,
-    CLIENT_ID_PAYPAL
+    CLIENT_ID_PAYPAL,
+    PORT_FRONTEND,
 
 
 } = process.env

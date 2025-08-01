@@ -10,7 +10,6 @@ const Store = configureStore({
     reducer:{
         UserReducer:UserReducer,
         AdminReducer:AdminReducer,
-        AdminReducer:AdminReducer,
         WishlistReducer:WishlistReducer,
         HotelReducer:HotelReducer,
         RoomReducer:RoomReducer
