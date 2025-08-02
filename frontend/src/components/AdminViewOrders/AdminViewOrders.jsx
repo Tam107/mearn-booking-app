@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message } from "antd";
-import { getAllBookinglApi, updateStatusBookingApi } from "../../../Axios/client/api";
+import { getAllBookingApi, updateStatusBookingApi } from "../../../Axios/client/api";
 
 const AdminViewOrders = () => {
   const [data, setData] = useState([]);
@@ -8,7 +8,7 @@ const AdminViewOrders = () => {
   const [loadingRow, setLoadingRow] = useState(null); // Lưu trạng thái loading của từng hàng
   const fetchApi = async () => {
     setLoading(true);
-    const res = await getAllBookinglApi();
+    const res = await getAllBookingApi();
     if (res.success) {
       const filteredData = res.data.filter((i) => i.isPaid === true);
       setData(filteredData);

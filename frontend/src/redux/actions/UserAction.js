@@ -26,7 +26,7 @@ export const loadUserAction = ()=>async(dispatch)=>{
     } catch (error) {
         dispatch({
             type:"LoadUserFail",
-            payload:error?.response?.data?.message||"Error in axios",
+            payload:error?.response?.data?.message||"load user error",
 
         })
     }
@@ -46,7 +46,7 @@ export const loginUserAction = (data) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: "LoadUserFail",
-            payload: error?.response?.data?.message || "Error in axios",
+            payload: error?.response?.data?.message || "error in login user",
         });
     }
 };
@@ -60,7 +60,7 @@ export const logoutUserAction = (data) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: "LoadUserFail",
-            payload: error?.response?.data?.message || "Error in axios",
+            payload: error?.response?.data?.message || "error in logout user",
         });
     }
 };
