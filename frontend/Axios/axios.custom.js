@@ -5,7 +5,9 @@ import axios from "axios"
 //   if (parts.length === 2) return parts.pop().split(';').shift(); // Get the cookie value
 // };
 // document.cookie = `cardId=${getCookie("cardId")}; path=/`;
-const baseURI = import.meta.env.VITE_REDIRECT_URI;
+const baseURI = import.meta.env.VITE_BASE_URI;
+
+console.log("Base uri",baseURI)
 
 // console.log("Base uri",baseURI)
 // Set config defaults when creating the instance

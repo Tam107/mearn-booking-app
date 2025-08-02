@@ -42,10 +42,12 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
-app.use(cors({
-    origin:PORT_FRONTEND,
-    credentials:true
-}))
+// app.use(cors({
+//     origin:PORT_FRONTEND,
+//     credentials:true
+// }))
+
+app.use(cors())
 
 // route
 app.use("/api/users", usersRoute);

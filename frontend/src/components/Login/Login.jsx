@@ -14,6 +14,8 @@ const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
+    const BASE_URI = import.meta.env.VITE_BASE_URI
+
     const fetchApi = async (data) => {
         Store.dispatch(loginUserAction(data))
     }
@@ -42,7 +44,7 @@ const Login = () => {
     }
 
     const handleGoogleLogin = () => {
-        window.location.href = "http://localhost:8080/api/auth/login";
+        window.location.href =  BASE_URI+"/api/auth/login";
     };
 
     useEffect(() => {

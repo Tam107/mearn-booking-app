@@ -8,8 +8,10 @@ import toast from 'react-hot-toast'
 // import {REDIRECT_URI} from "../../../config/env.js"
 
 const Register = ({otp,setOtp}) => {
+    const BASE_URI = import.meta.env.VITE_BASE_URI
+
     const handleGoogleLogin = () => {
-        window.location.href = "http://localhost:8080/api/auth/oauth";
+        window.location.href = BASE_URI+"/api/auth/oauth";
     };
     const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
