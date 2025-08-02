@@ -22,7 +22,7 @@ async function getUserData(access_token) {
 }
 
 router.get("/login", (req, res) => {
-    console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID); // Debug
+    // console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID); // Debug
     const authorizeUrl = oAuth2Client.generateAuthUrl({
         access_type: "offline",
         scope: [
@@ -32,7 +32,7 @@ router.get("/login", (req, res) => {
         ],
         prompt: "consent",
     });
-    console.log("Generated URL:", authorizeUrl); // Debug
+    // console.log("Generated URL:", authorizeUrl); // Debug
     res.redirect(authorizeUrl);
 });
 

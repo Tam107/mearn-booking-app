@@ -15,7 +15,7 @@ export const create = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.json({
             success: false,
             message: "Error in BE",
@@ -59,7 +59,7 @@ export const get = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.json({
             success: false,
             message: "Error in BE",
@@ -96,10 +96,10 @@ export const getByEmail = async (req, res) => {
             data: data,
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in get Email",
         });
     }
 };
