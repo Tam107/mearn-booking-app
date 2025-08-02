@@ -49,6 +49,7 @@ app.use(express.static("public"));
 
 app.use(cors({
     origin: [
+        'https://highlightsofvietnam.pages.dev/',
         'https://highlightsofvietnamm.vercel.app',
         'http://localhost:5173', // hoặc port development của bạn
     ],

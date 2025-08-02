@@ -141,7 +141,8 @@ export const createHotel = async (req, res) => {
 
 export const getAllHotels = async (req, res, next) => {
     try {
-        const hotels = await Hotel.find({}).populate('services').populate("roomType").populate('policy').sort({ createdAt: -1 });
+        const hotels = await Hotel.find({}).populate('services').populate("roomType")
+            .populate('policy').sort({ createdAt: -1 });
         res.status(200).json({
             success:true,
             data:hotels
@@ -150,7 +151,7 @@ export const getAllHotels = async (req, res, next) => {
         console.log(err)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in BE get all hotels",
         })
     }
 }

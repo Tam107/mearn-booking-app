@@ -63,7 +63,7 @@ export const getAdmin = async(req,res)=>{
     } catch (error) {
         return res.json({
             success:false,
-            message:"Error in BE"
+            message:"Error in BE get admin"
         })
     }
 }
