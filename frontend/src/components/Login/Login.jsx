@@ -44,7 +44,7 @@ const Login = () => {
     }
 
     const handleGoogleLogin = () => {
-        window.location.href =  BASE_URI+"/api/auth/login";
+        window.location.href =  BASE_URI+"/auth/login";
     };
 
     useEffect(() => {

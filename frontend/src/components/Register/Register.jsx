@@ -11,7 +11,7 @@ const Register = ({otp,setOtp}) => {
     const BASE_URI = import.meta.env.VITE_BASE_URI
 
     const handleGoogleLogin = () => {
-        window.location.href = BASE_URI+"/api/auth/oauth";
+        window.location.href = BASE_URI+"/auth/oauth";
     };
     const navigate = useNavigate();  // Để điều hướng trang
     const location = useLocation();  // Để lấy đường dẫn hiện tại khi thay đổi route
