@@ -47,7 +47,15 @@ app.use(express.static("public"));
 //     credentials:true
 // }))
 
-app.use(cors())
+app.use(cors({
+    origin: [
+        'https://highlightsofvietnamm.vercel.app',
+        'http://localhost:5173', // hoặc port development của bạn
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+}));
 
 // route
 app.use("/api/users", usersRoute);
