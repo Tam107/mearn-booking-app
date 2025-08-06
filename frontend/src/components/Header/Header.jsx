@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { AiOutlineHeart } from "react-icons/ai";
 import WishList from "../WishList/WishList";
 import { LuShoppingCart } from "react-icons/lu";
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
 
 const Header = () => {
   const [active, setActive] = useState(false);
@@ -91,27 +92,14 @@ const Header = () => {
                     {wishlist?.length}
                   </span>
                 </div>
-                {stateAuth.isAuthenticated ? (
-                  <>
-                    <Link to="/profile">
-                      {stateAuth.user?.avatar ? (
-                        <img
-                          className="ml-2 object-cover w-[32px] h-[32px] rounded-full"
-                          alt=""
-                          src={`${stateAuth.user.avatar}`}
-                        />
-                      ) : (
-                        <CgProfile size={28} color="#000000" className="ml-2" />
-                      )}
-                    </Link>
-                  </>
-                ) : (
-                  <Link to={"/login"}>
-                    <CgProfile size={28} color="#000000" className="ml-2" />{" "}
-                  </Link>
-                )}
-
-                {/*<img src='https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-trai-dep-Viet-Nam-58.jpg' className="ml-2 object-cover w-[32px] h-[32px] rounded-full" alt=""/>*/}
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <CgProfile size={28} color="#000000" className="ml-2" />
+                  </SignInButton>
+                </SignedOut>
               </div>
             </div>
           </div>
