@@ -18,7 +18,6 @@ const HotelDetail = () => {
   //  const [dataRoom,setDataRoom]=useState({});
   const { slug } = useParams();
   const [data, setData] = useState({});
-  const { isAuthenticated } = useSelector((state) => state.UserReducer);
 
   const stateHotels = useSelector((state) => state.HotelReducer);
   // const [roomType, setRoomType] = useState('');

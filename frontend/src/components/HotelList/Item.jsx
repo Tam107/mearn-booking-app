@@ -69,7 +69,7 @@ const Item = ({ i }) => {
               <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
                 {i.type} in {i.city}
               </p>
-              <h4 className="font-[500] text-[20px] leading-[32x] text-gray-700">
+              <h4 onClick={() => {navigate(i.slug)}} className="font-[500] text-[20px] leading-[32x] text-gray-700">
                 {i.name}
               </h4>
             </div>
@@ -91,48 +91,48 @@ const Item = ({ i }) => {
           </div>
           <div className="bg-gray-200 w-[40px] h-[1px]"></div>
           <div className="flex items-center justify-between">
-          <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
+                  {i?.roomType.map((type, index) => {
+                    const isLastItem = index === i.roomType.length - 1;
+                    console.log(i.roomType);
+
+                    return (
+                      <span key={index}>
+                        {type.RoomType}
+                        {!isLastItem && " · "}
+                      </span>
+                    );
+                  })}
+                </p>
+                <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
+                  {i?.services.map((service, index) => {
+                    const isLastItem = index === i.services.length - 1;
+
+                    return (
+                      <span>
+                        {service.name.length > 15
+                          ? `${service.name.slice(0, 15)}...`
+                          : service.name}
+                        {!isLastItem && " · "}
+                      </span>
+                    );
+                  })}
+                </p>
+              </div>
+            </div>
             <div>
-              <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
-              {i?.roomType.map((type, index) => {
-                  const isLastItem = index === i.roomType.length - 1;
-                  console.log(i.roomType);
-                  
-                  return (
-                    <span key={index}>
-                      {type.RoomType}
-                      {!isLastItem && " · "}
-                    </span>
-                  );
-                })}
-              </p>
-              <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
-  {i?.services.map((service, index) => {
-    const isLastItem = index === i.services.length - 1;
-
-    return (
-      <span>
-          {service.name.length > 15
-            ? `${service.name.slice(0, 15)}...`
-            : service.name}
-          {!isLastItem && " · "}
-        </span>
-    );
-  })}
-</p>
-
-            </div>
-          </div>
-          <div>
               <p className="font-[500] text-[18px] leading-[28px] text-gray-700">
-              {new Intl.NumberFormat("en-US").format(i.cheapestPrice)}{" VND "}
-    <span className="font-[400] text-[14px] leading-[20px]">
-      /night
-    </span>
+                {new Intl.NumberFormat("en-US").format(i.cheapestPrice)}
+                {" VND "}
+                <span className="font-[400] text-[14px] leading-[20px]">
+                  /night
+                </span>
               </p>
             </div>
           </div>
-       
+
           <div className="bg-gray-200 w-[40px] h-[1px]"></div>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
@@ -141,15 +141,17 @@ const Item = ({ i }) => {
               </p>
               <FaStar className="text-amber-500" size={20} />
               <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
-                ({i.numberRating||0}) ratings
+                ({i.numberRating || 0}) ratings
               </p>
             </div>
 
-            
-             <Link to={`/homes/${i.slug}`} className="px-2 py-2 border border-gray-300 hover:bg-pink-400 hover:text-white duration-200 transition rounded-2xl flex items-center gap-4">
-                <p className="text-sm font-[500]">Explore More</p>
-                <FaArrowRightLong size={14}/>
-          </Link>
+            <Link
+              to={`/homes/${i.slug}`}
+              className="px-2 py-2 border border-gray-300 hover:bg-pink-400 hover:text-white duration-200 transition rounded-2xl flex items-center gap-4"
+            >
+              <p className="text-sm font-[500]">Explore More</p>
+              <FaArrowRightLong size={14} />
+            </Link>
           </div>
         </div>
       </div>
