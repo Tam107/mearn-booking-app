@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message } from "antd";
-import { getAllBookingApi, updateStatusBookingApi } from "../../../Axios/client/api";
+import { useMediaQuery } from "react-responsive";
+import {
+  getAllBookingApi,
+  updateStatusBookingApi,
+} from "../../../Axios/client/api";
 
 const AdminViewOrders = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingRow, setLoadingRow] = useState(null); // Lưu trạng thái loading của từng hàng
+  const [loadingRow, setLoadingRow] = useState(null);
+
+  // Check mobile
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
   const fetchApi = async () => {
     setLoading(true);
     const res = await getAllBookingApi();
@@ -22,10 +30,8 @@ const AdminViewOrders = () => {
     fetchApi();
   }, []);
 
-  const handleConfirm = async(record) => {
-    // Xử lý hành động xác nhận
-    // message.success(`Confirmed booking with ID: ${record._id}`);
-    setLoadingRow(record._id); // Đặt trạng thái loading cho hàng hiện tại
+  const handleConfirm = async (record) => {
+    setLoadingRow(record._id);
     const res = await updateStatusBookingApi(record._id);
     if (res.success) {
       const updatedData = data.map((item) =>
@@ -33,51 +39,50 @@ const AdminViewOrders = () => {
       );
       setData(updatedData);
     }
-    setLoadingRow(null); // Đặt lại trạng thái loading
-
-    
-    // Thêm logic xử lý API nếu cần
+    setLoadingRow(null);
   };
 
   const columns = [
     {
-      title: " ID",
+      title: "ID",
       dataIndex: "_id",
       key: "_id",
-      width: 100, // Đặt chiều rộng cố định
-      ellipsis: true, // Kích hoạt cắt nội dung nếu quá dài
-      render: (id) => (
-        <div className="break-words whitespace-normal">{id}</div>
-      ),
+      width: 300,
+      ellipsis: true,
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      width: 300,
+      ellipsis: true,
     },
     {
       title: "Hotel",
       dataIndex: ["roomType", "hotel", "name"],
       key: "hotel",
       render: (hotelName) => hotelName || "N/A",
+      width: 200,
     },
     {
       title: "Room Type",
       dataIndex: ["roomType", "RoomType"],
       key: "roomType",
       render: (roomType) => roomType || "N/A",
+      width: 150,
     },
     {
       title: "Check-in / Check-out",
       key: "checkinCheckout",
+      width: 200,
       render: (_, record) => (
-        <div>
+        <div className="text-sm">
           <p>
-            <strong>Check-in:</strong>{" "}
+            <strong>In:</strong>{" "}
             {new Date(record.checkIn).toLocaleDateString("en-GB")}
           </p>
           <p>
-            <strong>Check-out:</strong>{" "}
+            <strong>Out:</strong>{" "}
             {new Date(record.checkOut).toLocaleDateString("en-GB")}
           </p>
         </div>
@@ -87,20 +92,21 @@ const AdminViewOrders = () => {
       title: "Total Price (VND)",
       dataIndex: "totalPrice",
       key: "totalPrice",
+      width: 160,
       render: (price) =>
         new Intl.NumberFormat("vi-VN", {
           style: "currency",
           currency: "VND",
         }).format(price || 0),
     },
-   
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      width: 120,
       render: (status) => (
         <span
-          className={`px-3 py-1 rounded-full text-white ${
+          className={`px-3 py-1 rounded-full text-white text-xs ${
             status?.toLowerCase() === "pending"
               ? "bg-yellow-500"
               : status?.toLowerCase() === "confirm"
@@ -115,33 +121,106 @@ const AdminViewOrders = () => {
     {
       title: "Action",
       key: "action",
+      fixed: "right",
+      width: 150,
       render: (_, record) => (
         <Button
           type="primary"
           size="small"
           onClick={() => handleConfirm(record)}
-          className="bg-blue-500 hover:bg-blue-600"
           disabled={
-            record.status?.toLowerCase() === "confirm" || loadingRow === record._id
-          } // Vô hiệu hóa nếu đã xác nhận hoặc đang loading
+            record.status?.toLowerCase() === "confirm" ||
+            loadingRow === record._id
+          }
         >
           {loadingRow === record._id ? "Processing..." : "Confirm Payment"}
         </Button>
       ),
     },
   ];
+  
 
   return (
-    <div className="py-6 px-6">
+    <div className="py-6 px-4">
       <h1 className="text-2xl font-bold mb-4">Paid Bookings</h1>
-      <Table
+
+      {isMobile ? (
+        // Mobile view as Card List
+        <div>
+          {data.map((item) => (
+            <div
+              key={item._id}
+              className="border rounded-lg p-4 mb-3 shadow-sm bg-white"
+            >
+              <p className="text-sm text-gray-500 break-words">
+                <strong>ID:</strong> {item._id}
+              </p>
+              <p><strong>Email:</strong> {item.email}</p>
+              <p><strong>Hotel:</strong> {item.roomType?.hotel?.name || "N/A"}</p>
+              <p><strong>Room Type:</strong> {item.roomType?.RoomType || "N/A"}</p>
+              <p>
+                <strong>Check-in:</strong>{" "}
+                {new Date(item.checkIn).toLocaleDateString("en-GB")}
+              </p>
+              <p>
+                <strong>Check-out:</strong>{" "}
+                {new Date(item.checkOut).toLocaleDateString("en-GB")}
+              </p>
+              <p>
+                <strong>Price:</strong>{" "}
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(item.totalPrice || 0)}
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span
+                  className={`px-2 py-1 rounded text-white ${
+                    item.status?.toLowerCase() === "pending"
+                      ? "bg-yellow-500"
+                      : item.status?.toLowerCase() === "confirm"
+                      ? "bg-green-500"
+                      : "bg-gray-500"
+                  }`}
+                >
+                  {item.status}
+                </span>
+              </p>
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => handleConfirm(item)}
+                disabled={
+                  item.status?.toLowerCase() === "confirm" ||
+                  loadingRow === item._id
+                }
+                className="mt-2"
+              >
+                {loadingRow === item._id ? "Processing..." : "Confirm Payment"}
+              </Button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Desktop Table view
+        <Table
         columns={columns}
         dataSource={data}
         rowKey="_id"
         loading={loading}
         bordered
-      
+        pagination={{
+          pageSize: 8,
+          showSizeChanger: false,
+        }}
+        scroll={{
+          x: 1000, // Cho phép scroll ngang khi màn hình nhỏ hơn bảng
+          y: 500,  // Scroll dọc, cố định header
+        }}
+        className="bg-white rounded-md shadow-sm"
       />
+      )}
     </div>
   );
 };

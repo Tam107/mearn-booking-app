@@ -1,48 +1,46 @@
 import { Form, TimePicker, Tooltip } from "antd";
 import React, { useState, useEffect } from "react";
-import { Country, State, City } from "country-state-city";
+import { Country, State } from "country-state-city";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { Editor } from "@tinymce/tinymce-react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import dayjs from "dayjs";
+import { FaQuestionCircle } from "react-icons/fa";
+import ModelCreateService from "./ModelCreateService";
+import ModelCreatePolicy from "../ModelCreatePolicy/ModelCreatePolicy";
+import Services from "../Services/Services";
+import Policy from "../Policy/Policy";
+import EditorTiny from "../EditorTiny/EditorTiny";
 import {
   createHotelApi,
-  createPolicyApi,
-  getAllRoomApi,
   getAllServicesApi,
   getPolicyApi,
   uploadByFilesApi,
   uploadByLinkApi,
 } from "../../../Axios/client/api";
-import iconMap from "../../data/iconMap"; // Import the iconMap from the external file
-import toast from "react-hot-toast";
-import dayjs from "dayjs";
-import { RxCross1 } from "react-icons/rx";
-import ModelCreateService from "./ModelCreateService";
-import { useDispatch } from "react-redux";
 import { getAllHotelsAction } from "../../redux/actions/HotelAction";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
-import { useNavigate } from "react-router";
-import { FaQuestionCircle } from "react-icons/fa";
-import Services from "../Services/Services";
-import EditorTiny from "../EditorTiny/EditorTiny";
-import Policy from "../Policy/Policy";
-import ModelCreatePolicy from "../ModelCreatePolicy/ModelCreatePolicy";
 
 const AdminCreateHotel = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   // popup model
   const [showModel, setShowModel] = useState(false);
-  const [showModelPolicy,setShowModelPolicy] = useState(false);
+  const [showModelPolicy, setShowModelPolicy] = useState(false);
 
   // default values
   const typeDefault = ["Hotel", "Villa", "House", "Flat"];
   const cities = State.getStatesOfCountry("VN");
-  const [roomTypeDefault,setRoomTypeDefault] = useState([
+
+  const [roomTypeDefault, setRoomTypeDefault] = useState([
     "King Room",
     "Deluxe Room",
     "One-Bedroom Apartment",
     "Two-Bedroom Apartment",
-  ])
-  const [inputRoomType,setInputRoomType] = useState("")
+  ]);
+  const [inputRoomType, setInputRoomType] = useState("");
   const [servicesDefault, setServicesDefault] = useState([]);
 
   // create hotel
@@ -50,358 +48,192 @@ const AdminCreateHotel = () => {
   const [type, setType] = useState("Hotel");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
-
   const [cheapestPrice, setCheapestPrice] = useState();
   const [roomType, setRoomType] = useState([]);
-  const [checkIn, setCheckIn] = useState(dayjs("14:00", "HH:mm")); // Default value for check-in
+  const [checkIn, setCheckIn] = useState(dayjs("14:00", "HH:mm"));
   const [checkOut, setCheckOut] = useState(dayjs("12:00", "HH:mm"));
   const [linkPhoto, setLinkPhoto] = useState("");
   const [photos, setPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [services, setServices] = useState([]);
 
-  // handle function
+  // policy
+  const [typePolicyDefault, setTypePolicyDefault] = useState([
+    "House rules",
+    "Safety & property",
+    "Cancellation policy",
+  ]);
+  const [typePolicy, setTypePolicy] = useState("House rules");
+  const [policy, setPolicy] = useState([]);
+  const [policyChecked, setPolicyChecked] = useState([]);
+
+  // fetch services
+  useEffect(() => {
+    const fetchServices = async () => {
+      const res = await getAllServicesApi();
+      setServicesDefault(res.data || []);
+    };
+    fetchServices();
+  }, [showModel]);
+
+  // fetch policies
+  const getPolicy = async () => {
+    if (typePolicy) {
+      const tmp = await getPolicyApi({ type: typePolicy });
+      if (tmp.success) setPolicy(tmp.data);
+    }
+  };
+  useEffect(() => {
+    getPolicy();
+  }, [typePolicy, showModelPolicy]);
+
+  // handlers
   const addPhotoByFile = async (ev) => {
-    // ev.preventDefault();
     const files = ev.target.files;
     const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
-    }
-    console.log("ok");
+    for (let i = 0; i < files.length; i++) data.append("photos", files[i]);
 
     const res = await uploadByFilesApi(data);
-    console.log(res);
-
-    if (res.success) {
-      const newImg = res.data.map((item) => item.url);
-      setPhotos([...photos, ...newImg]);
-    } else {
-      console.log(res);
-
-      toast.error("Error");
-    }
+    if (res.success) setPhotos([...photos, ...res.data.map((item) => item.url)]);
+    else toast.error("Error uploading files");
   };
 
   const addPhotoByLink = async (e) => {
     e.preventDefault();
-    // setDisableButton(true);
-    if (!linkPhoto) {
-      toast.error("Please enter a valid image URL");
-      // setDisableButton(false)
-      return;
-    } else {
-      const res = await uploadByLinkApi({ imageUrl: linkPhoto });
+    if (!linkPhoto) return toast.error("Please enter a valid image URL");
+    const res = await uploadByLinkApi({ imageUrl: linkPhoto });
+    if (res.code === 200) {
+      setPhotos([...photos, res.data.url]);
       setLinkPhoto("");
-      if (res.code == 200) {
-        // setPhotosByLink([...photosByLink,res.data.url])
-        setPhotos([...photos, res.data.url]);
-        setLinkPhoto("");
-        // setDisableButton(false)
-        toast.success("ok");
-      } else {
-        console.log(res);
-
-        toast.error("Link error");
-        // setDisableButton(false)
-      }
-    }
+      toast.success("Photo added");
+    } else toast.error("Link error");
   };
-  function removePhoto(ev, filename) {
+
+  const removePhoto = (ev, filename) => {
     ev.preventDefault();
-    setPhotos([...photos.filter((photo) => photo !== filename)]);
-  }
-  const handleEditorChange = (content) => {
-    console.log(content);
-    
-    setDescription(content);
+    setPhotos(photos.filter((photo) => photo !== filename));
   };
 
-  
+  const handleEditorChange = (content) => setDescription(content);
 
   const handleServiceChange = (serviceId) => {
-    setServices((services) => {
-      // If the service is already selected, remove it; otherwise, add it
-      if (services.includes(serviceId)) {
-        return services.filter((id) => id !== serviceId); // Remove the id
-      } else {
-        return [...services, serviceId]; // Add the id
-      }
-    });
+    setServices((prev) =>
+      prev.includes(serviceId)
+        ? prev.filter((id) => id !== serviceId)
+        : [...prev, serviceId]
+    );
   };
 
   const handleRoomTypeChange = (name) => {
-    const isExist = roomType.find((i) => i === name);
-    if (isExist) {
-      const tmp = roomType.filter((i) => i != name);
-      setRoomType(tmp);
-    } else {
-      return setRoomType([...roomType, name]);
-    }
+    setRoomType((prev) =>
+      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]
+    );
   };
-  const navigate = useNavigate()
 
-  // policy
-  const [typePolicyDefault,setTypePolicyDefault] = useState([
-    'House rules',
-    "Safety & property",
-    "Cancellation policy"
-  ])
-  const [inputPolicy,setInputPolicy] = useState()
-  const [typePolicy,setTypePolicy] = useState('House rules');
-  const [policy,setPolicy] = useState([])
-  const [policyChecked,setPolicyChecked] = useState([])
   const handlePolicyChange = (id) => {
-    const isExist = policyChecked.find((i) => i === id);
-    if (isExist) {
-      const tmp = policyChecked.filter((i) => i != id);
-      setPolicyChecked(tmp);
-    } else {
-      return setPolicyChecked([...policyChecked, id]);
-    }
+    setPolicyChecked((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
   };
-  const getPolicy = async()=>{
-    console.log(typePolicy);
-    
-    if(typePolicy){
-      const tmp = await getPolicyApi({type:typePolicy})
-      // console.log(tmp);
-      
-      if(tmp.success){
-        
-        setPolicy(tmp.data)
-      }
-    }
-  }
-  useEffect(()=>{
-     
-      getPolicy()
-  },[typePolicy,showModelPolicy])
 
-  // const handleAddPolicy =async ()=>{
-    
-  //   if(typePolicy){
-  //     if(inputPolicy){
-  //       const tmp = await createPolicyApi({name:inputPolicy,type:typePolicy})
-  //        if(tmp.success){
-  //         setPolicy([...policy,tmp.data])
-  //         setInputPolicy("")
-  //       }else{
-  //         return toast.error(tmp.message)
-  //       }
-       
-  //     }
-  //   }
-  //   else{
-  //     return toast.error("Please choose type policy first")
-  //   }
-  // }
-  
-  
-
-  useEffect(() => {
-    const alo = async () => {
-      const ad = await getAllServicesApi();
-      setServicesDefault(ad.data);
-    };
-    alo();
-  }, [showModel]);
-
-  const handleCreateHotel = async(e) => {
+  const handleCreateHotel = async (e) => {
     e.preventDefault();
-    // console.log(123);
-    if (!name || name.trim().length===0 ) {
-      return toast.error("Name cannot be empty");
-    }
+    if (!name?.trim()) return toast.error("Name cannot be empty");
+    if (!type) return toast.error("Type accommodation cannot be empty");
+    if (!city) return toast.error("Please choose a city");
+    if (!cheapestPrice) return toast.error("Please enter price");
+    if (cheapestPrice < 0) return toast.error("Invalid price");
+    if (!address?.trim()) return toast.error("Address cannot be empty");
+    if (!roomType.length) return toast.error("At least one room type is required");
+    if (!services.length) return toast.error("Please select at least one service");
+    if (!checkIn) return toast.error("Check in time cannot be empty");
+    if (!checkOut) return toast.error("Check out time cannot be empty");
 
-    if (!type) {
-      return toast.error("Type accommodation cannot be empty");
-    }
-    if (!city) {
-      return toast.error("Please choose a city for your home.");
-    }
-    if (!cheapestPrice) {
-      console.log(cheapestPrice);
-      
-     
-      return toast.error("please enter price"); // here
-    }
-    else{
-      if(cheapestPrice<0) return toast.error("Invalid price")
-    }
-    if (!address || address.trim().length===0 ) {
-      return toast.error("Address cannot be empty");
-    }
-
-    if (!roomType.length > 0) {
-      return toast.error("At least one room type is required");
-    }
-
-    
-    if (!services.length > 0) {
-      return toast.error("Please select at least one service offered at this accommodation");
-    }
-    if (!checkIn) {
-      return toast.error("Check in time cannot be empty");
-    }
-    if (!checkOut) {
-      return toast.error("Check out time cannot be empty");
-    }
-    
-    // return 1
-
-    let dataHotel = {
+    const dataHotel = {
       name,
       type,
       city,
       address,
-      // photos,
-      // description,
-      // services,
-      // numberOfrooms,
       roomType,
-      // numberOfFloor,
       cheapestPrice,
       checkIn,
       checkOut,
-      policy:policyChecked
+      policy: policyChecked,
+      ...(photos.length && { photos }),
+      ...(description && { description }),
+      ...(services.length && { services }),
     };
-    if (photos.length > 0) {
-      dataHotel.photos = photos;
-    }
 
-    if (description) {
-      dataHotel.description = description;
-    }
-    if (services.length > 0) {
-      dataHotel.services = services;
-    }
-    // console.log(dataHotel);
-    const res = await createHotelApi(dataHotel)
-    // console.log(services);
-    
-    if(res.success){
-      navigate("/dashboard-view-homes")
-      toast.success("Home has been successfully created.")
-      setName("")
-      setType("")
-      setCity("")
-      setAddress("")
-      setCheapestPrice()
-      setRoomType([])
-      setCheckIn(dayjs("14:00","HH:mm"))
-      setCheckOut(dayjs('14:00',"HH:mm"))
-      setLinkPhoto("")
-      setPhotos([])
-      setDescription("")
-      setServices([])
-      dispatch(getAllRoomsAction()  )
-      dispatch(getAllHotelsAction())
-      
-    }
-    else{
-      toast.error("Unable to create home. Please try again later.");
-    }
+    const res = await createHotelApi(dataHotel);
+    if (res.success) {
+      toast.success("Home has been successfully created.");
+      navigate("/dashboard-view-homes");
+      setName(""); setType("Hotel"); setCity(""); setAddress(""); setCheapestPrice();
+      setRoomType([]); setCheckIn(dayjs("14:00","HH:mm")); setCheckOut(dayjs("12:00","HH:mm"));
+      setLinkPhoto(""); setPhotos([]); setDescription(""); setServices([]);
+      dispatch(getAllRoomsAction());
+      dispatch(getAllHotelsAction());
+    } else toast.error("Unable to create home. Please try again later.");
   };
 
-  
-
   return (
-    <>
-      <div className="w-full py-6 px-6">
-        <h2 className="font-[600] leading-[40px] text-gray-600 text-[36px]">
-          Create new home
-        </h2>
-      </div>
-      <div className="w-full px-6">
-        <form className="w-full">
-          <div className="mb-4 w-full flex flex-col ">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Name
-            </p>
-            <p className="text-[16px] font-[400] text-gray-400">
-              Name of accommodation, should be short and catchy as in
-              advertisement
-            </p>
-            <input
-              placeholder="Name"
+    <div className="w-full px-4 md:px-6 py-6">
+      <h2 className="font-semibold text-gray-600 text-3xl md:text-4xl mb-6">Create new home</h2>
+      <form className="w-full space-y-6">
+
+        {/* Name */}
+        <div className="flex flex-col">
+          <label className="text-xl md:text-2xl font-medium">Name</label>
+          <p className="text-sm text-gray-400 mb-2">Short and catchy name</p>
+          <input
+            placeholder="Name"
+            className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        {/* Type & City */}
+        <div className="flex flex-col md:flex-row md:justify-between gap-4">
+          <div className="flex-1 flex flex-col">
+            <label className="text-xl md:text-2xl font-medium">Type of Accommodation</label>
+            <p className="text-sm text-gray-400 mb-2">Hotel, Villa, House...</p>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+            >
+              {typeDefault.map((i, idx) => <option key={idx} value={i}>{i}</option>)}
+            </select>
+          </div>
+          <div className="flex-1 flex flex-col">
+            <label className="text-xl md:text-2xl font-medium">City</label>
+            <p className="text-sm text-gray-400 mb-2">City of accommodation</p>
+            <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+            >
+              <option value="">Select City</option>
+              {cities.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+        </div>
+
+        {/* Price & Address */}
+        <div className="flex flex-col md:flex-row md:justify-between gap-4">
+          <div className="flex-1 flex flex-col">
+            <label className="text-xl md:text-2xl font-medium">Cheapest price</label>
+            <input
+              className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+              type="number"
+              value={cheapestPrice}
+              onChange={(e) => setCheapestPrice(e.target.value)}
+              placeholder="Price"
             />
           </div>
-
-          <div className="mb-4 w-full flex items-center justify-between">
-            <div className="w-[48%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Type of Accommodation
-              </p>
-              <p className="text-[16px] font-[400] text-gray-400">
-                Choose the type of accommodation, such as hotel, villa, guest
-                house, ...
-              </p>
-              <select
-                defaultValue={type}
-                onChange={(e) => setType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-              >
-                {typeDefault.map((i, index) => (
-                  <option key={index} value={i}>
-                    {i}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className=" w-[50%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                City
-              </p>
-              <p className="text-[16px] font-[400] text-gray-400">
-                Choose the city of your accomodation
-              </p>
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-              >
-                <option value="">Select City</option>
-                {cities.map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          
-
-<div className=" w-full flex items-center justify-between">
-          <div className=" w-[48%] flex flex-col ">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Cheapest price
-              </p>
-              <p className="text-[16px] font-[400] text-gray-400">
-              Specific address of the building
-            </p>
-              <input
-                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                type="number"
-                name=""
-                id=""
-                value={cheapestPrice}
-                onChange={(e) => setCheapestPrice(e.target.value)}
-                placeholder="Price"
-              />
-            </div>
-            <div className=" w-[50%] flex flex-col ">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Address
-            </p>
-            <p className="text-[16px] font-[400] text-gray-400">
-              Specific address of the building
-            </p>
+          <div className="flex-1 flex flex-col">
+            <label className="text-xl md:text-2xl font-medium">Address</label>
             <input
               placeholder="Address"
               value={address}
@@ -409,238 +241,198 @@ const AdminCreateHotel = () => {
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
             />
           </div>
+        </div>
 
-            
-          </div>
-
-          <div className="my-4 w-full flex flex-col ">
-              <div className="flex mb-2 items-center justify-between">
-              <p htmlFor="" className="font-[400] text-[25px]">
-                Rooms Type
-              </p>  
-                <div className="flex items-center gap-2">
-                  <input value={inputRoomType} onChange={e=>setInputRoomType(e.target.value)} type="text" className="px-4 py-2 border border-gray-400 rounded-3xl" placeholder="Enter type's name " />
-                  <div
-                  onClick={() => {setRoomTypeDefault([...roomTypeDefault,inputRoomType]); setInputRoomType("")}}
-                  className="cursor-pointer px-4 py-2 flex items-center   bg-gray-400 rounded-2xl text-white justify-center "
-                >
-                  Add type
-                </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-              <div className="flex-1 px-4 py-2 border border-gray-400 rounded-3xl">
-                <div className="flex  items-center gap-4 flex-wrap ">
-                  {roomTypeDefault.map((item, index) => {
-                    return (
-                      <>
-                        <div key={index} className="flex items-center gap-2">
-                          <input
-                            checked={roomType.includes(item)} // Check if the room type is selected
-                            onChange={() => handleRoomTypeChange(item)}
-                            type="checkbox"
-                          />
-                          {item}
-                        </div>
-                      </>
-                    );
-                  })}
-                </div>
-              </div>
-              </div>
-            </div>
-
-          <div className="mb-4 w-full flex flex-col ">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Photos
-            </p>
-            <p className="text-[16px] font-[400] text-gray-400">Specific URL</p>
-            <div className="flex justify-between">
+        {/* Room Types */}
+        <div className="flex flex-col">
+          <div className="flex flex-col md:flex-row md:justify-between items-center gap-2 mb-2">
+            <label className="text-xl md:text-2xl font-medium">Rooms Type</label>
+            <div className="flex gap-2 w-full md:w-auto">
               <input
+                value={inputRoomType}
+                onChange={(e) => setInputRoomType(e.target.value)}
                 type="text"
-                className=" w-[90%]  px-4 py-2 border border-gray-400 rounded-3xl"
-                placeholder="Add using a link"
-                value={linkPhoto}
-                onChange={(e) => setLinkPhoto(e.target.value)}
+                className="flex-1 px-4 py-2 border border-gray-400 rounded-3xl"
+                placeholder="Enter type name"
               />
               <button
-                onClick={addPhotoByLink}
-                className="cursor-pointer flex items-center w-[9%]  bg-gray-400 rounded-2xl text-white justify-center "
+                type="button"
+                onClick={() => {
+                  if (inputRoomType.trim()) {
+                    setRoomTypeDefault([...roomTypeDefault, inputRoomType]);
+                    setInputRoomType("");
+                  }
+                }}
+                className="px-4 py-2 bg-gray-400 text-white rounded-2xl"
               >
-                Add photo
+                Add
               </button>
             </div>
-            <div className="grid gap-2 mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4">
-              <label className="border cursor-pointer bg-transparent rounded-2xl p-8 flex items-center  text-2xl text-gray-600">
+          </div>
+          <div className="flex flex-wrap gap-4 mt-2">
+            {roomTypeDefault.map((item, idx) => (
+              <label key={idx} className="flex items-center gap-2">
                 <input
-                  type="file"
-                  multiple
-                  className="hidden"
-                  onChange={addPhotoByFile}
+                  type="checkbox"
+                  checked={roomType.includes(item)}
+                  onChange={() => handleRoomTypeChange(item)}
                 />
-                <IoCloudUploadOutline />
-                Upload
+                {item}
               </label>
-              {photos.length > 0 &&
-                photos.map((item, index) => (
-                  <>
-                    <div key={index} className="h-32 relative flex ">
-                      <img
-                        src={item}
-                        className="rounded-2xl w-full object-cover"
-                      />
-                      <span
-                        onClick={(ev) => removePhoto(ev, item)}
-                        className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition duration-300"
-                      >
-                        X
-                      </span>
-                    </div>
-                  </>
-                ))}
-            </div>
+            ))}
           </div>
+        </div>
 
-          <div className="mb-4 w-full flex flex-col ">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Description
-            </p>
-           <EditorTiny handleEditorChange={handleEditorChange} description={description}/>
+        {/* Photos */}
+        <div className="flex flex-col">
+          <label className="text-xl md:text-2xl font-medium">Photos</label>
+          <p className="text-sm text-gray-400 mb-2">Add images via link or upload</p>
+          <div className="flex flex-col sm:flex-row gap-2 mb-2">
+            <input
+              type="text"
+              placeholder="Add using a link"
+              className="flex-1 px-4 py-2 border border-gray-400 rounded-3xl"
+              value={linkPhoto}
+              onChange={(e) => setLinkPhoto(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={addPhotoByLink}
+              className="px-4 py-2 bg-gray-400 text-white rounded-2xl"
+            >
+              Add photo
+            </button>
           </div>
-
-          <div className="mb-4 w-full flex flex-col ">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Services
-            </p>
-            <p className="text-[16px] font-[400] text-gray-400">
-              Select the services available at your accommodation to offer your
-              guests a great experience.
-            </p>
-            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
-              <div
-                onClick={() => setShowModel(true)}
-                className="cursor-pointer h-20 border p-4 flex rounded-2xl gap-2 items-center"
-              >
-                <IoCloudUploadOutline />
-                Create service
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            <label className="cursor-pointer border rounded-2xl p-8 flex items-center justify-center text-2xl text-gray-600">
+              <input type="file" multiple className="hidden" onChange={addPhotoByFile} />
+              <IoCloudUploadOutline />
+            </label>
+            {photos.map((item, idx) => (
+              <div key={idx} className="relative h-32">
+                <img src={item} alt="hotel" className="w-full h-full object-cover rounded-2xl" />
+                <span
+                  onClick={(ev) => removePhoto(ev, item)}
+                  className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full cursor-pointer hover:bg-red-700"
+                >
+                  X
+                </span>
               </div>
-
-              {servicesDefault?.length > 0 && (
-                <>
-                  <Services handleServiceChange={handleServiceChange} setServicesDefault={setServicesDefault} servicesDefault={servicesDefault} services={services}/>
-                </>
-              )}
-            </div>
+            ))}
           </div>
+        </div>
 
-          <div className="mb-4 w-full flex flex-col ">
-            <div className="flex items-center justify-between">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Policies
-            </p>
-            <div className="flex mb-3 items-center gap-4">
-                <Tooltip title="Choose the type of policy before add ">
-                  <FaQuestionCircle size={23} />
-                </Tooltip>
-              
-                <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className=" px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
-                  <option disabled  value="" className="text-gray-200">Select type of policy</option>
-                  {typePolicyDefault?.map((i,ind)=>(
-                    <>
-                      <option key={ind} value={i}>{i}</option>
-                    </>
-                  ))}
-                </select>
-                
-              </div>
+        {/* Description */}
+        <div className="flex flex-col">
+          <label className="text-xl md:text-2xl font-medium">Description</label>
+          <EditorTiny handleEditorChange={handleEditorChange} description={description} />
+        </div>
+
+        {/* Services */}
+        <div className="flex flex-col">
+          <label className="text-xl md:text-2xl font-medium">Services</label>
+          <p className="text-sm text-gray-400 mb-2">Select services to offer guests</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+            <div
+              onClick={() => setShowModel(true)}
+              className="cursor-pointer h-20 border p-4 flex items-center rounded-2xl gap-2"
+            >
+              <IoCloudUploadOutline /> Create service
             </div>
-              <div>
-                {/* <select value={typePolicy} onChange={e=>setTypePolicy(e.target.value)}  className="w-[30%] px-4 py-2 border border-gray-400 rounded-3xl" name="" id="">
-                  <option disabled  value="" className="text-gray-200">Select type of policy</option>
-                  {typePolicyDefault?.map((i,ind)=>(
-                    <>
-                      <option key={ind} value={i}>{i}</option>
-                    </>
-                  ))}
-                </select> */}
-
-              </div>
-              <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
-              <div
-                onClick={() => setShowModelPolicy(true)}
-                className="cursor-pointer h-20 border p-4 flex rounded-2xl gap-2 items-center"
-              >
-                <IoCloudUploadOutline />
-                Create policy
-              </div>
-
-              {policy?.length > 0 && (
-                <>
-                  <Policy typePolicyDefault={typePolicyDefault} handlePolicyChange={handlePolicyChange} policy={policy} setPolicy={setPolicy} policyChecked={policyChecked}/>
-                </>
-              )}
-            </div>
-             
-          </div>
-
-          
-
-          
-
-         
-
-          <div className="mb-4 w-full flex flex-col ">
-            <p htmlFor="" className="font-[400] text-[25px]">
-              Check in&out times
-            </p>
-            <p className="text-[16px] font-[400] text-gray-400">
-              Add check in and out times, remember to have some time window for
-              clearing the room between guests
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <TimePicker
-                onChange={(time) => setCheckIn(time)}
-                value={checkIn}
-                format="HH:mm"
-                placeholder="14:00"
-                className="rounded-2xl w-full"
+            {servicesDefault.length > 0 && (
+              <Services
+                handleServiceChange={handleServiceChange}
+                setServicesDefault={setServicesDefault}
+                servicesDefault={servicesDefault}
+                services={services}
               />
-              <TimePicker
-                onChange={(time) => setCheckOut(time)}
-                value={checkOut}
-                format="HH:mm"
-                placeholder="12:00"
-                className="rounded-2xl w-full"
-              />
+            )}
+          </div>
+        </div>
+
+        {/* Policies */}
+        <div className="flex flex-col">
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-xl md:text-2xl font-medium">Policies</label>
+            <div className="flex items-center gap-2">
+              <Tooltip title="Choose the type of policy before add">
+                <FaQuestionCircle size={23} />
+              </Tooltip>
+              <select
+                value={typePolicy}
+                onChange={(e) => setTypePolicy(e.target.value)}
+                className="px-4 py-2 border border-gray-400 rounded-3xl"
+              >
+                <option disabled value="">
+                  Select type
+                </option>
+                {typePolicyDefault.map((i, idx) => <option key={idx} value={i}>{i}</option>)}
+              </select>
             </div>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+            <div
+              onClick={() => setShowModelPolicy(true)}
+              className="cursor-pointer h-20 border p-4 flex items-center rounded-2xl gap-2"
+            >
+              <IoCloudUploadOutline /> Create policy
+            </div>
+            {policy.length > 0 && (
+              <Policy
+                typePolicyDefault={typePolicyDefault}
+                handlePolicyChange={handlePolicyChange}
+                policy={policy}
+                setPolicy={setPolicy}
+                policyChecked={policyChecked}
+              />
+            )}
+          </div>
+        </div>
 
-          <button
-            onClick={handleCreateHotel}
-            className="w-full cursor-pointer flex items-center justify-center bg-gray-300 rounded-2xl my-4 mt-6 py-2"
-          >
-            Create Home
-          </button>
-        </form>
-      </div>
+        {/* Check in/out */}
+        <div className="flex flex-col">
+          <label className="text-xl md:text-2xl font-medium">Check in & out times</label>
+          <p className="text-sm text-gray-400 mb-2">
+            Set check in/out times
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <TimePicker
+              onChange={(time) => setCheckIn(time)}
+              value={checkIn}
+              format="HH:mm"
+              placeholder="14:00"
+              className="w-full rounded-2xl"
+            />
+            <TimePicker
+              onChange={(time) => setCheckOut(time)}
+              value={checkOut}
+              format="HH:mm"
+              placeholder="12:00"
+              className="w-full rounded-2xl"
+            />
+          </div>
+        </div>
 
-      {showModel && (
-        <>
-          <ModelCreateService services={services} setServices={setServices} setShowModel={setShowModel}/>
-          
-        </>
-      )}
+        <button
+          onClick={handleCreateHotel}
+          className="w-full py-2 bg-gray-300 rounded-2xl flex items-center justify-center mt-4"
+        >
+          Create Home
+        </button>
+      </form>
+
+      {showModel && <ModelCreateService services={services} setServices={setServices} setShowModel={setShowModel} />}
       {showModelPolicy && (
-        <>
-          <ModelCreatePolicy typePolicyDefault={typePolicyDefault} setTypePolicy={setTypePolicy} typePolicy={typePolicy} policyChecked={policyChecked} setPolicyChecked={setPolicyChecked} setShowModel={setShowModelPolicy}/>
-          
-        </>
+        <ModelCreatePolicy
+          typePolicyDefault={typePolicyDefault}
+          setTypePolicy={setTypePolicy}
+          typePolicy={typePolicy}
+          policyChecked={policyChecked}
+          setPolicyChecked={setPolicyChecked}
+          setShowModel={setShowModelPolicy}
+        />
       )}
-
-
-      {/* <Map/> */}
-    </>
+    </div>
   );
 };
 

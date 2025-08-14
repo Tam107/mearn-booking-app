@@ -32,6 +32,7 @@ import OrderListPage from './pages/OrderListPage/OrderListPage.jsx';
 import OrderDetailPage from './pages/OrderDetailPage/OrderDetailPage.jsx';
 import AdminViewOrdersPage from './pages/AdminViewOrdersPage/AdminViewOrdersPage.jsx';
 import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin.jsx';
+import BusPage from './pages/BusPage/BusPage.jsx';
 
 function App() {
 
@@ -89,6 +90,10 @@ function App() {
     element={<PrivateRouteAdmin><AdminViewHotelPage /></PrivateRouteAdmin>}
   />
   <Route
+    path="/dashboard-view-bus"
+    element={<PrivateRouteAdmin><AdminViewHotelPage /></PrivateRouteAdmin>}
+  />
+  <Route
     path="/dashboard-hotel/:slug"
     element={<PrivateRouteAdmin><AdminViewEditHotelPage /></PrivateRouteAdmin>}
   />
@@ -106,6 +111,7 @@ function App() {
   />
        
        <Route path="/homes" element={<HotelListPage />} />
+       <Route path="/bus" element={<BusPage />} />
        <Route path="/booking/:id" element={<BookingPage />} />
        <Route path="/payment/:id" element={<PaymentPage />} />
        <Route path="/orderSuccess/:id" element={<OrderSuccessPage />} />

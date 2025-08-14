@@ -20,7 +20,6 @@ const HomePage = () => {
       <RecommendPlaces/>
       <RecommendExperience/>
       <SuggestionTrainTicket/>
-      <TravelGuide/>
         <Footer/>
       
 
