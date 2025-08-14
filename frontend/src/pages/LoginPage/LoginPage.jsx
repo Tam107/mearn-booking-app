@@ -3,9 +3,10 @@ import Header from "../../components/Header/Header.jsx";
 import Login from "../../components/Login/Login.jsx";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { useUser } from '@clerk/clerk-react';
 
 const LoginPage = ({otp,setOtp}) => {
-    const {isAuthenticated} = useSelector(state=>state.UserReducer)
+    const {isSignedIn, user} = useUser()
     const navigate = useNavigate()
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -13,7 +14,7 @@ const LoginPage = ({otp,setOtp}) => {
     }
     , []);
     const check = ()=>{
-        if(isAuthenticated){
+        if(isSignedIn){
             navigate("/")
         }
     }

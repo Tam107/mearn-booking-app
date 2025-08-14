@@ -1,26 +1,14 @@
-import React from 'react'
-import SidebarAdmin from '../../components/SidebarAdmin/SidebarAdmin'
-import HeaderAdmin from '../../components/HeaderAdmin/HeaderAdmin'
-import AdminViewOrders from '../../components/AdminViewOrders/AdminViewOrders'
+import React, { useState } from "react";
+import SidebarAdmin from "../../components/SidebarAdmin/SidebarAdmin";
+import HeaderAdmin from "../../components/HeaderAdmin/HeaderAdmin";
+import AdminViewOrders from "../../components/AdminViewOrders/AdminViewOrders";
 
 const AdminViewOrdersPage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <>
-        <div className="flex">
-    <SidebarAdmin />
-    <div className="w-full">
-        {/* <AdminCreateBus/> */}
-        <HeaderAdmin/>
-        <AdminViewOrders/>
+    <AdminViewOrders />
+  );
+};
 
-        {/* <AdminViewEditHotel/> */}
-        
-       
-        
-    </div>
-</div>
-    </>
-  )
-}
-
-export default AdminViewOrdersPage
+export default AdminViewOrdersPage;

@@ -6,14 +6,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeFromWishlist } from '../../redux/actions/WishlistAction';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
+import { useUser } from "@clerk/clerk-react";
 
 const WishList = ({setOpenWishList}) => {
     const { wishlist } = useSelector((state) => state.WishlistReducer);
-        const {isAuthenticated} = useSelector(state=>state.UserReducer)
+    const { isSignedIn, user } = useUser();
     
     const dispatch = useDispatch();
     const removeFromWishlistHandler = (data) => {
-      if(isAuthenticated){
+      if(isSignedIn){
         dispatch(removeFromWishlist(data));
       }else{
         toast.error("Please login to use wishlist")

@@ -5,13 +5,13 @@ import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux';
 import { addToWishlist, removeFromWishlist } from '../../redux/actions/WishlistAction';
 import toast from 'react-hot-toast';
+import { useUser } from "@clerk/clerk-react";
 
 const Item = ({data}) => {
     const { wishlist } = useSelector((state) => state.WishlistReducer);
     const [click, setClick] = useState(false);
     const dispatch = useDispatch();
-
-    const {isAuthenticated} = useSelector(state=>state.UserReducer)
+    const { isSignedIn, user } = useUser();
 
     useEffect(() => {
         if (wishlist && wishlist.find((i) => i._id === data._id)) {
@@ -21,7 +21,7 @@ const Item = ({data}) => {
         }
       }, [wishlist]);
       const removeFromWishlistHandler = (data) => {
-        if(isAuthenticated){
+        if(isSignedIn){
             setClick(!click);
         dispatch(removeFromWishlist(data));
         }
@@ -32,7 +32,7 @@ const Item = ({data}) => {
       };
     
       const addToWishlistHandler = (data) => {
-        if(isAuthenticated){
+        if(isSignedIn){
             setClick(!click);
             // console.log(data)
             dispatch(addToWishlist(data));

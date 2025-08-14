@@ -3,10 +3,11 @@ import { getBookingApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useUser } from "@clerk/clerk-react";
 
 const FindOrder = () => {
   const [orderId, setOrderId] = useState("");
-  const stateUser = useSelector(state=>state.UserReducer)
+  const { isSignedIn, user } = useUser();
 
   const [data,setData] = useState({})
   const [isLoading, setIsLoading] = useState(false); // State để kiểm soát trạng thái loading
@@ -37,7 +38,7 @@ const FindOrder = () => {
   };
   console.log(data);
   const handleViewDetails = ()=>{
-    if(stateUser.isAuthenticated){
+    if(isSignedIn){
         navigate("/order/"+data._id)
     }
     else{

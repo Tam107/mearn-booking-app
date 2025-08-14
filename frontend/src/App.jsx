@@ -4,11 +4,8 @@ import { Toaster } from 'react-hot-toast';
 
 import './App.css'
 import HomePage from './pages/HomePage/HomePage';
-import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import HotelDetailPage from './pages/HotelDetailPage/HotelDetailPage.jsx';
 import PackageTourPage from './pages/PackageTourPage/PackageTourPage.jsx';
-import RegisterPage from './pages/RegisterPage/RegisterPage.jsx';
-import ConfirmOtpPage from './pages/ConfirmOtpPage/ConfirmOtpPage.jsx';
 import { useSelector } from "react-redux";
 import Store from "./redux/store"
 import { loadUserAction } from './redux/actions/UserAction.js';
@@ -35,6 +32,7 @@ import OrderListPage from './pages/OrderListPage/OrderListPage.jsx';
 import OrderDetailPage from './pages/OrderDetailPage/OrderDetailPage.jsx';
 import AdminViewOrdersPage from './pages/AdminViewOrdersPage/AdminViewOrdersPage.jsx';
 import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin.jsx';
+import BusPage from './pages/BusPage/BusPage.jsx';
 
 function App() {
 
@@ -63,9 +61,6 @@ function App() {
       <Toaster />
       <Routes>
        <Route path="/" element={<HomePage/>}/>
-       <Route path="/login"  element={<LoginPage  otp={otp} setOtp={setOtp}/>}/>
-       <Route path="/register"   element={<RegisterPage otp={otp} setOtp={setOtp}/>}/>
-       <Route path="/confirmOtp"   element={<ConfirmOtpPage otp={otp} setOtp={setOtp}/>}/>
        <Route path="/homes/:slug" element={<HotelDetailPage/>}/>
        <Route path="/packageTour/:slug" element={<PackageTourPage/>}/>
        <Route path="/admin-create" element={<AdminCreatePage/>}/>
@@ -95,6 +90,10 @@ function App() {
     element={<PrivateRouteAdmin><AdminViewHotelPage /></PrivateRouteAdmin>}
   />
   <Route
+    path="/dashboard-view-bus"
+    element={<PrivateRouteAdmin><AdminViewHotelPage /></PrivateRouteAdmin>}
+  />
+  <Route
     path="/dashboard-hotel/:slug"
     element={<PrivateRouteAdmin><AdminViewEditHotelPage /></PrivateRouteAdmin>}
   />
@@ -112,6 +111,7 @@ function App() {
   />
        
        <Route path="/homes" element={<HotelListPage />} />
+       <Route path="/bus" element={<BusPage />} />
        <Route path="/booking/:id" element={<BookingPage />} />
        <Route path="/payment/:id" element={<PaymentPage />} />
        <Route path="/orderSuccess/:id" element={<OrderSuccessPage />} />

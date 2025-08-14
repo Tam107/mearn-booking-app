@@ -6,15 +6,11 @@ import { DatePicker, Tooltip } from "antd";
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import {
-  createFacilitiesApi,
   createRoomApi,
   getAllFacilitiesApi,
   getAllServicesApi,
   uploadByFilesApi,
 } from "../../../Axios/client/api";
-import iconMap from "../../data/iconMap";
-import { Editor } from "@tinymce/tinymce-react";
-// set gia
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -27,6 +23,7 @@ import { RxCross1 } from "react-icons/rx";
 import Services from "../Services/Services";
 import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import Facilities from "../Facilities/Facilities";
+import { useMediaQuery } from "react-responsive";
 const localizer = momentLocalizer(moment);
 function getStartOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
@@ -43,7 +40,7 @@ function getEndOfDay(date) {
   );
 }
 
-const baseDate = new Date(); // April 6, 2025
+const baseDate = new Date();
 
 const CustomEvent = ({ event }) => {
   return (
@@ -91,7 +88,7 @@ const AdminCreateRoom = () => {
     };
     alo();
     ola();
-  }, [showModel,showCreateFacility]);
+  }, [showModel, showCreateFacility]);
 
   // console.log(facilitiesDefault);
   // chuc nang price
@@ -212,16 +209,6 @@ const AdminCreateRoom = () => {
     }
   };
 
-  // const [open, setOpen] = useState(false);
-  // const [hotelSelected, setHotelSelected] = useState("");
-  // const [hotelSelectedId, setHotelSelectedId] = useState("");
-  // const [input, setInput] = useState("");
-  // const [hotelPopup, setHotelPopup] = useState([]);
-  // useEffect(() => {
-  //     setHotelPopup(stateHotels.hotels);
-  // }
-  // , [stateHotels.hotels]);
-
   //set gia 2
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -273,13 +260,6 @@ const AdminCreateRoom = () => {
     // const dayOfWeek = moment(startDate).format("dddd");
     const newStartDate = startDate.startOf("day").toDate();
     const newEndDate = endDate.endOf("day").toDate();
-    // console.log(newStartDate);
-    // console.log(newEndDate);
-    // console.log(daysChoosed);
-    // console.log(dayOfWeek);
-    // console.log(eventsDefault[9].start);
-    // console.log(eventsDefault[9].start.getTime()>=newStartDate.getTime());
-
     const newEvent = eventsDefault.map((event) => {
       if (
         event.start.getTime() >= newStartDate.getTime() &&
@@ -332,7 +312,6 @@ const AdminCreateRoom = () => {
   // console.log(priceExtra);
 
   const handleCreateRoom = async () => {
-    
     if (!hotelId) {
       return toast.error("Please select a home to create a room.");
     }
@@ -347,7 +326,7 @@ const AdminCreateRoom = () => {
       return toast.error("Invalid number of room capacity");
     }
     if (maxPeople <= 0) return toast.error("Invalid number of room capacity");
-   
+
     if (services.length === 0) {
       return toast.error("Please choose at least 1 services");
     }
@@ -374,14 +353,6 @@ const AdminCreateRoom = () => {
       dispatch(getAllRoomsAction());
       dispatch(getAllHotelsAction());
       navigate("/dashboard-view-room");
-
-      // setRoomType("");
-      // setPhotos([]);
-      // setPrice("");
-      // setMaxPeople("");
-      // setFacilities([]);
-      // setServices([]);
-      // setDescription("");
     }
   };
 
@@ -521,446 +492,355 @@ const AdminCreateRoom = () => {
     toast.success("save changes successfully!");
   };
   // console.log(priceExtra);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return (
     <>
-      <div className="w-full pt-6 px-6">
-        <div className="flex w-full items-center justify-between">
-          <h2
-            onClick={handleCreateRoom}
-            className="font-[600] leading-[40px] text-gray-600 text-[36px]"
-          >
-            Create new room
-          </h2>
-          <div
-            onClick={handleCreateRoom}
-            className=" cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-4"
-          >
-            <TiPlusOutline color="white" size={20} />
-            <p className="text-white text-md">Add a new room</p>
-          </div>
+      {/* Header */}
+      <div className="w-full pt-6 px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <h2
+          onClick={handleCreateRoom}
+          className="font-[600] text-gray-600 text-[28px] md:text-[36px] leading-[36px] md:leading-[40px] cursor-pointer"
+        >
+          Create new room
+        </h2>
+        <div
+          onClick={handleCreateRoom}
+          className="cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-2 md:gap-4"
+        >
+          <TiPlusOutline color="white" size={20} />
+          <p className="text-white text-md">Add a new room</p>
         </div>
       </div>
-      <div className="w-full  px-6 py-6  ">
-        <div className="w-full  border border-gray-300 rounded-2xl py-4 px-4">
-          <div className="w-full mb-4 border-gray-300 pb-4 border-b ">
-            <div className="flex mb-3 items-center gap-4">
-              <h2 className="font-medium text-lg ">Room Picture</h2>
+
+      {/* Room Pictures */}
+      <div className="w-full px-6 py-6">
+        <div className="w-full border border-gray-300 rounded-2xl p-4 md:p-6">
+          <div className="flex mb-3 items-center gap-2 md:gap-4">
+            <h2 className="font-medium text-lg">Room Picture</h2>
+            {!isMobile && (
               <Tooltip title="Where the customer sleeps">
                 <FaQuestionCircle size={23} />
               </Tooltip>
-            </div>
-            <div className="grid gap-2 mt-2 grid-cols-3 lg:grid-cols-6 md:grid-cols-4">
-              <label className="border border-gray-300 border-dashed cursor-pointer bg-transparent rounded-2xl p-8 flex items-center  text-2xl text-gray-600">
-                <input
-                  type="file"
-                  multiple
-                  className="hidden"
-                  onChange={addPhotoByFile}
-                />
-                <IoCloudUploadOutline />
-                Upload
-              </label>
-
-              {photos.length > 0 &&
-                photos.map((item, index) => (
-                  <>
-                    <div key={index} className="h-32 relative flex ">
-                      <img
-                        src={item}
-                        className="rounded-2xl w-full object-cover"
-                      />
-                      <div
-                        onClick={(ev) => removePhoto(ev, item)}
-                        className="absolute top-0 right-0 w-6 h-6 text-sm flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition z-50 duration-300"
-                      >
-                        X
-                      </div>
-                    </div>
-                  </>
-                ))}
-            </div>
+            )}
           </div>
-
-          <div className="w-full  mb-4 border-gray-300 pb-4 border-b">
-            <div className="flex mb-3 items-center gap-4">
-              <h2 className="font-medium text-lg ">Room Details</h2>
-              <Tooltip title="Nghĩ span giúp Vĩnh">
-                <FaQuestionCircle size={23} />
-              </Tooltip>
-            </div>
-            <div className="grid gap-4 grid-cols-4">
-              <div className="flex flex-col gap-2 ">
-                <p className="text-lg">
-                  Home <span className="text-red-500">*</span>{" "}
-                </p>
-                <select
-                  value={hotelId}
-                  onChange={(e) => setHotelId(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                >
-                  <option value="">Select home</option>
-                  {stateHotels?.hotels?.map((i, index) => (
-                    <option key={index} value={i._id}>
-                      {i.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-2 ">
-                <p className="text-lg">
-                  Room price per night <span className="text-red-500">*</span>{" "}
-                </p>
-                <input
-                  className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                  type="number"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="Price"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 ">
-                <p className="text-lg">
-                  Room Type <span className="text-red-500">*</span>{" "}
-                </p>
-                <input
-                  className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                  type="text"
-                  value={roomType}
-                  onChange={(e) => setRoomType(e.target.value)}
-                  placeholder="Room Type"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 ">
-                <p className="text-lg">
-                  Room Capacity <span className="text-red-500">*</span>{" "}
-                </p>
-                <input
-                  className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
-                  type="number"
-                  value={maxPeople}
-                  onChange={(e) => setMaxPeople(e.target.value)}
-                  placeholder="2-4 guests"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
-            <div className="flex mb-3 items-center gap-4">
-              <h2 className="font-medium text-lg ">Services</h2>
-              <Tooltip title="Should choose room type first">
-                <FaQuestionCircle size={23} />
-              </Tooltip>
-            </div>
-            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
-              <div
-                onClick={() => setShowModel(true)}
-                className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
-              >
-                <IoCloudUploadOutline />
-                Create service
-              </div>
-
-              {servicesDefault?.length > 0 && (
-                <>
-                  <Services
-                    handleServiceChange={handleServiceChange}
-                    setServicesDefault={setServicesDefault}
-                    servicesDefault={servicesDefault}
-                    services={services}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="mb-4 border-gray-300 pb-4 border-b w-full">
-            <div className="flex items-center justify-between">
-              <div className="flex mb-3 items-center gap-4">
-                <h2 className="font-medium text-lg ">Facilities</h2>
-                {/* <Tooltip title="Should choose room type first">
-                  <FaQuestionCircle size={23} />
-                </Tooltip> */}
-              </div>
-             
-            </div>
-            {/* <div className="flex items-center gap-4 flex-wrap">
-              {facilitiesDefault?.map((item, index) => (
-                <>
-                  <label className="flex cursor-pointer items-center">
-                    <input
-                      type="checkbox"
-                      checked={facilities.includes(item._id)}
-                      onChange={() => handleFaChange(item._id)}
-                    />
-                    <span className="ml-2">{item.name}</span>
-                  </label>
-                </>
-              ))}
-            </div> */}
-            <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
-              <div
-                onClick={() => setShowCreateFacility(true)}
-                className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center"
-              >
-                <IoCloudUploadOutline />
-                Create facility
-              </div>
-
-              {facilitiesDefault?.length > 0 && (
-                <>
-                  <Facilities handleFaChange={handleFaChange} facilities={facilities} setFacilitiesDefault={setFacilitiesDefault} facilitiesDefault={facilitiesDefault}/>
-                  </>
-              )}
-            </div>
-          </div>
-
-          <div className="mb-4  w-full">
-            <div className="flex mb-3 items-center gap-4">
-              <h2 className="font-medium text-lg ">Price extra</h2>
-              <Tooltip title="Nên set theo ngày việt nam">
-                <FaQuestionCircle size={23} />
-              </Tooltip>
-            </div>
-            <div
-              style={{
-                overflowX: "auto",
-                whiteSpace: "nowrap",
-                display: "flex",
-                gap: "30px",
-              }}
-            >
-              <Calendar
-                selectable
-                onSelectSlot={handleSelectSlot}
-                events={eventsDefault} // Sự kiện được truyền vào lịch
-                localizer={localizer}
-                startAccessor="start" // Trường 'start' trong sự kiện được sử dụng làm thời gian bắt đầu
-                endAccessor="end" // Trường 'end' trong sự kiện được sử dụng làm thời gian kết thúc
-                defaultView="month"
-                views={["month"]}
-                style={{ height: "500px", width: "60%" }} // Sử dụng width 'max-content' để lịch không bị co lại
-                components={{
-                  event: CustomEvent, // Ghi đè cách hiển thị sự kiện
-                }}
+          <div className="grid gap-2 mt-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-6">
+            <label className="border border-gray-300 border-dashed cursor-pointer bg-transparent rounded-2xl p-6 flex items-center justify-center text-2xl text-gray-600">
+              <input
+                type="file"
+                multiple
+                className="hidden"
+                onChange={addPhotoByFile}
               />
-              <div className="p-4 flex-1 border">
-                <div className="flex flex-col gap-2 pb-6 border-b border-gray-300">
-                  <p className="text-md">Checked days</p>
-                  <div className="w-full mb-2 flex items-center gap-2">
-                    <DatePicker
-                      disabledDate={(current) =>
-                        current.isBefore(moment(), "day")
-                      }
-                      value={startDate}
-                      onChange={handleStartDateChange}
-                    />
-                    -{" "}
-                    <DatePicker
-                      disabledDate={(current) =>
-                        current.isBefore(moment(), "day")
-                      }
-                      value={endDate}
-                      open={openEndDate}
-                      onChange={handleEndDateChange}
-                      onClick={() => setOpenEndDate(true)}
-                      onOpenChange={(open) => setOpenEndDate(open)}
-                    />
-                  </div>
-                  <p className="text-md">Các ngày nhất định</p>
-                  <div className="flex items-center gap-4">
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Sun")}
-                        checked={daysChoosed.includes("Sunday")}
-                      />
-                      <span className="ml-2">Sun</span>
-                    </label>
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Mon")}
-                        checked={daysChoosed.includes("Monday")}
-                      />
-                      <span className="ml-2">Mon</span>
-                    </label>
+              <IoCloudUploadOutline />
+              Upload
+            </label>
 
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Tue")}
-                        checked={daysChoosed.includes("Tuesday")}
-                      />
-                      <span className="ml-2">Tue</span>
-                    </label>
-
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Wed")}
-                        checked={daysChoosed.includes("Wednesday")}
-                      />
-                      <span className="ml-2">Wed</span>
-                    </label>
-
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Thu")}
-                        checked={daysChoosed.includes("Thursday")}
-                      />
-                      <span className="ml-2">Thu</span>
-                    </label>
-
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Fri")}
-                        checked={daysChoosed.includes("Friday")}
-                      />
-                      <span className="ml-2">Fri</span>
-                    </label>
-
-                    <label className="flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleDayClick("Sat")}
-                        checked={daysChoosed.includes("Saturday")}
-                      />
-                      <span className="ml-2">Sat</span>
-                    </label>
+            {photos.length > 0 &&
+              photos.map((item, index) => (
+                <div key={index} className="h-32 relative flex">
+                  <img src={item} className="rounded-2xl w-full object-cover" />
+                  <div
+                    onClick={() => removePhoto(item)}
+                    className="absolute top-0 right-0 w-6 h-6 text-sm flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition z-50 duration-300"
+                  >
+                    X
                   </div>
                 </div>
+              ))}
+          </div>
+        </div>
 
-                <div className="flex flex-col gap-2 pb-6 border-b border-gray-300">
-                  <p className="text-md pt-4">
-                    Giá tối thiểu mỗi đêm là bao nhiêu?
-                  </p>
-                  <div className="w-full mb-2 flex items-center">
-                    <input
-                      type="number"
-                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
-                      placeholder="Price"
-                      value={priceEvents}
-                      onChange={(e) => setPriceEvents(e.target.value)}
-                      min={0}
-                    />
-                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
-                      VND
-                    </div>
+        {/* Room Details */}
+        <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6">
+          <div className="flex mb-3 items-center gap-2 md:gap-4">
+            <h2 className="font-medium text-lg">Room Details</h2>
+            {!isMobile && (
+              <Tooltip title="Room basic info">
+                <FaQuestionCircle size={23} />
+              </Tooltip>
+            )}
+          </div>
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Home <span className="text-red-500">*</span>
+              </p>
+              <select
+                value={hotelId}
+                onChange={(e) => setHotelId(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+              >
+                <option value="">Select home</option>
+                {stateHotels?.hotels?.map((i, index) => (
+                  <option key={index} value={i._id}>
+                    {i.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Room price per night <span className="text-red-500">*</span>
+              </p>
+              <input
+                type="number"
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Price"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Room Type <span className="text-red-500">*</span>
+              </p>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                value={roomType}
+                onChange={(e) => setRoomType(e.target.value)}
+                placeholder="Room Type"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Room Capacity <span className="text-red-500">*</span>
+              </p>
+              <input
+                type="number"
+                className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
+                value={maxPeople}
+                onChange={(e) => setMaxPeople(e.target.value)}
+                placeholder="2-4 guests"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Services */}
+        <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6">
+          <div className="flex mb-3 items-center gap-2 md:gap-4">
+            <h2 className="font-medium text-lg">Services</h2>
+            {!isMobile && (
+              <Tooltip title="Choose room type first">
+                <FaQuestionCircle size={23} />
+              </Tooltip>
+            )}
+          </div>
+          <div className="grid gap-2 mt-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+            <div
+              onClick={() => setShowModel(true)}
+              className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center justify-center"
+            >
+              <IoCloudUploadOutline />
+              Create service
+            </div>
+            {servicesDefault?.length > 0 && (
+              <Services
+                handleServiceChange={handleServiceChange}
+                setServicesDefault={setServicesDefault}
+                servicesDefault={servicesDefault}
+                services={services}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Facilities */}
+        <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6">
+          <div className="flex mb-3 items-center gap-2 md:gap-4">
+            <h2 className="font-medium text-lg">Facilities</h2>
+            {!isMobile && (
+              <Tooltip title="Optional facilities">
+                <FaQuestionCircle size={23} />
+              </Tooltip>
+            )}
+          </div>
+          <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+            <div
+              onClick={() => setShowCreateFacility(true)}
+              className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center justify-center"
+            >
+              <IoCloudUploadOutline />
+              Create facility
+            </div>
+            {facilitiesDefault?.length > 0 && (
+              <Facilities
+                handleFaChange={handleFaChange}
+                facilities={facilities}
+                setFacilitiesDefault={setFacilitiesDefault}
+                facilitiesDefault={facilitiesDefault}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Price Extra */}
+        <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6 overflow-x-auto">
+          <div className="flex mb-3 items-center gap-2 md:gap-4">
+            <h2 className="font-medium text-lg">Price Extra</h2>
+            {!isMobile && (
+              <Tooltip title="Optional price changes per day">
+                <FaQuestionCircle size={23} />
+              </Tooltip>
+            )}
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <Calendar
+              selectable
+              localizer={localizer}
+              events={eventsDefault}
+              startAccessor="start"
+              endAccessor="end"
+              defaultView="month"
+              views={["month"]}
+              style={{ height: "400px", minWidth: "300px", flex: "1" }}
+              onSelectSlot={handleSelectSlot}
+            />
+            <div className="flex-1 border p-4 rounded-2xl">
+              <div className="flex flex-col gap-2 pb-6 border-b border-gray-300">
+                <p className="text-md">Checked days</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                    (day, idx) => (
+                      <label
+                        key={idx}
+                        className="flex cursor-pointer items-center gap-1"
+                      >
+                        <input
+                          type="checkbox"
+                          onChange={() => handleDayClick(day)}
+                          checked={daysChoosed.includes(day)}
+                        />
+                        <span className="ml-1">{day}</span>
+                      </label>
+                    )
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 pb-6 border-b border-gray-300 mt-4">
+                <p className="text-md">Minimum price per night</p>
+                <div className="flex">
+                  <input
+                    type="number"
+                    className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0 rounded-l-2xl w-full"
+                    placeholder="Price"
+                    value={priceEvents}
+                    onChange={(e) => setPriceEvents(e.target.value)}
+                    min={0}
+                  />
+                  <div className="px-4 py-2 border bg-gray-100 text-gray-500 rounded-r-2xl">
+                    VND
                   </div>
                 </div>
-
-                <div
-                  onClick={handleChangePrice}
-                  className="px-4 py-2 bg-blue-500 text-md text-white flex items-center justify-center cursor-pointer transition duration-200 hover:bg-blue-400"
-                >
-                  Save
-                </div>
+              </div>
+              <div
+                onClick={handleChangePrice}
+                className="px-4 py-2 bg-blue-500 text-md text-white flex items-center justify-center cursor-pointer transition duration-200 hover:bg-blue-400 mt-4 rounded-2xl"
+              >
+                Save
               </div>
             </div>
           </div>
         </div>
+
+        {/* Scroll to top button */}
         <div className="w-full flex mt-2 items-center justify-center cursor-pointer">
           <CiCircleChevUp onClick={handleUp} size={40} />
-        </div>{" "}
+        </div>
       </div>
+
+      {/* Modals */}
       {showModel && (
-        <>
-          <ModelCreateService services={services} setServices={setServices} setShowModel={setShowModel} />
-        </>
+        <ModelCreateService
+          services={services}
+          setServices={setServices}
+          setShowModel={setShowModel}
+        />
       )}
       {showCreateFacility && (
-            <>
-              <ModelCreateFacility facilities={facilities} setFacilities={setFacilities} setShowCreateFacility={setShowCreateFacility} />
-            </>
-        )}
-
-      {modelChangePrice && (
-        <>
-          <div className="fixed top-0  left-0 w-full bg-[#0000004b] h-screen z-50">
-            <div className=" mx-auto mt-36 p-4  w-[40%] overflow-y-scroll  bg-white  shadow-sm">
-              <div className="flex w-full justify-end ">
-                <RxCross1
-                  size={25}
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setModelChangePrice(false);
-                    setInfoChangePrice(null);
-                  }}
-                />
-              </div>
-
-              {infoChangePrice?.slots.length === 1 && (
-                <>
-                  <div className=" flex mt-4 itmes-center gap-4">
-                    <p className="text-lg">Checked day:</p>
-                    <p className="text-lg">
-                      {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
-                    </p>
-                  </div>
-                  <div className="w-full  mt-4 flex items-center">
-                    <input
-                      type="number"
-                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
-                      placeholder="Price"
-                      value={priceChange}
-                      onChange={(e) => setPriceChange(e.target.value)}
-                      min={0}
-                    />
-                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
-                      VND
-                    </div>
-                  </div>
-                  <div
-                    onClick={handlePriceChangeOne}
-                    className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white"
-                  >
-                    <p className="w-full text-center">Save</p>
-                  </div>
-                </>
-              )}
-              {infoChangePrice?.slots.length > 1 && (
-                <>
-                  <div className=" flex mt-4 itmes-center gap-4">
-                    <p className="text-lg">Checked day:</p>
-                    <p className="text-lg">
-                      {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} -{" "}
-                      {moment(infoChangePrice?.end)
-                        .subtract(1, "day")
-                        .format("DD/MM/YYYY")}
-                    </p>
-                  </div>
-                  <div className="w-full  mt-4 flex items-center">
-                    <input
-                      type="number"
-                      className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0"
-                      placeholder="Price"
-                      value={priceChange}
-                      onChange={(e) => setPriceChange(e.target.value)}
-                      min={0}
-                    />
-                    <div className="px-4 py-2 border bg-gray-100 text-gray-500">
-                      VND
-                    </div>
-                  </div>
-                  <div
-                    onClick={handlePriceChangeMulti}
-                    className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-between bg-blue-500 w-full text-white"
-                  >
-                    <p className="w-full text-center">Save</p>
-                  </div>
-                </>
-              )}
+        <ModelCreateFacility
+          facilities={facilities}
+          setFacilities={setFacilities}
+          setShowCreateFacility={setShowCreateFacility}
+        />
+      )}
+      {modelChangePrice && infoChangePrice && (
+        <div className="fixed top-0 left-0 w-full h-screen bg-[#0000004b] z-50 flex items-start justify-center overflow-y-auto p-4">
+          <div className="bg-white w-full md:w-2/5 p-4 rounded-xl relative">
+            <div className="flex w-full justify-end">
+              <RxCross1
+                size={25}
+                className="cursor-pointer"
+                onClick={() => setModelChangePrice(false)}
+              />
             </div>
+            {/* Single slot */}
+            {infoChangePrice?.slots.length === 1 ? (
+              <>
+                <div className="flex mt-4 gap-2 items-center">
+                  <p className="text-lg">Checked day:</p>
+                  <p className="text-lg">
+                    {moment(infoChangePrice?.start).format("DD/MM/YYYY")}
+                  </p>
+                </div>
+                <div className="flex mt-4">
+                  <input
+                    type="number"
+                    className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0 rounded-l-2xl w-full"
+                    placeholder="Price"
+                    value={priceChange}
+                    onChange={(e) => setPriceChange(e.target.value)}
+                  />
+                  <div className="px-4 py-2 border bg-gray-100 text-gray-500 rounded-r-2xl">
+                    VND
+                  </div>
+                </div>
+                <div
+                  onClick={handlePriceChangeOne}
+                  className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-center bg-blue-500 text-white rounded-2xl"
+                >
+                  Save
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex mt-4 gap-2 items-center">
+                  <p className="text-lg">Checked days:</p>
+                  <p className="text-lg">
+                    {moment(infoChangePrice?.slots[0]).format("DD/MM/YYYY")} -{" "}
+                    {moment(infoChangePrice?.end)
+                      .subtract(1, "day")
+                      .format("DD/MM/YYYY")}
+                  </p>
+                </div>
+                <div className="flex mt-4">
+                  <input
+                    type="number"
+                    className="px-4 py-2 border text-gray-500 border-gray-400 border-r-0 rounded-l-2xl w-full"
+                    placeholder="Price"
+                    value={priceChange}
+                    onChange={(e) => setPriceChange(e.target.value)}
+                  />
+                  <div className="px-4 py-2 border bg-gray-100 text-gray-500 rounded-r-2xl">
+                    VND
+                  </div>
+                </div>
+                <div
+                  onClick={handlePriceChangeMulti}
+                  className="mt-6 cursor-pointer px-4 py-2 flex items-center justify-center bg-blue-500 text-white rounded-2xl"
+                >
+                  Save
+                </div>
+              </>
+            )}
           </div>
-          
-        </>
+        </div>
       )}
     </>
   );

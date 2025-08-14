@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import iconMap from "../../data/iconMap"; // import the iconMap
+import iconMap from "../../data/iconMap";
 import { RxCross1 } from "react-icons/rx";
-import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
-import { createPolicyApi, createServicesApi } from "../../../Axios/client/api";
+import { createPolicyApi } from "../../../Axios/client/api";
 import toast from "react-hot-toast";
 
 const ModelCreatePolicy = ({
@@ -16,131 +15,113 @@ const ModelCreatePolicy = ({
 }) => {
   const [icon, setIcon] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  // const [description, setDescription] = useState();
+  const [name, setName] = useState("");
 
   const handleIconChange = (iconKey) => {
     setIcon(iconKey);
-    setDropdownOpen(false); // Close the dropdown after selecting an icon
+    setDropdownOpen(false); // close dropdown after selecting icon
   };
-  const [name, setName] = useState();
 
   const handleClick = async () => {
-    console.log(1);
-    
-    if (!name) {
-      return toast.error("Name must not be empty");
-    }
-   if(!typePolicy){
-    return toast.error("Type of policy must not be empty");
-   }
-   const res = await createPolicyApi({name:name,type:typePolicy,icon:icon})
+    if (!name) return toast.error("Name must not be empty");
+    if (!typePolicy) return toast.error("Type of policy must not be empty");
+
+    const res = await createPolicyApi({ name, type: typePolicy, icon });
     if (res.success) {
-      console.log(res);
-      
       toast.success("Create policy success");
       setShowModel(false);
       setName("");
-      setIcon("");
+      setIcon(null);
       if (setPolicyChecked) {
-        console.log(123);
-
         setPolicyChecked([...policyChecked, res.data._id]);
       }
     } else {
       toast.error(res.message);
       setShowModel(false);
       setName("");
-      setIcon("");
+      setIcon(null);
     }
   };
 
   return (
-    <>
-      <div className="w-full fixed top-0 left-0 h-screen z-50 bg-[#00000042]">
-        <div className="mx-auto p-6 w-[60%] rounded-3xl my-40 bg-white">
-          <div className="w-full flex items-center justify-end">
-            <RxCross1
-              className="cursor-pointer"
-              onClick={() => setShowModel(false)}
-              size={20}
-            />
-          </div>
-          <div className="w-full text-center">
-            <h3 className="font-[500] text-[28px] text-gray-500">
-              Create new policy
-            </h3>
-          </div>
-          <div className="w-full my-4 flex items-center justify-between">
-            <input
-              type="text"
-              placeholder="Service name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-[49%] px-4 py-2 border border-gray-400 rounded-3xl"
-            />
-            <div className="w-[50%] relative ">
-              <div className="flex px-4 py-2 border border-gray-400 rounded-3xl  w-full items-center justify-between">
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="w-full  flex items-center gap-2"
-                >
-                  {icon
-                    ? React.createElement(iconMap[icon], { size: 20 })
-                    : "Select Icon"}{" "}
-                  <p>{icon && icon}</p>
-                </button>
-                <div className="">
-                  <BiChevronDown className="cursor-pointer" size={20} />
-                </div>
-              </div>
+    <div className="fixed top-0 left-0 w-full h-screen z-50 bg-black/40 flex justify-center items-center p-4">
+      <div className="bg-white rounded-3xl w-full max-w-lg p-6 relative overflow-auto max-h-[90vh]">
+        {/* Close button */}
+        <div className="flex justify-end">
+          <RxCross1
+            size={24}
+            className="cursor-pointer"
+            onClick={() => setShowModel(false)}
+          />
+        </div>
 
-              {dropdownOpen && (
-                <div className="absolute overflow-y-auto h-60 w-full mt-2 top-6 left-0 bg-white border border-gray-400 rounded-3xl z-10">
-                  <div className="grid grid-cols-2">
-                    {Object.keys(iconMap).map((iconKey) => (
-                      <button
-                        key={iconKey}
-                        onClick={() => handleIconChange(iconKey)}
-                        className="w-full px-4 py-2 text-left flex items-center gap-2"
-                      >
-                        {React.createElement(iconMap[iconKey], { size: 20 })}{" "}
-                        {iconKey}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <select
-              value={typePolicy}
-              onChange={(e) => setTypePolicy(e.target.value)}
-              className=" w-[49%] px-4 py-2 border border-gray-400 rounded-3xl"
-              name=""
-              id=""
+        {/* Header */}
+        <h3 className="text-center text-2xl font-medium text-gray-700 mb-6">
+          Create New Policy
+        </h3>
+
+        {/* Name & Icon */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-4">
+          <input
+            type="text"
+            placeholder="Policy Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-3xl"
+          />
+
+          <div className="relative flex-1">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-3xl flex items-center justify-between"
             >
-              <option disabled value="" className="text-gray-200">
-                Select type of policy
-              </option>
-              {typePolicyDefault?.map((i, ind) => (
-                <>
-                  <option key={ind} value={i}>
-                    {i}
-                  </option>
-                </>
-              ))}
-            </select>
-            <div
-              onClick={handleClick}
-              className=" w-[50%] cursor-pointer my-4 bg-gray-400 px-4 py-2 rounded-3xl flex items-center justify-center text-white "
-            >
-              Add Policy
-            </div>
+              {icon ? React.createElement(iconMap[icon], { size: 20 }) : "Select Icon"}
+              <BiChevronDown className="ml-2" size={20} />
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute z-10 mt-2 w-full max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-3xl p-2 grid grid-cols-2 gap-2">
+                {Object.keys(iconMap).map((iconKey) => (
+                  <button
+                    key={iconKey}
+                    className="flex items-center gap-2 px-2 py-1 w-full hover:bg-gray-100 rounded-lg"
+                    onClick={() => handleIconChange(iconKey)}
+                  >
+                    {React.createElement(iconMap[iconKey], { size: 20 })}
+                    <span className="truncate">{iconKey}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Type select & Add button */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <select
+            value={typePolicy}
+            onChange={(e) => setTypePolicy(e.target.value)}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-3xl"
+          >
+            <option value="" disabled>
+              Select type of policy
+            </option>
+            {typePolicyDefault?.map((type, idx) => (
+              <option key={idx} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+
+          <button
+            onClick={handleClick}
+            className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-3xl hover:bg-gray-500 transition"
+          >
+            Add Policy
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { addToWishlist, removeFromWishlist } from "../../redux/actions/WishlistAction";
+import { useUser } from "@clerk/clerk-react";
 
 const HotelDetail = () => {
   const [click, setClick] = useState(false);
@@ -17,12 +18,12 @@ const HotelDetail = () => {
   //  const [dataRoom,setDataRoom]=useState({});
   const { slug } = useParams();
   const [data, setData] = useState({});
-  const { isAuthenticated } = useSelector((state) => state.UserReducer);
 
   const stateHotels = useSelector((state) => state.HotelReducer);
   // const [roomType, setRoomType] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isSignedIn, user } = useUser();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -49,7 +50,7 @@ const HotelDetail = () => {
   }, [slug, stateHotels.hotels, wishlist]);
   // useEffect(() => {}, [wishlist]);
   const removeFromWishlistHandler = (data) => {
-    if (isAuthenticated) {
+    if (isSignedIn) {
       setClick(!click);
       dispatch(removeFromWishlist(data));
     } else {
@@ -58,7 +59,7 @@ const HotelDetail = () => {
   };
 
   const addToWishlistHandler = (data) => {
-    if (isAuthenticated) {
+    if (isSignedIn) {
       setClick(!click);
       // console.log(data)
       dispatch(addToWishlist(data));

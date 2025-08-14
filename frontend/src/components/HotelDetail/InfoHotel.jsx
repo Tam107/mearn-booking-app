@@ -117,10 +117,7 @@ const InfoHotel = ({ data }) => {
     }
    
 
-    // if(!stateUser?.isAuthenticated){
-    //   setDisablePaymentButton(false);
-    //   return toast.error("Please login first");
-    // }
+
     let dataPayment = {
       guests: numberOfGuests,
       checkIn,
