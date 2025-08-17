@@ -42,8 +42,6 @@ export const verifyUser =  (req, res, next) => {
 
 export const verifyAdmin =  async(req, res, next) => {
       const {tokenAdmin} = req.cookies
-   
-        
     if(!tokenAdmin){
         return res.status(401).json({
             success:false,
@@ -52,13 +50,9 @@ export const verifyAdmin =  async(req, res, next) => {
     }
     try {
         const decode = jwt.verify(tokenAdmin,process.env.JWT_SECRET);
-
         const admin  = await Admin.findOne({_id:decode.id}).select("-password")
-        req.admin = admin
-     
-        
+        req.admin = admin        
         next()
-
     } catch (error) {
         return res.status(401).json({
             success:false,

@@ -222,7 +222,7 @@ export const login = async (req, res, next) => {
     } catch (error) {
         return res.status(500).json({
             success:false,
-            message:"Error in BE"
+            message:"Error in BE status 500"
         })
     }
 }
