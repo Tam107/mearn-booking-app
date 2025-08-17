@@ -13,6 +13,7 @@ console.log("Base uri",baseURI)
 // Set config defaults when creating the instance
 const instance = axios.create({
     baseURL: baseURI,
+    withCredentials: true, // This is important to include cookies in requests
   });
   
 // document.cookie = `cardID=${localStorage.getItem("cardId")}; path=/`;

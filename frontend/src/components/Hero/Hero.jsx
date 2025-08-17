@@ -37,11 +37,9 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Search form */}
-          <div className='absolute bottom-0 left-0 w-full flex justify-center'>
+          {/* <div className='hidden sm:absolute sm:bottom-0 sm:left-0 sm:w-full sm:flex sm:justify-center'>
             <div className='w-full lg:w-[90%] py-2 pr-3 flex flex-col sm:flex-row items-center rounded-[130px] px-2 shadow-lg bg-[#FFFFFFCC] gap-2'>
 
-              {/* Location */}
               <div className='flex-1 flex items-center gap-3 px-3 py-2 bg-white rounded-full'>
                 <CiLocationOn color='#D1D5DB' size={25}/>
                 <div className='flex flex-col'>
@@ -50,7 +48,6 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Check-in */}
               <div className='flex-1 flex items-center gap-3 px-3 py-2 bg-white rounded-full'>
                 <CiCalendarDate color='#D1D5DB' size={25}/>
                 <div className='flex flex-col'>
@@ -59,7 +56,6 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Check-out */}
               <div className='flex-1 flex items-center gap-3 px-3 py-2 bg-white rounded-full'>
                 <CiCalendarDate color='#D1D5DB' size={25}/>
                 <div className='flex flex-col'>
@@ -68,7 +64,6 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Guests */}
               <div className='flex-1 flex items-center gap-3 px-3 py-2 bg-white rounded-full'>
                 <IoPersonAddOutline color='#D1D5DB' size={25}/>
                 <div className='flex flex-col'>
@@ -77,13 +72,12 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Search button */}
               <div className='bg-[#4F46E5] w-[48px] h-[48px] rounded-full flex items-center justify-center cursor-pointer'>
                 <CiSearch color='white' size={25}/>
               </div>
 
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
   )
