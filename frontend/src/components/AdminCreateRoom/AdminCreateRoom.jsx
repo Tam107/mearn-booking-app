@@ -166,15 +166,6 @@ const AdminCreateRoom = () => {
     });
   };
 
-  // const handleAddFa = async () => {
-  //   if (inputFacility) {
-  //     const res = await createFacilitiesApi({ name: inputFacility });
-  //     setInputFacility("");
-  //     setFacilities([...facilities, res.data._id]);
-  //     setFacilitiesDefault([...facilitiesDefault, res.data]);
-  //   } else {
-  //   }
-  // };
   const handleFaChange = (id) => {
     const isExist = facilities.find((i) => i === id);
     if (isExist) {
