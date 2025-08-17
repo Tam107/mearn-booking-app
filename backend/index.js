@@ -10,6 +10,7 @@ import BookingRoute from "./routes/Booking.js"; // Keep .jsx if necessary
 import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
 import adminsRoute from "./routes/admin.js"; // Keep .jsx if necessary
 import roomsRoute from "./routes/rooms.js";
+import busRoute from "./routes/bus.js"; // Keep .jsx if necessary
 import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser"; // Keep .jsx if necessary
 import cors from "cors";
@@ -69,6 +70,7 @@ app.use("/api/facilityHotel", facilityHotel);
 app.use("/api/upload", uploadRoute);
 app.use("/api/policy", policyRoute);
 app.use("/api/booking", BookingRoute);
+app.use("/api/bus", busRoute);
 app.use("/api/config/paypal", (req,res)=>{
     res.send(CLIENT_ID_PAYPAL)
 });

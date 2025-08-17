@@ -470,6 +470,19 @@ const getPayPalClientApi = async () => {
     }
 }
 
+const busAdminApi = async (path, method, payload = {}) => {
+    try {
+        const URL_LOGIN = '/bus/admin/' + path  
+        const response = await axios[method](URL_LOGIN, payload, { withCredentials: true })        
+        return response
+    } catch (error) {
+        return {
+            success: false,
+            message: error?.response?.data?.message || "Failed to fetch bus data"
+        }
+    }
+}
+
 export {
     registerUser,
     checkTokenOtp,
@@ -506,5 +519,6 @@ export {
     getPayPalClientApi,
     getBookingByEmailApi,
     getAllBookingApi,
-    updateStatusBookingApi
+    updateStatusBookingApi,
+    busAdminApi
 }

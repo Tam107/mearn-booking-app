@@ -4,7 +4,7 @@ import { AdminReducer } from "./reducers/AdminReducer";
 import { WishlistReducer } from "./reducers/WishlistReducer";
 import { HotelReducer } from "./reducers/HotelReducer";
 import { RoomReducer } from "./reducers/RoomReducer";
-
+import { BusReducer } from "./reducers/BusReducer";
 
 const Store = configureStore({
     reducer:{
@@ -12,7 +12,8 @@ const Store = configureStore({
         AdminReducer:AdminReducer,
         WishlistReducer:WishlistReducer,
         HotelReducer:HotelReducer,
-        RoomReducer:RoomReducer
+        RoomReducer:RoomReducer,
+        BusReducer:BusReducer
     }
 })
 
