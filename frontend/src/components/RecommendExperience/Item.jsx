@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToWishlist, removeFromWishlist } from '../../redux/actions/WishlistAction';
 import toast from 'react-hot-toast';
 import { useUser } from "@clerk/clerk-react";
+import {useNavigate} from "react-router";
 
 const Item = ({data}) => {
     const { wishlist } = useSelector((state) => state.WishlistReducer);
@@ -42,6 +43,9 @@ const Item = ({data}) => {
         }
         
       };
+      const navigate = useNavigate();
+
+
   return (
     <>
         <div className='h-[396px] rounded-[24px] border-[1px] border-[#F3F4F6]'>
@@ -63,9 +67,9 @@ const Item = ({data}) => {
                     )
                 }
 
-                <img className='w-full h-full object-cover cursor-pointer rounded-tr-[24px] rounded-tl-[24px] ' src={`${data?.photos?.[0]}`} alt="" />
+                <img onClick={()=> navigate(`/homes/${data.slug}`)} className='w-full h-full object-cover cursor-pointer rounded-tr-[24px] rounded-tl-[24px] ' src={`${data?.photos?.[0]}`} alt="" />
             </div>
-            <div className='w-full p-[16px] rounded-b-[24px] bg-white'>
+            <div onClick={()=> navigate(`/homes/${data.slug}`)} className='w-full p-[16px] rounded-b-[24px] bg-white'>
                 <div className='flex flex-col gap-[10px] mb-[10px] '>
                    
                     <h4 className='text-[18px] font-[500] leading-[28px] min-h-16 flex shrink-0'>{data.name}</h4>

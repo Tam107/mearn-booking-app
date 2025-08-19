@@ -59,6 +59,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
 }));
 
+app.get("/health", async (req, res) => {
+    res.send({message: "Health is ok"})
+})
+
 // route
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
