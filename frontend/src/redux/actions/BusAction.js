@@ -223,3 +223,30 @@ export const updateArrivalPointAdminAction = (payload)=>async(dispatch)=>{
         })
     }
 }
+
+export const createBusAdminAction = (data)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:"createBusAdminRequest",
+        })
+        if(data.success){   
+            dispatch({
+                type:"createBusAdminSuccess",
+                payload:data.data
+            })
+        } 
+       else{
+        dispatch({
+            type:"createBusAdminFailed",
+            payload:"Error when creating bus",
+            errorCreate:data.message
+        })
+       }
+    } catch (error) {
+        dispatch({
+            type:"createBusAdminFailed",
+            payload:error?.response?.data?.message||"Error in axios",
+            errorCreate:error?.response?.data?.message || "Error in axios"
+        })
+    }
+}
