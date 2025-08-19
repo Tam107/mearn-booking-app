@@ -80,7 +80,7 @@ const ModelUpdateFacility = ({ setFacilitiesDefault,facilitiesDefault,setShowMod
             />
           </div>
           <div className="w-full text-center">
-            <h3 className="font-[500] text-[28px] text-gray-500">Edit new service</h3>
+            <h3 className="font-[500] text-[28px] text-gray-500">Edit Facility</h3>
           </div>
           <div className="w-full my-4 flex items-center justify-between">
             <input
@@ -121,7 +121,7 @@ const ModelUpdateFacility = ({ setFacilitiesDefault,facilitiesDefault,setShowMod
               )}
             </div>
           </div>
-          <div onClick={handleClick} className=" w-full cursor-pointer my-4 bg-gray-400 px-4 py-2 rounded-3xl flex items-center justify-center text-white ">Add Service</div>
+          <div onClick={handleClick} className=" w-full cursor-pointer my-4 bg-gray-400 px-4 py-2 rounded-3xl flex items-center justify-center text-white ">Update Facility</div>
 
         </div>
       </div>

@@ -4,20 +4,30 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { Country, State } from "country-state-city";
 import { useMediaQuery } from "react-responsive";
-import { Input, Tooltip } from "antd";
+import { Checkbox, Input, Radio, TimePicker, Tooltip } from "antd";
 import { FaQuestionCircle } from "react-icons/fa";
-import { uploadByFilesApi } from "../../../Axios/client/api";
+import {
+  getAllFacilitiesApi,
+  uploadByFilesApi,
+} from "../../../Axios/client/api";
 import ModalBoardingArrive from "./ModalBoardingArrive";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import BoardingArrive from "./BoardingArrive";
 import { MdOutlineBusAlert } from "react-icons/md";
+import { CiCircleChevUp, CiMoneyCheck1, CiReceipt } from "react-icons/ci";
+import { GoClock } from "react-icons/go";
+import { PiSeatThin } from "react-icons/pi";
+import Facilities from "../Facilities/Facilities";
+import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
+import EditorTiny from "../EditorTiny/EditorTiny";
 
 const AdminCreateBus = () => {
   //default values
   const cities = State.getStatesOfCountry("VN");
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
+  const [facilitiesDefault, setFacilitiesDefault] = useState([]);
   const [modalArrivalPoint, setModalArrivalPoint] = useState(false);
   const stateBus = useSelector((state) => state.BusReducer);
 
@@ -27,6 +37,12 @@ const AdminCreateBus = () => {
   const [photos, setPhotos] = useState([]);
   const [boarding, setBoarding] = useState([]);
   const [arrival, setArrival] = useState([]);
+  const [departureTime, setDepartureTime] = useState();
+  const [arrivalTime, setArrivalTime] = useState();
+  const [showCreateFacility, setShowCreateFacility] = useState(false);
+  const [facilities, setFacilities] = useState([]);
+  const [condition, setCondition] = useState("");
+
   // useEffect
   useEffect(() => {
     if (stateBus?.boardingPointsAdmin?.length > 0 && cityFrom) {
@@ -34,19 +50,24 @@ const AdminCreateBus = () => {
         stateBus?.boardingPointsAdmin.filter((item) => item.city === cityFrom)
       );
     }
-    if (stateBus?.arrivalPointsAdmin?.length > 0 && cityTo) {
-      setArrival(
-        stateBus?.arrivalPointsAdmin.filter((item) => item.city === cityTo)
-      );
-    }
-  }, [stateBus, stateBus?.boardingPointsAdmin, stateBus?.arrivalPointsAdmin, cityFrom, cityTo]);
+  }, [stateBus?.boardingPointsAdmin, cityFrom]);
   useEffect(() => {
     if (stateBus?.arrivalPointsAdmin?.length > 0 && cityTo) {
       setArrival(
         stateBus?.arrivalPointsAdmin.filter((item) => item.city === cityTo)
       );
     }
-  }, [stateBus, stateBus?.arrivalPointsAdmin, cityTo]);
+  }, [stateBus?.arrivalPointsAdmin, cityTo]);
+
+  useEffect(() => {
+    const getDefaultFaicily = async () => {
+      const data = await getAllFacilitiesApi();
+      setFacilitiesDefault(
+        data.data ? data.data.filter((item) => item?.isBus === true) : []
+      );
+    };
+    getDefaultFaicily();
+  }, [showCreateFacility]);
 
   //function
   function removePhoto(filename) {
@@ -70,6 +91,22 @@ const AdminCreateBus = () => {
     } else {
       toast.error("Error");
     }
+  };
+  const handleFaChange = (id) => {
+    const isExist = facilities.find((i) => i === id);
+    if (isExist) {
+      const tmp = facilities.filter((i) => i != id);
+      setFacilities(tmp);
+    } else {
+      return setFacilities([...facilities, id]);
+    }
+  };
+  const handleUp = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth", // This enables the smooth scrolling effect
+    });
   };
   return (
     <>
@@ -178,6 +215,50 @@ const AdminCreateBus = () => {
             </div>
             <div className="flex flex-col gap-2">
               <p className="text-lg">
+                Departure Time <span className="text-red-500">*</span>
+              </p>
+              <div
+                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                className="rounded-[4px] flex relative border-[1px]"
+              >
+                <GoClock
+                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                  className="size-8 border-r-[1px]"
+                />
+                <TimePicker
+                  className="flex-1 !bg-[#F9FAFB] !border-0 !focus:outline-none hover:!border-0 hover:!shadow-none"
+                  format="HH:mm"
+                  value={departureTime}
+                  onChange={(time) => {
+                    setDepartureTime(time);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Arrival Time <span className="text-red-500">*</span>
+              </p>
+              <div
+                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                className="rounded-[4px] flex relative border-[1px]"
+              >
+                <GoClock
+                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                  className="size-8 border-r-[1px]"
+                />
+                <TimePicker
+                  className="flex-1 !bg-[#F9FAFB] !border-0 !focus:outline-none hover:!border-0 hover:!shadow-none"
+                  format="HH:mm"
+                  value={arrivalTime}
+                  onChange={(time) => {
+                    setArrivalTime(time);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
                 Total Seat <span className="text-red-500">*</span>
               </p>
               <div
@@ -189,9 +270,83 @@ const AdminCreateBus = () => {
                   className="size-8 border-r-[1px]"
                 />
                 <Input
-                  className="!border-0 !focus:outline-none hover:!border-0 hover:!shadow-none"
+                  className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
                   type="number"
+                  placeholder="40"
                 />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                PO Name <span className="text-red-500">*</span>
+              </p>
+              <div
+                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                className="rounded-[4px] flex relative border-[1px]"
+              >
+                <CiReceipt
+                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                  className="size-8 border-r-[1px]"
+                />
+                <Input
+                  placeholder="Limousine"
+                  className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Seat(s) <span className="text-red-500">*</span>
+              </p>
+              <div
+                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                className="rounded-[4px] gap-2 flex relative border-[1px] items-center"
+              >
+                <PiSeatThin
+                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                  className="size-8 border-r-[1px]"
+                />
+                <Checkbox.Group
+                  className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
+                  // value={selectedSeats}
+                  // onChange={handleSeatChange}
+                >
+                  <Checkbox value="1">1-1</Checkbox>
+                  <Checkbox value="2">2-2</Checkbox>
+                  {/* <Checkbox value="WC">WC</Checkbox> */}
+                </Checkbox.Group>{" "}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-lg">
+                Price <span className="text-red-500">*</span>
+              </p>
+              <div
+                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                className="rounded-[4px] flex relative border-[1px] items-center"
+              >
+                <CiMoneyCheck1
+                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+                  className="size-8 border-r-[1px]"
+                />
+                <Input
+                  type="number"
+                  className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
+                  placeholder="500$"
+                />
+              </div>
+            </div>
+            <div className="flex w-full flex-col gap-2">
+              <p className="text-lg">Refund & Reschedule Policy</p>
+              <div className="gap-8 flex" style={{ borderColor: "rgba(180, 180, 180, 1)" }}>
+                <Radio.Group className="flex gap-2 mb-4">
+                  <Radio value="reschedule">Reschedule Available</Radio>
+                  <Radio value="no_reschedule">Reschedule Not Available</Radio>
+                </Radio.Group>
+                <Radio.Group className="flex gap-2">
+                  <Radio value="refundable">Refundable</Radio>
+                  <Radio value="norefundable">No refundable</Radio>
+                </Radio.Group>
               </div>
             </div>
           </div>
@@ -275,7 +430,49 @@ const AdminCreateBus = () => {
             )} */}
           </div>
         </div>
+
+        {/* Facilities */}
+        <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6">
+          <div className="flex mb-3 items-center gap-2 md:gap-4">
+            <h2 className="font-medium text-lg">Facilities</h2>
+            {!isMobile && (
+              <Tooltip title="Optional facilities">
+                <FaQuestionCircle size={23} />
+              </Tooltip>
+            )}
+          </div>
+          <div className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+            <div
+              onClick={() => setShowCreateFacility(true)}
+              className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center justify-center"
+            >
+              <IoCloudUploadOutline />
+              Create facility
+            </div>
+            {facilitiesDefault?.length > 0 ? (
+              <Facilities
+                handleFaChange={handleFaChange}
+                facilities={facilities}
+                setFacilitiesDefault={setFacilitiesDefault}
+                facilitiesDefault={facilitiesDefault}
+              />
+            ) : (
+              <p className="col-span-full text-center text-gray-500">
+                No facility available.
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col mt-4 gap-2">
+          <label className="text-xl md:text-2xl font-medium">Terms & Conditions</label>
+          <EditorTiny handleEditorChange={(e)=>{setCondition(e)}} description={condition} />
+        </div>
       </div>
+
+      {/* Scroll to top button */}
+              <div className="w-full flex items-center justify-center cursor-pointer">
+                <CiCircleChevUp  onClick={handleUp} size={40} />
+              </div>
 
       {/* Modals */}
       {modalBoardingPoint && (
@@ -292,6 +489,14 @@ const AdminCreateBus = () => {
           isBoarding={false}
           setShowModel={setModalArrivalPoint}
           city={cityTo}
+        />
+      )}
+      {showCreateFacility && (
+        <ModelCreateFacility
+          facilities={facilities}
+          setFacilities={setFacilities}
+          setShowCreateFacility={setShowCreateFacility}
+          isBus={true}
         />
       )}
     </>

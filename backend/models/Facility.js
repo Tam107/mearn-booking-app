@@ -9,6 +9,10 @@ const FacilitiesHotelSchema = new mongoose.Schema({
             type: String,
          
         },
+        isBus:{
+            type: Boolean,
+            default:false
+        }
     },
     {timestamps: true}
 )
