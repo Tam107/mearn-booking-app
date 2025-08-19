@@ -6,13 +6,15 @@ import { Country, State } from "country-state-city";
 import { useMediaQuery } from "react-responsive";
 import { Checkbox, Input, Radio, TimePicker, Tooltip } from "antd";
 import { FaQuestionCircle } from "react-icons/fa";
+import { useNavigate } from "react-router";
 import {
+  busAdminApi,
   getAllFacilitiesApi,
   uploadByFilesApi,
 } from "../../../Axios/client/api";
 import ModalBoardingArrive from "./ModalBoardingArrive";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BoardingArrive from "./BoardingArrive";
 import { MdOutlineBusAlert } from "react-icons/md";
 import { CiCircleChevUp, CiMoneyCheck1, CiReceipt } from "react-icons/ci";
@@ -21,39 +23,51 @@ import { PiSeatThin } from "react-icons/pi";
 import Facilities from "../Facilities/Facilities";
 import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import EditorTiny from "../EditorTiny/EditorTiny";
+import { createBusAdminAction } from "../../redux/actions/BusAction";
 
 const AdminCreateBus = () => {
+  const dispatch = useDispatch();
   //default values
   const cities = State.getStatesOfCountry("VN");
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
   const [facilitiesDefault, setFacilitiesDefault] = useState([]);
   const [modalArrivalPoint, setModalArrivalPoint] = useState(false);
+  const [boardingDefault, setBoardingDefault] = useState([]);
+  const [arrivalDefault, setArrivalDefault] = useState([]);
   const stateBus = useSelector((state) => state.BusReducer);
 
   // State save
   const [cityFrom, setCityFrom] = useState("");
   const [cityTo, setCityTo] = useState("");
   const [photos, setPhotos] = useState([]);
-  const [boarding, setBoarding] = useState([]);
+  const [boarding,setBoarding] = useState([]);
   const [arrival, setArrival] = useState([]);
   const [departureTime, setDepartureTime] = useState();
   const [arrivalTime, setArrivalTime] = useState();
   const [showCreateFacility, setShowCreateFacility] = useState(false);
   const [facilities, setFacilities] = useState([]);
   const [condition, setCondition] = useState("");
+  const [totalSeats, setTotalSeats] = useState("");
+  const [poName, setPoName] = useState("");
+  const [seat, setSeat] = useState([]);
+  const [price, setPrice] = useState(0);
+  const [policy1, setPolicy1] = useState("");
+  const [policy2, setPolicy2] = useState("");
+  const [policy, setPolicy] = useState([]);
+  const [conditions, setConditions] = useState("");
 
   // useEffect
   useEffect(() => {
     if (stateBus?.boardingPointsAdmin?.length > 0 && cityFrom) {
-      setBoarding(
+      setBoardingDefault(
         stateBus?.boardingPointsAdmin.filter((item) => item.city === cityFrom)
       );
     }
   }, [stateBus?.boardingPointsAdmin, cityFrom]);
   useEffect(() => {
     if (stateBus?.arrivalPointsAdmin?.length > 0 && cityTo) {
-      setArrival(
+      setArrivalDefault(
         stateBus?.arrivalPointsAdmin.filter((item) => item.city === cityTo)
       );
     }
@@ -108,6 +122,54 @@ const AdminCreateBus = () => {
       behavior: "smooth", // This enables the smooth scrolling effect
     });
   };
+  const [loading, setLoading] = useState(false); // Loading state for the button
+
+  const navigate = useNavigate();
+  const addBus = async () => {
+    if (
+      !cityFrom ||
+      !cityTo ||
+      !departureTime ||
+      !arrivalTime ||
+      boarding.length === 0 ||
+      arrival.length === 0 ||
+      !policy1 || !policy2
+    ) {
+      return toast.error("Please fill in all required fields");
+    }
+    const data = {
+      photos,
+      cityFrom,
+      cityTo,
+      departureTime,
+      arrivalTime,
+      totalSeats,
+      poName,
+      seat,
+      price,
+      policy: [policy1, policy2],
+      boarding: boarding,
+      arrival: arrival,
+      facilities,
+      conditions,
+    };
+    setLoading(true);
+    try {
+      const dataResponse = await busAdminApi("createBus", "post", data);
+
+      if (dataResponse.success) {
+        toast.success("Create bus successfully");
+        dispatch(createBusAdminAction(dataResponse));
+        navigate("/dashboard-view-bus");
+      } else {
+        toast.error(dataResponse.message || "Error creating bus");
+      }
+    } catch (error) {
+      toast.error("Something went wrong, please try again.");
+    } finally {
+      setLoading(false); // Re-enable the button after the API call
+    }
+  };
   return (
     <>
       {/* Header */}
@@ -115,10 +177,19 @@ const AdminCreateBus = () => {
         <h2 className="font-[600] text-gray-600 text-[28px] md:text-[36px] leading-[36px] md:leading-[40px] cursor-pointer">
           Create new bus
         </h2>
-        <div className="cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-2 md:gap-4">
-          <TiPlusOutline color="white" size={20} />
+        <div
+          onClick={addBus}
+          className="cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-2 md:gap-4"
+        >
+          {loading ? (
+            <div className="loader"></div> // Custom loading spinner or you can use a library spinner
+          ) : (
+            <TiPlusOutline color="white" size={20} />
+          )}
 
-          <p className="text-white text-md">Add a new bus</p>
+          <p className="text-white text-md">
+            {loading ? "Creating Bus..." : "Add a new bus"}
+          </p>
         </div>
       </div>
       <div className="w-full px-6 py-6">
@@ -174,7 +245,10 @@ const AdminCreateBus = () => {
                 />
                 <select
                   value={cityFrom}
-                  onChange={(e) => setCityFrom(e.target.value)}
+                  onChange={(e) => {
+                    setCityFrom(e.target.value);
+                    setBoarding([]); 
+                  }}
                   className="w-full bg-transparent outline-none"
                 >
                   <option value="" className="text-gray-300 text-sm"></option>
@@ -201,7 +275,10 @@ const AdminCreateBus = () => {
                 />
                 <select
                   value={cityTo}
-                  onChange={(e) => setCityTo(e.target.value)}
+                  onChange={(e) => {
+                    setCityTo(e.target.value);
+                    setArrival([]);
+                  }}
                   className="w-full bg-transparent outline-none"
                 >
                   <option value="" className="text-gray-300 text-sm"></option>
@@ -273,6 +350,12 @@ const AdminCreateBus = () => {
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
                   type="number"
                   placeholder="40"
+                  value={totalSeats}
+                  onChange={(e) =>
+                    setTotalSeats(
+                      e.target.value ? parseInt(e.target.value, 10) : 0
+                    )
+                  }
                 />
               </div>
             </div>
@@ -291,6 +374,8 @@ const AdminCreateBus = () => {
                 <Input
                   placeholder="Limousine"
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
+                  value={poName}
+                  onChange={(e) => setPoName(e.target.value)}
                 />
               </div>
             </div>
@@ -308,8 +393,10 @@ const AdminCreateBus = () => {
                 />
                 <Checkbox.Group
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
-                  // value={selectedSeats}
-                  // onChange={handleSeatChange}
+                  value={seat}
+                  onChange={(e) => {
+                    setSeat(e);
+                  }}
                 >
                   <Checkbox value="1">1-1</Checkbox>
                   <Checkbox value="2">2-2</Checkbox>
@@ -333,17 +420,32 @@ const AdminCreateBus = () => {
                   type="number"
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
                   placeholder="500$"
+                  value={price}
+                  onChange={(e) =>
+                    setPrice(e.target.value ? parseInt(e.target.value, 10) : 0)
+                  }
                 />
               </div>
             </div>
             <div className="flex w-full flex-col gap-2">
               <p className="text-lg">Refund & Reschedule Policy</p>
-              <div className="gap-8 flex" style={{ borderColor: "rgba(180, 180, 180, 1)" }}>
-                <Radio.Group className="flex gap-2 mb-4">
+              <div
+                className="gap-8 flex"
+                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
+              >
+                <Radio.Group
+                  value={policy1}
+                  onChange={(e) => setPolicy1(e.target.value)}
+                  className="flex gap-2 mb-4"
+                >
                   <Radio value="reschedule">Reschedule Available</Radio>
                   <Radio value="no_reschedule">Reschedule Not Available</Radio>
                 </Radio.Group>
-                <Radio.Group className="flex gap-2">
+                <Radio.Group
+                  value={policy2}
+                  onChange={(e) => setPolicy2(e.target.value)}
+                  className="flex gap-2"
+                >
                   <Radio value="refundable">Refundable</Radio>
                   <Radio value="norefundable">No refundable</Radio>
                 </Radio.Group>
@@ -375,9 +477,9 @@ const AdminCreateBus = () => {
               Create boarding point
             </div>
 
-            {boarding?.length > 0 ? (
-              boarding.map((item, index) => (
-                <BoardingArrive data={item} key={item._id} isBoarding={true} />
+            {boardingDefault?.length > 0 ? (
+              boardingDefault.map((item, index) => (
+                <BoardingArrive array={boarding} setArray={setBoarding} data={item} key={item._id} isBoarding={true} />
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
@@ -410,9 +512,9 @@ const AdminCreateBus = () => {
               Create arrival point
             </div>
 
-            {arrival?.length > 0 ? (
-              arrival.map((item, index) => (
-                <BoardingArrive data={item} key={item._id} isBoarding={false} />
+            {arrivalDefault?.length > 0 ? (
+              arrivalDefault.map((item, index) => (
+                <BoardingArrive array={arrival} setArray={setArrival} data={item} key={item._id} isBoarding={false} />
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
@@ -464,15 +566,22 @@ const AdminCreateBus = () => {
           </div>
         </div>
         <div className="flex flex-col mt-4 gap-2">
-          <label className="text-xl md:text-2xl font-medium">Terms & Conditions</label>
-          <EditorTiny handleEditorChange={(e)=>{setCondition(e)}} description={condition} />
+          <label className="text-xl md:text-2xl font-medium">
+            Terms & Conditions
+          </label>
+          <EditorTiny
+            handleEditorChange={(e) => {
+              setCondition(e);
+            }}
+            description={condition}
+          />
         </div>
       </div>
 
       {/* Scroll to top button */}
-              <div className="w-full flex items-center justify-center cursor-pointer">
-                <CiCircleChevUp  onClick={handleUp} size={40} />
-              </div>
+      <div className="w-full flex items-center justify-center cursor-pointer">
+        <CiCircleChevUp onClick={handleUp} size={40} />
+      </div>
 
       {/* Modals */}
       {modalBoardingPoint && (

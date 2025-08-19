@@ -1,4 +1,5 @@
 import BoardingArrive from "../models/BoardingArrive.js"
+import Bus from "../models/Bus.js"
 
 export const getAllBoardingPoint = async (req, res) => {
     try {
@@ -109,5 +110,25 @@ export const updatePoint = async (req, res) => {
             success: false,
             message: "Error in BE",
         });
+    }
+}
+
+export const createBus = async (req, res) => {
+    try {
+        const newBus = new Bus(req.body);
+        await newBus.save();
+        return res.json({
+            success: true,
+            message: "Create bus successfully",
+            data: newBus
+        });
+    } catch (error) {
+        console.log(error);
+        
+        return res.json({
+            success: false,
+            message: "Error in BE",
+        })
+        
     }
 }

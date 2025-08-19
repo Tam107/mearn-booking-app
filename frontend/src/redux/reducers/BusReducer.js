@@ -112,4 +112,18 @@ export const BusReducer = createReducer(initialState, (builder) => {
             state.error = action.payload;
         })
 
+        //create
+        .addCase("createBusAdminRequest", (state) => {
+            state.loading = true;
+        })
+        .addCase("createBusAdminSuccess", (state, action) => {
+            state.loading = false;
+            state.busesAdmin = [...state.busesAdmin, action.payload];
+        })
+        .addCase("createBusAdminFailed", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        });
+    
+
 });
