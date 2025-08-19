@@ -170,7 +170,7 @@ const AdminViewHotel = () => {
             )}
           </div>
           {/* Get all */}
-          <Button
+          <div
             onClick={() => {
               setHotelSelected("");
               setHotelSelectedId("");
@@ -178,10 +178,10 @@ const AdminViewHotel = () => {
               setInput("");
               setHotelPopup(stateHotels.hotels);
             }}
-            className="rounded-3xl"
-          >
+            className="cursor-pointer shadow-2xl px-4 border border-gray-300 bg-white p-2 flex items-center justify-center rounded-3xl whitespace-nowrap"
+            >
             Get All
-          </Button>
+          </div>
         </div>
         {/* Create button */}
         <Link

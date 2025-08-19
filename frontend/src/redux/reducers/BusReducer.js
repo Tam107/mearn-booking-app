@@ -123,7 +123,19 @@ export const BusReducer = createReducer(initialState, (builder) => {
         .addCase("createBusAdminFailed", (state, action) => {
             state.loading = false;
             state.error = action.payload;
-        });
-    
+        })
+        
+        //get bus
+        .addCase("getAllBusesAdminRequest", (state) => {
+            state.loading = true;
+        })
+        .addCase("getAllBusesAdminSuccess", (state, action) => {
+            state.loading = false;
+            state.busesAdmin = action.payload;
+        })
+        .addCase("getAllBusesAdminFailed", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
 
 });

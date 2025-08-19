@@ -250,3 +250,31 @@ export const createBusAdminAction = (data)=>async(dispatch)=>{
         })
     }
 }
+
+export const getAllBusesAdminAction = ()=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:"getAllBusesAdminRequest",
+        })
+        const data = await busAdminApi("getAll-bus","get"); 
+        if(data.success){
+            dispatch({
+                type:"getAllBusesAdminSuccess",
+                payload:data.data
+            })
+        } 
+       else{
+        dispatch({
+            type:"getAllBusesAdminFailed",
+            payload:"Error when get",
+
+        })
+       }
+    } catch (error) {
+        dispatch({
+            type:"getAllBusesAdminFailed",
+            payload:error?.response?.data?.message||"Error in axios",
+
+        })
+    }
+}

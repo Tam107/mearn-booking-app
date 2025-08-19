@@ -132,3 +132,20 @@ export const createBus = async (req, res) => {
         
     }
 }
+
+export const getAllBus = async (req, res) => {
+    try {
+        const buses = await Bus.find().populate("boarding").populate("arrival").populate("facilities").sort({ createdAt: -1 });
+        return res.json({
+            success: true,
+            message: "Get all buses successfully",
+            data: buses
+        });
+    } catch (error) {
+        // console.log(error)
+        return res.json({
+            success: false,
+            message: "Error in BE",
+        })
+    }
+}
