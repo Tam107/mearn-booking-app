@@ -33,6 +33,7 @@ import OrderDetailPage from './pages/OrderDetailPage/OrderDetailPage.jsx';
 import AdminViewOrdersPage from './pages/AdminViewOrdersPage/AdminViewOrdersPage.jsx';
 import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin.jsx';
 import BusPage from './pages/BusPage/BusPage.jsx';
+import AdminViewBusPage from './pages/AdminViewBusPage/AdminViewBusPage.jsx';
 
 function App() {
 
@@ -91,7 +92,7 @@ function App() {
   />
   <Route
     path="/dashboard-view-bus"
-    element={<PrivateRouteAdmin><AdminViewHotelPage /></PrivateRouteAdmin>}
+    element={<PrivateRouteAdmin><AdminViewBusPage /></PrivateRouteAdmin>}
   />
   <Route
     path="/dashboard-hotel/:slug"

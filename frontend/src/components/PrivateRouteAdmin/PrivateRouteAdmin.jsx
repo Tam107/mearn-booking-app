@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import AdminLayout from "../AdminLayout/AdminLayout.jsx"; // import layout admin
-import { getAllArrivalPointAdminAction, getAllBoardingPointAdminAction } from "../../redux/actions/BusAction.js";
+import { getAllArrivalPointAdminAction, getAllBoardingPointAdminAction, getAllBusesAdminAction } from "../../redux/actions/BusAction.js";
 import Store from "../../redux/store.js";
 
 const PrivateRouteAdmin = ({ children }) => {
@@ -15,6 +15,7 @@ const PrivateRouteAdmin = ({ children }) => {
     if (!stateBus?.boardingPointsAdmin) {  
       Store.dispatch(getAllBoardingPointAdminAction());              
       Store.dispatch(getAllArrivalPointAdminAction());              
+      Store.dispatch(getAllBusesAdminAction());              
     }
   }, [dispatch, isAdmin, stateBus]);
 
