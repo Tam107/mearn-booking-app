@@ -5,14 +5,16 @@ import { useMediaQuery } from "react-responsive";
 import { deleteBoardingPointAdminAction, deleteArrivalPointAdminAction } from "../../redux/actions/BusAction";
 import EditModalBoardingArrive from "./EditModalBoardingArrive";
 
-const BoardingArrive = ({ isBoarding, data }) => {
+const BoardingArrive = ({ isBoarding, data, array, setArray }) => {
   const [hover, setHover] = useState(false);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  const [showEdit,setShowEdit] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const handleDelete = () => {
     dispatch(isBoarding ? deleteBoardingPointAdminAction(data?._id) : deleteArrivalPointAdminAction(data?._id));
+    let newTmp = array.filter((item) => item !== data._id);
+    setArray(newTmp);
   };
   const renderIcons = () => (
     <div className="absolute top-1 right-1 flex items-center gap-2">
@@ -30,6 +32,15 @@ const BoardingArrive = ({ isBoarding, data }) => {
       </div>
     </div>
   );
+  const handleChange = (e) => {
+    if (e.target.checked) {
+      setArray((prevArray) => [...prevArray, data._id]);
+    } else {
+      let newTmp = array.filter((item) => item !== data._id);
+      setArray(newTmp);
+    }
+  };
+  
   return (
     <>
       <div
@@ -39,7 +50,7 @@ const BoardingArrive = ({ isBoarding, data }) => {
       >
         <label className="cursor-pointer h-20 border border-gray-300 p-2 flex rounded-2xl gap-1 items-center">
           <input
-            // onChange={() => handleServiceChange(service?._id)}
+            onChange={handleChange}
             type="checkbox"
             className="mr-2"
             // checked={services?.includes(service?._id)}

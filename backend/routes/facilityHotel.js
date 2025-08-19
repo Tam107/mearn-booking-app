@@ -32,13 +32,13 @@ router.post("/create",async(req,res)=>{
          const Exist = await Facility.find({
                     name: { $regex: `^${faciName}$`, $options: 'i' } // So sánh chính xác, không phân biệt chữ hoa chữ thường
                   });
-                if (Exist.length>0) {
+                // if (Exist.length>0) {
                     
-                    return res.json({
-                        success: false,
-                        message: "This facility already exists"
-                    })
-                }
+                //     return res.json({
+                //         success: false,
+                //         message: "This facility already exists"
+                //     })
+                // }
         
         const record = new Facility(req.body)        
         await record.save()
