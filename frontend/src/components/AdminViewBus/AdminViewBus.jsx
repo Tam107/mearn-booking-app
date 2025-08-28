@@ -80,7 +80,6 @@ const AdminViewBus = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      width: 300,
       width: 150,
       ellipsis: true,
       render: (text) =>
