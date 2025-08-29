@@ -106,7 +106,7 @@ const Header = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    className="stroke-current text-gray-800 hover:text-pink-500"
+                    className="stroke-current text-gray-800 hover:text-pink-500 cursor-pointer"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>

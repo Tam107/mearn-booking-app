@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PiBusThin } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { DatePicker } from "antd";
+import { Select } from "antd";
 import { GoPerson } from "react-icons/go";
 import { IoIosSearch } from "react-icons/io";
 import { State } from "country-state-city";
@@ -59,7 +60,7 @@ const BusForm = () => {
           <h2 className="font-[600] pb-2 text-[36px] leading-[40px] text-[#1F2937]">
             Book Bus Travel Shuttle Tickets with Promo Price
           </h2>
-          <p className="font-[400] mx-10 text-[16px] leading-[24px] text-[#6B7280]">
+          <p className="font-[400]  mx-10 text-[16px] leading-[24px] text-[#6B7280]">
             Booking bus and travel shuttle tickets is now as easy as shopping
             online from Highlights of Vietnam online agent ticket. Find complete
             information of bus and travel routes, schedules, boarding points,
@@ -67,100 +68,103 @@ const BusForm = () => {
             SuperApp.
           </p>
         </div>
-        <div className="mx-auto w-[960px]">
-          <div
-            style={{
-              boxShadow: "0px 4px 10px rgba(3, 18, 26, 0.15)",
-              backgroundColor: "rgba(255,255,255,1.00)",
-            }}
-            className="pt-5 pb-10 px-3 rounded-lg flex flex-col gap-3"
-          >
-            <div className="">
-              <h3 className="text-sm font-bold pb-1">Bus & Shuttle Ticket</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-x-6">
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[12px] font-bold">From</h4>
-                <div className="relative rounded-sm border-[1px]">
-                  <PiBusThin className="absolute top-0 border-r-[1px] p-1 size-8" />
-                  <select
-                    placeholder="Da Lat"
-                    type="text"
-                    className="h-8 w-full font-sm font-[400] text-[14px] rounded-sm pl-9"
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                  >
-                    <option>Select city</option>
-                    {cities.map((c) => (
-                      <option key={`from-${c.isoCode}`} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[12px] font-bold">To</h4>
-                <div className="relative rounded-sm border-[1px]">
-                  <PiBusThin className="absolute top-0 border-r-[1px] p-1 size-8" />
-                  <select
-                    placeholder="Da Lat"
-                    type="text"
-                    className="h-8 w-full font-sm font-[400] text-[14px] rounded-sm pl-9"
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                  >
-                    <option>Select city</option>
-                    {cities.map((c) => (
-                      <option key={`to-${c.isoCode}`} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-x-6">
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[12px] font-bold">Departure Date</h4>
-                <div className="relative rounded-sm border-[1px]">
-                  <SlCalender className="absolute top-0 border-r-[1px] p-1 size-8 z-10" />
+          <div className="mx-auto w-11/12  px-4 sm:px-6 lg:px-8">
+              <div className="bg-white shadow-xl rounded-2xl p-6 sm:p-6 flex flex-col gap-8 border border-gray-100">
+                  {/* Header */}
+                  <div className="text-center">
+                      <h3 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
+                          🚌 Bus & Shuttle Ticket
+                      </h3>
+                      <p className="text-sm text-gray-500 mt-1">
+                          Find your perfect ride quickly
+                      </p>
+                  </div>
 
-                  <DatePicker
-                    value={departureDate ? dayjs(departureDate) : null}
-                    onChange={(date, dateString) =>
-                      setDepartureDate(dateString)
-                    }
-                    className="h-8 w-full font-sm font-[400] text-[14px] !rounded-sm !pl-9"
-                    suffixIcon={null}
-                  />
-                </div>
+                  {/* From & To */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="flex flex-col gap-2">
+                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                              From
+                          </label>
+                          <div className="relative">
+                              <PiBusThin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-20 w-5 z-10" />
+                              <Select
+                                  showSearch
+                                  placeholder="Select city"
+                                  value={from}
+                                  size={"large"}
+                                  onChange={(value) => setFrom(value)}
+                                  options={cities.map((c) => ({ value: c.id, label: c.name }))}
+                                  className="w-full h-15 p-4 pl-8 [&_.ant-select-selector]:h-12 [&_.ant-select-selector]:rounded-lg [&_.ant-select-selector]:border-gray-200 hover:[&_.ant-select-selector]:border-gray-300 [&_.ant-select-selector]:focus:border-blue-500 [&_.ant-select-selector]:focus:ring-2 [&_.ant-select-selector]:focus:ring-blue-500"
+                              />
+                          </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                              To
+                          </label>
+                          <div className="relative">
+                              <PiBusThin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 z-10" />
+                              <Select
+                                  showSearch
+                                  placeholder="Select city"
+                                  value={to}
+                                  size={"large"}
+                                  onChange={(value) => setTo(value)}
+                                  options={cities.map((c) => ({ value: c.id, label: c.name }))}
+                                  className="w-full h-12 pl-8 [&_.ant-select-selector]:h-12 [&_.ant-select-selector]:rounded-lg [&_.ant-select-selector]:border-gray-200 hover:[&_.ant-select-selector]:border-gray-300 [&_.ant-select-selector]:focus:border-blue-500 [&_.ant-select-selector]:focus:ring-2 [&_.ant-select-selector]:focus:ring-blue-500"
+                              />
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* Departure & Seats */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                      <div className="flex flex-col gap-2">
+                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                              Departure Date
+                          </label>
+                          <div className="relative">
+                              <SlCalender className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                              <DatePicker
+                                  value={departureDate ? dayjs(departureDate) : null}
+                                  onChange={(date, dateString) => setDepartureDate(dateString)}
+                                  className="w-full h-12 pl-8 [&_.ant-picker-input>input]:text-sm [&_.ant-picker-input>input]:pl-2 [&_.ant-picker]:h-12 [&_.ant-picker]:rounded-lg [&_.ant-picker]:border-gray-200 hover:[&_.ant-picker]:border-gray-300 focus:[&_.ant-picker]:border-blue-500 focus:[&_.ant-picker]:ring-2 focus:[&_.ant-picker]:ring-blue-500"
+                                  suffixIcon={null}
+                              />
+                          </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                              No. of Seats
+                          </label>
+                          <div className="relative">
+                              <GoPerson className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                              <input
+                                  type="text"
+                                  placeholder="2"
+                                  className="w-full h-12 pl-10 pr-4 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white hover:border-gray-300"
+                                  value={seats}
+                                  onChange={(e) => setSeats(e.target.value)}
+                              />
+                          </div>
+                      </div>
+
+                      {/* Button */}
+                      <div className="flex items-end">
+                          <button
+                              onClick={handleSubmit}
+                              className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg flex items-center justify-center gap-2 font-medium shadow-md hover:scale-[1.02] hover:from-orange-600 hover:to-orange-700 active:scale-95 transition-all duration-300"
+                          >
+                              <IoIosSearch className="h-5 w-5" />
+                              Search
+                          </button>
+                      </div>
+                  </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[12px] font-bold">No. of Seats</h4>
-                <div className="relative rounded-sm border-[1px]">
-                  <GoPerson className="absolute top-0 border-r-[1px] p-1 size-8" />
-                  <input
-                    type="text"
-                    placeholder="2"
-                    className="h-8 w-full font-[400] text-[14px] rounded-sm pl-9"
-                    value={seats}
-                    onChange={(e) => setSeats(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-1 justify-end">
-                <div
-                  onClick={handleSubmit}
-                  className=" cursor-pointer border-[#FF5E20] relative bg-[#FF5E20] flex h-[34px] items-center justify-center gap-2 rounded-sm border-[1px]"
-                >
-                  <IoIosSearch color="white" className="size-6" />
-                  <h4 className="text-white">Search</h4>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
       </div>
     </>
   );
