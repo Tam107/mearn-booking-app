@@ -68,98 +68,83 @@ const BusForm = () => {
             SuperApp.
           </p>
         </div>
-          <div className="mx-auto w-11/12  px-4 sm:px-6 lg:px-8">
-              <div className="bg-white shadow-xl rounded-2xl p-6 sm:p-6 flex flex-col gap-8 border border-gray-100">
-                  {/* Header */}
-                  <div className="text-center">
-                      <h3 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
-                          🚌 Bus & Shuttle Ticket
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                          Find your perfect ride quickly
-                      </p>
+          make this form more beautifully and modern way
+          <div className="mx-auto w-11/12 px-4 sm:px-6 lg:px-8">
+              <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-6 sm:p-8 flex flex-col gap-6">
+                  <div>
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Bus & Shuttle Ticket</h3>
                   </div>
-
-                  {/* From & To */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div className="flex flex-col gap-2">
-                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                              From
-                          </label>
+                          <label className="text-sm font-medium text-gray-700">From</label>
                           <div className="relative">
-                              <PiBusThin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-20 w-5 z-10" />
-                              <Select
-                                  showSearch
-                                  placeholder="Select city"
+                              <PiBusThin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+                              <select
+                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
                                   value={from}
-                                  size={"large"}
-                                  onChange={(value) => setFrom(value)}
-                                  options={cities.map((c) => ({ value: c.id, label: c.name }))}
-                                  className="w-full h-15 p-4 pl-8 [&_.ant-select-selector]:h-12 [&_.ant-select-selector]:rounded-lg [&_.ant-select-selector]:border-gray-200 hover:[&_.ant-select-selector]:border-gray-300 [&_.ant-select-selector]:focus:border-blue-500 [&_.ant-select-selector]:focus:ring-2 [&_.ant-select-selector]:focus:ring-blue-500"
-                              />
+                                  onChange={(e) => setFrom(e.target.value)}
+                              >
+                                  <option value="">Select city</option>
+                                  {cities.map((c) => (
+                                      <option key={`from-${c.isoCode}`} value={c.id}>
+                                          {c.name}
+                                      </option>
+                                  ))}
+                              </select>
                           </div>
                       </div>
-
                       <div className="flex flex-col gap-2">
-                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                              To
-                          </label>
+                          <label className="text-sm font-medium text-gray-700">To</label>
                           <div className="relative">
-                              <PiBusThin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 z-10" />
-                              <Select
-                                  showSearch
-                                  placeholder="Select city"
+                              <PiBusThin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+                              <select
+                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
                                   value={to}
-                                  size={"large"}
-                                  onChange={(value) => setTo(value)}
-                                  options={cities.map((c) => ({ value: c.id, label: c.name }))}
-                                  className="w-full h-12 pl-8 [&_.ant-select-selector]:h-12 [&_.ant-select-selector]:rounded-lg [&_.ant-select-selector]:border-gray-200 hover:[&_.ant-select-selector]:border-gray-300 [&_.ant-select-selector]:focus:border-blue-500 [&_.ant-select-selector]:focus:ring-2 [&_.ant-select-selector]:focus:ring-blue-500"
-                              />
+                                  onChange={(e) => setTo(e.target.value)}
+                              >
+                                  <option value="">Select city</option>
+                                  {cities.map((c) => (
+                                      <option key={`to-${c.isoCode}`} value={c.id}>
+                                          {c.name}
+                                      </option>
+                                  ))}
+                              </select>
                           </div>
                       </div>
                   </div>
-
-                  {/* Departure & Seats */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                       <div className="flex flex-col gap-2">
-                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                              Departure Date
-                          </label>
+                          <label className="text-sm font-medium text-gray-700">Departure Date</label>
                           <div className="relative">
-                              <SlCalender className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                              <SlCalender className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-8 w-5" />
                               <DatePicker
                                   value={departureDate ? dayjs(departureDate) : null}
                                   onChange={(date, dateString) => setDepartureDate(dateString)}
-                                  className="w-full h-12 pl-8 [&_.ant-picker-input>input]:text-sm [&_.ant-picker-input>input]:pl-2 [&_.ant-picker]:h-12 [&_.ant-picker]:rounded-lg [&_.ant-picker]:border-gray-200 hover:[&_.ant-picker]:border-gray-300 focus:[&_.ant-picker]:border-blue-500 focus:[&_.ant-picker]:ring-2 focus:[&_.ant-picker]:ring-blue-500"
+                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
                                   suffixIcon={null}
                               />
                           </div>
                       </div>
-
                       <div className="flex flex-col gap-2">
-                          <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                              No. of Seats
-                          </label>
+                          <label className="text-sm font-medium text-gray-700">No. of Seats</label>
                           <div className="relative">
-                              <GoPerson className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                              <GoPerson className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
                               <input
                                   type="text"
                                   placeholder="2"
-                                  className="w-full h-12 pl-10 pr-4 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white hover:border-gray-300"
+                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
                                   value={seats}
                                   onChange={(e) => setSeats(e.target.value)}
                               />
                           </div>
                       </div>
-
-                      {/* Button */}
-                      <div className="flex items-end">
+                      <div className="flex flex-col gap-2 justify-end">
                           <button
                               onClick={handleSubmit}
-                              className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg flex items-center justify-center gap-2 font-medium shadow-md hover:scale-[1.02] hover:from-orange-600 hover:to-orange-700 active:scale-95 transition-all duration-300"
+                              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-2.5 rounded-md flex items-center justify-center gap-2 hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-sm"
                           >
                               <IoIosSearch className="h-5 w-5" />
-                              Search
+                              <span className="text-sm font-medium">Search</span>
                           </button>
                       </div>
                   </div>
