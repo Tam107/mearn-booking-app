@@ -94,7 +94,8 @@ const AdminCreateHotel = () => {
     for (let i = 0; i < files.length; i++) data.append("photos", files[i]);
 
     const res = await uploadByFilesApi(data);
-    if (res.success) setPhotos([...photos, ...res.data.map((item) => item.url)]);
+    if (res.success)
+      setPhotos([...photos, ...res.data.map((item) => item.url)]);
     else toast.error("Error uploading files");
   };
 
@@ -144,8 +145,10 @@ const AdminCreateHotel = () => {
     if (!cheapestPrice) return toast.error("Please enter price");
     if (cheapestPrice < 0) return toast.error("Invalid price");
     if (!address?.trim()) return toast.error("Address cannot be empty");
-    if (!roomType.length) return toast.error("At least one room type is required");
-    if (!services.length) return toast.error("Please select at least one service");
+    if (!roomType.length)
+      return toast.error("At least one room type is required");
+    if (!services.length)
+      return toast.error("Please select at least one service");
     if (!checkIn) return toast.error("Check in time cannot be empty");
     if (!checkOut) return toast.error("Check out time cannot be empty");
 
@@ -168,9 +171,18 @@ const AdminCreateHotel = () => {
     if (res.success) {
       toast.success("Home has been successfully created.");
       navigate("/dashboard-view-homes");
-      setName(""); setType("Hotel"); setCity(""); setAddress(""); setCheapestPrice();
-      setRoomType([]); setCheckIn(dayjs("14:00","HH:mm")); setCheckOut(dayjs("12:00","HH:mm"));
-      setLinkPhoto(""); setPhotos([]); setDescription(""); setServices([]);
+      setName("");
+      setType("Hotel");
+      setCity("");
+      setAddress("");
+      setCheapestPrice();
+      setRoomType([]);
+      setCheckIn(dayjs("14:00", "HH:mm"));
+      setCheckOut(dayjs("12:00", "HH:mm"));
+      setLinkPhoto("");
+      setPhotos([]);
+      setDescription("");
+      setServices([]);
       dispatch(getAllRoomsAction());
       dispatch(getAllHotelsAction());
     } else toast.error("Unable to create home. Please try again later.");
@@ -178,9 +190,10 @@ const AdminCreateHotel = () => {
 
   return (
     <div className="w-full px-4 md:px-6 py-6">
-      <h2 className="font-semibold text-gray-600 text-3xl md:text-4xl mb-6">Create new home</h2>
+      <h2 className="font-semibold text-gray-600 text-3xl md:text-4xl mb-6">
+        Create new home
+      </h2>
       <form className="w-full space-y-6">
-
         {/* Name */}
         <div className="flex flex-col">
           <label className="text-xl md:text-2xl font-medium">Name</label>
@@ -196,14 +209,20 @@ const AdminCreateHotel = () => {
         {/* Type & City */}
         <div className="flex flex-col md:flex-row md:justify-between gap-4">
           <div className="flex-1 flex flex-col">
-            <label className="text-xl md:text-2xl font-medium">Type of Accommodation</label>
+            <label className="text-xl md:text-2xl font-medium">
+              Type of Accommodation
+            </label>
             <p className="text-sm text-gray-400 mb-2">Hotel, Villa, House...</p>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
             >
-              {typeDefault.map((i, idx) => <option key={idx} value={i}>{i}</option>)}
+              {typeDefault.map((i, idx) => (
+                <option key={idx} value={i}>
+                  {i}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex-1 flex flex-col">
@@ -215,7 +234,11 @@ const AdminCreateHotel = () => {
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
             >
               <option value="">Select City</option>
-              {cities.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              {cities.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -223,7 +246,9 @@ const AdminCreateHotel = () => {
         {/* Price & Address */}
         <div className="flex flex-col md:flex-row md:justify-between gap-4">
           <div className="flex-1 flex flex-col">
-            <label className="text-xl md:text-2xl font-medium">Cheapest price</label>
+            <label className="text-xl md:text-2xl font-medium">
+              Cheapest price
+            </label>
             <input
               className="w-full px-4 py-2 border border-gray-400 rounded-3xl"
               type="number"
@@ -246,7 +271,9 @@ const AdminCreateHotel = () => {
         {/* Room Types */}
         <div className="flex flex-col">
           <div className="flex flex-col md:flex-row md:justify-between items-center gap-2 mb-2">
-            <label className="text-xl md:text-2xl font-medium">Rooms Type</label>
+            <label className="text-xl md:text-2xl font-medium">
+              Rooms Type
+            </label>
             <div className="flex gap-2 w-full md:w-auto">
               <input
                 value={inputRoomType}
@@ -286,7 +313,9 @@ const AdminCreateHotel = () => {
         {/* Photos */}
         <div className="flex flex-col">
           <label className="text-xl md:text-2xl font-medium">Photos</label>
-          <p className="text-sm text-gray-400 mb-2">Add images via link or upload</p>
+          <p className="text-sm text-gray-400 mb-2">
+            Add images via link or upload
+          </p>
           <div className="flex flex-col sm:flex-row gap-2 mb-2">
             <input
               type="text"
@@ -304,13 +333,23 @@ const AdminCreateHotel = () => {
             </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-            <label className="cursor-pointer border rounded-2xl p-8 flex items-center justify-center text-2xl text-gray-600">
-              <input type="file" multiple className="hidden" onChange={addPhotoByFile} />
+            <label className="border border-gray-300 border-dashed cursor-pointer bg-transparent rounded-2xl p-6 flex items-center justify-center text-2xl text-gray-600">
+              <input
+                type="file"
+                multiple
+                className="hidden"
+                onChange={addPhotoByFile}
+              />
               <IoCloudUploadOutline />
+              Upload
             </label>
             {photos.map((item, idx) => (
               <div key={idx} className="relative h-32">
-                <img src={item} alt="hotel" className="w-full h-full object-cover rounded-2xl" />
+                <img
+                  src={item}
+                  alt="hotel"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
                 <span
                   onClick={(ev) => removePhoto(ev, item)}
                   className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full cursor-pointer hover:bg-red-700"
@@ -325,13 +364,18 @@ const AdminCreateHotel = () => {
         {/* Description */}
         <div className="flex flex-col">
           <label className="text-xl md:text-2xl font-medium">Description</label>
-          <EditorTiny handleEditorChange={handleEditorChange} description={description} />
+          <EditorTiny
+            handleEditorChange={handleEditorChange}
+            description={description}
+          />
         </div>
 
         {/* Services */}
         <div className="flex flex-col">
           <label className="text-xl md:text-2xl font-medium">Services</label>
-          <p className="text-sm text-gray-400 mb-2">Select services to offer guests</p>
+          <p className="text-sm text-gray-400 mb-2">
+            Select services to offer guests
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
             <div
               onClick={() => setShowModel(true)}
@@ -366,7 +410,11 @@ const AdminCreateHotel = () => {
                 <option disabled value="">
                   Select type
                 </option>
-                {typePolicyDefault.map((i, idx) => <option key={idx} value={i}>{i}</option>)}
+                {typePolicyDefault.map((i, idx) => (
+                  <option key={idx} value={i}>
+                    {i}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -391,10 +439,10 @@ const AdminCreateHotel = () => {
 
         {/* Check in/out */}
         <div className="flex flex-col">
-          <label className="text-xl md:text-2xl font-medium">Check in & out times</label>
-          <p className="text-sm text-gray-400 mb-2">
-            Set check in/out times
-          </p>
+          <label className="text-xl md:text-2xl font-medium">
+            Check in & out times
+          </label>
+          <p className="text-sm text-gray-400 mb-2">Set check in/out times</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <TimePicker
               onChange={(time) => setCheckIn(time)}
@@ -421,7 +469,13 @@ const AdminCreateHotel = () => {
         </button>
       </form>
 
-      {showModel && <ModelCreateService services={services} setServices={setServices} setShowModel={setShowModel} />}
+      {showModel && (
+        <ModelCreateService
+          services={services}
+          setServices={setServices}
+          setShowModel={setShowModel}
+        />
+      )}
       {showModelPolicy && (
         <ModelCreatePolicy
           typePolicyDefault={typePolicyDefault}
