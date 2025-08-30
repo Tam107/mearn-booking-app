@@ -34,8 +34,6 @@ import AdminViewOrdersPage from './pages/AdminViewOrdersPage/AdminViewOrdersPage
 import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin.jsx';
 import BusPage from './pages/BusPage/BusPage.jsx';
 import AdminViewBusPage from './pages/AdminViewBusPage/AdminViewBusPage.jsx';
-import BusSearchPage from './pages/BusSearchPage/BusSearchPage.jsx';
-import { getAllBusesAdminAction } from './redux/actions/BusAction.js';
 
 function App() {
 
@@ -49,7 +47,8 @@ function App() {
       Store.dispatch(loadAdminAction())
       Store.dispatch(getAllHotelsAction())
       Store.dispatch(getAllRoomsAction())
-      Store.dispatch(getAllBusesAdminAction());  
+
+    
     }
     fetchApi()
 
@@ -114,7 +113,6 @@ function App() {
        
        <Route path="/homes" element={<HotelListPage />} />
        <Route path="/bus" element={<BusPage />} />
-       <Route path="/bus/search" element={<BusSearchPage />} />
        <Route path="/booking/:id" element={<BookingPage />} />
        <Route path="/payment/:id" element={<PaymentPage />} />
        <Route path="/orderSuccess/:id" element={<OrderSuccessPage />} />

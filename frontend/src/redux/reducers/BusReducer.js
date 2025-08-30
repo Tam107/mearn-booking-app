@@ -138,6 +138,4 @@ export const BusReducer = createReducer(initialState, (builder) => {
             state.error = action.payload;
         })
 
-        
-
 });

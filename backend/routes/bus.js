@@ -5,7 +5,7 @@ import { create } from "../validate/bus.js";
 const router = express.Router();
 router.get("/admin/getAll-boardingPoint",verifyAdmin,getAllBoardingPoint);
 router.get("/admin/getAll-arrivalPoint", verifyAdmin, getAllArrivalPoint);
-router.get("/admin/getAll-bus", getAllBus);
+router.get("/admin/getAll-bus", verifyAdmin, getAllBus);
 router.post("/admin/createPoint", verifyAdmin, createPoint);
 router.post("/admin/createBus", verifyAdmin, create, createBus);
 router.patch("/admin/updatePoint/:id", verifyAdmin, updatePoint);

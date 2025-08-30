@@ -398,16 +398,16 @@ const AdminCreateBus = () => {
                                     onChange={(e) => setPolicy1(e.target.value)}
                                     className="flex gap-4"
                                 >
-                                    <Radio value="Reschedule Available">Reschedule Available</Radio>
-                                    <Radio value="Reschedule Not Available">Reschedule Not Available</Radio>
+                                    <Radio value="reschedule">Reschedule Available</Radio>
+                                    <Radio value="no_reschedule">Reschedule Not Available</Radio>
                                 </Radio.Group>
                                 <Radio.Group
                                     value={policy2}
                                     onChange={(e) => setPolicy2(e.target.value)}
                                     className="flex gap-4"
                                 >
-                                    <Radio value="Refundable">Refundable</Radio>
-                                    <Radio value="No refundable">No refundable</Radio>
+                                    <Radio value="refundable">Refundable</Radio>
+                                    <Radio value="norefundable">No refundable</Radio>
                                 </Radio.Group>
                             </div>
                         </div>
