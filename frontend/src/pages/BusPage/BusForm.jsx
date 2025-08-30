@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { PiBusThin } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { DatePicker } from "antd";
-import { Select } from "antd";
 import { GoPerson } from "react-icons/go";
 import { IoIosSearch } from "react-icons/io";
 import { State } from "country-state-city";
@@ -60,7 +59,7 @@ const BusForm = () => {
           <h2 className="font-[600] pb-2 text-[36px] leading-[40px] text-[#1F2937]">
             Book Bus Travel Shuttle Tickets with Promo Price
           </h2>
-          <p className="font-[400]  mx-10 text-[16px] leading-[24px] text-[#6B7280]">
+          <p className="font-[400] mx-10 text-[16px] leading-[24px] text-[#6B7280]">
             Booking bus and travel shuttle tickets is now as easy as shopping
             online from Highlights of Vietnam online agent ticket. Find complete
             information of bus and travel routes, schedules, boarding points,
@@ -68,88 +67,100 @@ const BusForm = () => {
             SuperApp.
           </p>
         </div>
-          make this form more beautifully and modern way
-          <div className="mx-auto w-11/12 px-4 sm:px-6 lg:px-8">
-              <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-6 sm:p-8 flex flex-col gap-6">
-                  <div>
-                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Bus & Shuttle Ticket</h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                      <div className="flex flex-col gap-2">
-                          <label className="text-sm font-medium text-gray-700">From</label>
-                          <div className="relative">
-                              <PiBusThin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-                              <select
-                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                  value={from}
-                                  onChange={(e) => setFrom(e.target.value)}
-                              >
-                                  <option value="">Select city</option>
-                                  {cities.map((c) => (
-                                      <option key={`from-${c.isoCode}`} value={c.id}>
-                                          {c.name}
-                                      </option>
-                                  ))}
-                              </select>
-                          </div>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                          <label className="text-sm font-medium text-gray-700">To</label>
-                          <div className="relative">
-                              <PiBusThin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-                              <select
-                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                  value={to}
-                                  onChange={(e) => setTo(e.target.value)}
-                              >
-                                  <option value="">Select city</option>
-                                  {cities.map((c) => (
-                                      <option key={`to-${c.isoCode}`} value={c.id}>
-                                          {c.name}
-                                      </option>
-                                  ))}
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                      <div className="flex flex-col gap-2">
-                          <label className="text-sm font-medium text-gray-700">Departure Date</label>
-                          <div className="relative">
-                              <SlCalender className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-8 w-5" />
-                              <DatePicker
-                                  value={departureDate ? dayjs(departureDate) : null}
-                                  onChange={(date, dateString) => setDepartureDate(dateString)}
-                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                  suffixIcon={null}
-                              />
-                          </div>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                          <label className="text-sm font-medium text-gray-700">No. of Seats</label>
-                          <div className="relative">
-                              <GoPerson className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-                              <input
-                                  type="text"
-                                  placeholder="2"
-                                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                  value={seats}
-                                  onChange={(e) => setSeats(e.target.value)}
-                              />
-                          </div>
-                      </div>
-                      <div className="flex flex-col gap-2 justify-end">
-                          <button
-                              onClick={handleSubmit}
-                              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-2.5 rounded-md flex items-center justify-center gap-2 hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-sm"
-                          >
-                              <IoIosSearch className="h-5 w-5" />
-                              <span className="text-sm font-medium">Search</span>
-                          </button>
-                      </div>
-                  </div>
+        <div className="mx-auto w-[960px]">
+          <div
+            style={{
+              boxShadow: "0px 4px 10px rgba(3, 18, 26, 0.15)",
+              backgroundColor: "rgba(255,255,255,1.00)",
+            }}
+            className="pt-5 pb-10 px-3 rounded-lg flex flex-col gap-3"
+          >
+            <div className="">
+              <h3 className="text-sm font-bold pb-1">Bus & Shuttle Ticket</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-x-6">
+              <div className="flex flex-col gap-1">
+                <h4 className="text-[12px] font-bold">From</h4>
+                <div className="relative rounded-sm border-[1px]">
+                  <PiBusThin className="absolute top-0 border-r-[1px] p-1 size-8" />
+                  <select
+                    placeholder="Da Lat"
+                    type="text"
+                    className="h-8 w-full font-sm font-[400] text-[14px] rounded-sm pl-9"
+                    value={from}
+                    onChange={(e) => setFrom(e.target.value)}
+                  >
+                    <option>Select city</option>
+                    {cities.map((c) => (
+                      <option key={`from-${c.isoCode}`} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+              <div className="flex flex-col gap-1">
+                <h4 className="text-[12px] font-bold">To</h4>
+                <div className="relative rounded-sm border-[1px]">
+                  <PiBusThin className="absolute top-0 border-r-[1px] p-1 size-8" />
+                  <select
+                    placeholder="Da Lat"
+                    type="text"
+                    className="h-8 w-full font-sm font-[400] text-[14px] rounded-sm pl-9"
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                  >
+                    <option>Select city</option>
+                    {cities.map((c) => (
+                      <option key={`to-${c.isoCode}`} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-x-6">
+              <div className="flex flex-col gap-1">
+                <h4 className="text-[12px] font-bold">Departure Date</h4>
+                <div className="relative rounded-sm border-[1px]">
+                  <SlCalender className="absolute top-0 border-r-[1px] p-1 size-8 z-10" />
+
+                  <DatePicker
+                    value={departureDate ? dayjs(departureDate) : null}
+                    onChange={(date, dateString) =>
+                      setDepartureDate(dateString)
+                    }
+                    className="h-8 w-full font-sm font-[400] text-[14px] !rounded-sm !pl-9"
+                    suffixIcon={null}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h4 className="text-[12px] font-bold">No. of Seats</h4>
+                <div className="relative rounded-sm border-[1px]">
+                  <GoPerson className="absolute top-0 border-r-[1px] p-1 size-8" />
+                  <input
+                    type="text"
+                    placeholder="2"
+                    className="h-8 w-full font-[400] text-[14px] rounded-sm pl-9"
+                    value={seats}
+                    onChange={(e) => setSeats(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1 justify-end">
+                <div
+                  onClick={handleSubmit}
+                  className=" cursor-pointer border-[#FF5E20] relative bg-[#FF5E20] flex h-[34px] items-center justify-center gap-2 rounded-sm border-[1px]"
+                >
+                  <IoIosSearch color="white" className="size-6" />
+                  <h4 className="text-white">Search</h4>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
     </>
   );

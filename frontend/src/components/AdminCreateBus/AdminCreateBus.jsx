@@ -24,7 +24,7 @@ import Facilities from "../Facilities/Facilities";
 import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import EditorTiny from "../EditorTiny/EditorTiny";
 import { createBusAdminAction } from "../../redux/actions/BusAction";
-import { BeatLoader } from "react-spinners";
+// import { BeatLoader } from "react-spinners";
 
 const AdminCreateBus = () => {
     const dispatch = useDispatch();
@@ -182,7 +182,8 @@ const AdminCreateBus = () => {
                     className={`flex items-center gap-2 px-4 py-2 sm:px-3 sm:py-3 rounded-xl bg-indigo-600 mb-3 text-white font-semibold hover:bg-indigo-700 transition duration-200 disabled:opacity-50`}
                 >
                     {loading ? (
-                        <BeatLoader color="#ffffff" size={10} />
+                        // <BeatLoader color="#ffffff" size={10} />
+                        <>123</>
                     ) : (
                         <TiPlusOutline size={20} />
                     )}
@@ -398,16 +399,16 @@ const AdminCreateBus = () => {
                                     onChange={(e) => setPolicy1(e.target.value)}
                                     className="flex gap-4"
                                 >
-                                    <Radio value="reschedule">Reschedule Available</Radio>
-                                    <Radio value="no_reschedule">Reschedule Not Available</Radio>
+                                    <Radio value="Reschedule Available">Reschedule Available</Radio>
+                                    <Radio value="Reschedule Not Available">Reschedule Not Available</Radio>
                                 </Radio.Group>
                                 <Radio.Group
                                     value={policy2}
                                     onChange={(e) => setPolicy2(e.target.value)}
                                     className="flex gap-4"
                                 >
-                                    <Radio value="refundable">Refundable</Radio>
-                                    <Radio value="norefundable">No refundable</Radio>
+                                    <Radio value="Refundable">Refundable</Radio>
+                                    <Radio value="No refundable">No refundable</Radio>
                                 </Radio.Group>
                             </div>
                         </div>
