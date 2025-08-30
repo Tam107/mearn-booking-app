@@ -41,10 +41,16 @@ const Item = ({ bus }) => {
     return new Intl.DateTimeFormat("vi-VN", options).format(date);
   }
   function calculateTimeDifference(departureTime, arrivalTime) {
-    const departure = new Date(departureTime);
-    const arrival = new Date(arrivalTime);
+    // Chỉ lấy giờ và phút từ thời gian, bỏ qua ngày
+    const departure = new Date("1970-01-01T" + formatTime(departureTime) + "Z");
+    const arrival = new Date("1970-01-01T" + formatTime(arrivalTime) + "Z");
 
-    const differenceInMs = arrival - departure;
+    let differenceInMs = arrival - departure;
+
+    // Nếu thời gian đến (arrival) nhỏ hơn thời gian đi (departure), tức là đã qua nửa đêm
+    if (differenceInMs < 0) {
+      differenceInMs += 24 * 60 * 60 * 1000; // Cộng thêm 24 giờ (1 ngày)
+    }
 
     const hours = Math.floor(differenceInMs / (1000 * 60 * 60));
     const minutes = Math.floor(
@@ -56,13 +62,14 @@ const Item = ({ bus }) => {
     `;
   }
   const handleFeatureTabClick = () => {
-    setFeatureTab(true); // Mở tab Feature
+    setFeatureTab(!featureTab); // Mở tab Feature
     setTicketTab(false); // Đóng tab Ticket
   };
 
   const handleTicketTabClick = () => {
+    if(!bus?.conditions) return;
     setFeatureTab(false); // Đóng tab Feature
-    setTicketTab(true); // Mở tab Ticket
+    setTicketTab(!ticketTab); // Mở tab Ticket
   };
   return (
     <>
@@ -73,18 +80,19 @@ const Item = ({ bus }) => {
       >
         <div className="pb-3">
           <h3 className="text-[16px] text-black font-bold">{bus?.poName}</h3>
-          <div className="flex gap-2">
+          <div className="flex">
             {bus?.policy &&
               bus?.policy.map((policy, index) => (
-                <p key={index} className="text-[12px] text-gray-600">
+                <p key={index} className={`text-[12px] text-gray-600 ${index !== 0 ? "ml-1" : ""}`}>
                   {policy}
+                  {index !== bus.policy.length - 1 && " - "}
                 </p>
               ))}
           </div>
         </div>
         <div className="flex items-center w-full justify-between">
-          <div className="flex items-center">
-            <div className="flex items-center gap-4">
+          <div className="flex items-strech">
+            <div className="flex items-center gap-4 border-r-[1px] pr-4 mr-4 border-r-gray-300">
               <div className="flex flex-col">
                 <div className="flex gap-4 items-center">
                   <div className="flex flex-col gap-1">
@@ -101,7 +109,7 @@ const Item = ({ bus }) => {
                       })}
                   </div>
                   <IoIosReturnRight size={30} />
-                  <div className="flex flex-col gap-1 border-r-[1px] pr-4 mr-4 border-r-gray-300">
+                  <div className="flex flex-col gap-1 ">
                     <p className="font-[600] text-sm text-slate-900">
                       {formatTime(bus?.arrivalTime)}
                     </p>
@@ -118,20 +126,37 @@ const Item = ({ bus }) => {
               </div>
             </div>
             <div
+              className="border-r-[1px] pr-4 mr-4 border-r-gray-300 flex items-center justify-center"
               dangerouslySetInnerHTML={{
                 __html: calculateTimeDifference(
                   bus?.departureTime,
                   bus?.arrivalTime
                 ),
               }}
-            ></div>
+            />
+            <div className="flex gap-1 items-center justify-center ">
+              <div className="w-fit px-3 py-1 gap-2 flex items-center justify-center  rounded-3xl border-gray-300 border-[1px] text-sm text-[rgb(104,113,118)]">
+                {bus?.facilities?.map((i) => (
+                  <>
+                    {i.icon && (
+                      <>
+                        {React.createElement(iconMap[i?.icon], {
+                          size: 15,
+                        })}
+                      </>
+                    )}
+                  </>
+                ))}
+              </div>
+            </div>
           </div>
           <div>
             <p className="text-center font-bold text-lg text-orange-600">
               {new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-              }).format(bus?.price)} <span className="text-sm font-[500] text-[#687176]">/pax</span>
+              }).format(bus?.price)}{" "}
+              <span className="text-sm font-[500] text-[#687176]">/pax</span>
             </p>
             <button className="bg-orange-600 text-sm text-white px-8 py-1 rounded-md shadow-md transform hover:bg-orange-700 transition duration-300">
               Book Now
@@ -260,7 +285,7 @@ const Item = ({ bus }) => {
           <div className="w-full flex items-center gap-2 justify-between">
             <div className="w-full flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <h4 className="text-sm font-[600] mb-4">Terms & Conditions</h4>
+                <h4 className="text-sm font-[600]">Terms & Conditions</h4>
                 <div className="border-[1px] border-gray-200 shadow-sm rounded-sm p-2 px-4">
                   <div
                     dangerouslySetInnerHTML={{ __html: bus?.conditions }}

@@ -70,7 +70,7 @@ const BusSearchPage = () => {
             </div>
           </div>
           <div className="w-full flex gap-2">
-            <div className="w-[250px] mr-2 bg-white h-full">123</div>
+            <div className="w-[250px] mr-2 bg-white h-full"></div>
             <div className="flex-1 flex flex-col">
               <div className="rounded-full mb-3 flex items-center justify-center gap-2 hover:bg-[#F2F3F3] transition duration-200 px-4 py-2 cursor-pointer bg-gray-50 self-end w-fit">
                 <p className="font-bold font-sm text-blue-500">Sort</p>
