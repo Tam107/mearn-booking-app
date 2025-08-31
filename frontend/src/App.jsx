@@ -37,6 +37,8 @@ import AdminViewBusPage from './pages/AdminViewBusPage/AdminViewBusPage.jsx';
 import BusSearchPage from './pages/BusSearchPage/BusSearchPage.jsx';
 import { getAllBusesAdminAction } from './redux/actions/BusAction.js';
 import BookingBusPage from './pages/BookingBusPage/BookingBusPage.jsx';
+import BusPaymentPage from './pages/BusPaymentPage/BusPaymentPage.jsx';
+import AdminEditBusPage from './pages/AdminEditBusPage/AdminEditBusPage.jsx';
 
 function App() {
 
@@ -57,7 +59,6 @@ function App() {
 
 
   },[])
-  // console.log(stateAuth);
 
 
   return (
@@ -76,6 +77,10 @@ function App() {
   <Route
     path="/dashboard-create-bus"
     element={<PrivateRouteAdmin><AdminCreateBusPage /></PrivateRouteAdmin>}
+  />
+  <Route
+    path="/dashboard-edit-bus/:id"
+    element={<PrivateRouteAdmin><AdminEditBusPage /></PrivateRouteAdmin>}
   />
   <Route
     path="/dashboard-create-room"
@@ -120,6 +125,7 @@ function App() {
        <Route path="/booking/:id" element={<BookingPage />} />
        <Route path="/bus/booking/:id" element={<BookingBusPage />} />
        <Route path="/payment/:id" element={<PaymentPage />} />
+       <Route path="/bus/payment/:id" element={<BusPaymentPage />} />
        <Route path="/orderSuccess/:id" element={<OrderSuccessPage />} />
        <Route path="/orderList" element={<OrderListPage />} />
        <Route path="/order/:id" element={<OrderDetailPage />} />

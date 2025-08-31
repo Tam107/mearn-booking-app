@@ -50,7 +50,6 @@ const AdminViewRoomDetail = () => {
   }, []);
   useEffect(() => {
     const tmp = stateRooms?.rooms?.find((i) => i.slug === slug);
-    console.log(tmp);
 
     setServicesId(tmp?.services.map((item) => item._id));
     setData(tmp);
@@ -74,7 +73,6 @@ const AdminViewRoomDetail = () => {
       const ex = tmp?.priceExtra.find((i) => {
         const startDate = moment(i.start);
         if (startDate.isSame(currentDay.startOf("day").toDate(), "day")) {
-          console.log(startDate);
           return i;
         }
         return null;

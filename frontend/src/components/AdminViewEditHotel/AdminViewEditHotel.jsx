@@ -134,16 +134,13 @@ const AdminViewEditHotel = () => {
     for (let i = 0; i < files.length; i++) {
       data.append("photos", files[i]);
     }
-    console.log("ok");
 
     const res = await uploadByFilesApi(data);
-    console.log(res);
 
     if (res.success) {
       const newImg = res.data.map((item) => item.url);
       setPhotos([...photos, ...newImg]);
     } else {
-      console.log(res);
 
       toast.error("Error");
     }
@@ -166,7 +163,6 @@ const AdminViewEditHotel = () => {
         // setDisableButton(false)
         toast.success("ok");
       } else {
-        console.log(res);
 
         toast.error("Link error");
         // setDisableButton(false)

@@ -24,7 +24,6 @@ const PaymentPage = () => {
       
   
       if (data?.checkOut && data?.checkIn) {
-          console.log(1);
           
         let tmpInfoPrice = [];
         let tmp = 0;
@@ -45,7 +44,6 @@ const PaymentPage = () => {
         }
         setNumberOfDays(dateArray.length);
   
-        console.log(dateArray);
         
   
         dateArray.forEach((date) => {

@@ -10,8 +10,10 @@ import { useSelector } from "react-redux";
 import { IoIosReturnRight } from "react-icons/io";
 import { RxCross1 } from "react-icons/rx";
 import iconMap from "../../data/iconMap";
+import { useUser } from "@clerk/clerk-react";
 const BookingBus = () => {
   const [booking, setBooking] = useState([]);
+  const {  user } = useUser();
   const { id } = useParams();
   const stateBus = useSelector((state) => state.BusReducer);
   const [name, setName] = useState("");
@@ -22,6 +24,7 @@ const BookingBus = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
   const [popupRight, setPopupRight] = useState(false);
+  const [showModelConfirm, setShowModelConfirm] = useState(false);
   const [travelerDetails, setTravelerDetails] = useState(
     [...Array(1)].map(() => ({
       name: "",
@@ -32,9 +35,6 @@ const BookingBus = () => {
   const [openPrice, setOpenPrice] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
 
-  const toggleDetail = () => {
-    setShowDetail((prev) => !prev);
-  };
   const isFormTravelerValid = () => {
     return travelerDetails?.every(
       (detail) =>
@@ -61,15 +61,12 @@ const BookingBus = () => {
     if (!existingStr) return [];
 
     const bookings = JSON.parse(existingStr);
+  
+    const newBooking = bookings.filter(i=>i.expiry > now)
 
-    // Lọc các booking còn hạn
-    const validBookings = bookings.filter((booking) => booking.expiry > now);
+    localStorage.setItem("busBooking", JSON.stringify(newBooking));
 
-    // Cập nhật lại localStorage (xóa booking hết hạn)
-    localStorage.setItem("busBooking", JSON.stringify(validBookings));
-
-    // Trả về mảng booking
-    return validBookings.map((b) => b.value);
+    return newBooking.map(i=>i.value)
   };
   function formatTime(time) {
     if (!time) return "";
@@ -108,26 +105,76 @@ const BookingBus = () => {
     if (book) {
       setBooking(book);
       setTravelerDetails(
-        [...Array(book.seats || 1)].map(() => ({
+        [...Array(parseInt(book.seats) || 1)].map(() => ({
           name: "",
           email: "",
           phoneNumber: "",
         }))
       );
     } else {
-      navigate("/bus");
-      toast.error("This bus booking session has expired.");
+      if(id && stateBus?.busesAdmin?.length > 0){
+        toast.error("This bus booking session has expired.");
+        navigate("/bus");
+      }
+      
+      
     }
   };
+  useEffect(()=>{
+    if(user){
+      setName(user?.fullName);
+      setEmail(user?.primaryEmailAddress.emailAddress)
+    }
+  },[user])
+  
 
   useEffect(() => {
     setData(stateBus?.busesAdmin?.find((bus) => bus._id === id));
     setBookingF();
-    const interval = setInterval(() => {
-      setBookingF(getBusBookings());
-    }, 600000);
-    return () => clearInterval(interval);
-  }, [id]);
+  }, [id, stateBus?.busesAdmin]);  
+  const handlePayment = () => {
+    if (!name || !email || !phoneNumber) {
+      toast.error("Please fill in contact details.");
+      return;
+    }
+    if (!isFormTravelerValid()) {
+      toast.error("Please fill in traveler details.");
+      return;
+    }
+    setShowModelConfirm(true);
+  };
+  const handleConfirm = () => {
+    if (!name || !email || !phoneNumber) {
+      toast.error("Please fill in contact details.");
+      return;
+    }
+    if (!isFormTravelerValid()) {
+      toast.error("Please fill in traveler details.");
+      return;
+    }
+    const bookings = getBusBookings();
+    let tmpIndex = bookings.findIndex((b) => b._id == id);
+    if (tmpIndex === -1) {
+      toast.error("This bus booking session has expired.");
+      navigate("/bus");
+      return;
+    }
+    else{
+      let tmp = JSON.parse(localStorage.getItem("busBooking"))
+      tmp[tmpIndex].value = {
+        ...tmp[tmpIndex].value,
+        contactDetail:{
+          name,
+          email,
+          phoneNumber
+        },
+        travelerDetails: travelerDetails,
+      }
+      localStorage.setItem("busBooking", JSON.stringify(tmp));
+
+      navigate("/bus/payment/" + id);
+    }
+  };
   return (
     <>
       <div className="container mx-auto  p-10 ">
@@ -236,10 +283,8 @@ const BookingBus = () => {
                 <div className="flex w-full justify-end mt-4">
                   <button
                     // disabled={disableButton}
-                    // onClick={handlePayment}
-                    className={` bg-orange-500 text-white py-3 rounded-md font-semibold text-lg px-6 p hover:bg-orange-600 ${
-                      true ? "cursor-not-allowed" : "cursor-pointer"
-                    }`}
+                    onClick={handlePayment}
+                    className={` bg-orange-500 text-white py-3 rounded-md font-semibold text-lg px-6 p hover:bg-orange-600 cursor-pointer`}
                   >
                     Continue to Payment
                   </button>
@@ -263,7 +308,16 @@ const BookingBus = () => {
                   onClick={() => setPopupRight(!popupRight)}
                   className="flex  items-center justify-between cursor-pointer"
                 >
-                  <h2 className="text-sm font-bold">Price Details</h2>
+                  <h2 className="text-sm font-bold">
+                    {booking?.departureTime
+                      ? new Intl.DateTimeFormat("en-GB", {
+                          weekday: "short",
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        }).format(new Date(booking?.departureTime))
+                      : "No departure time"}
+                  </h2>
                   <div className="flex ">
                     {!popupRight ? (
                       <FaChevronDown size={20} className="text-blue-400" />
@@ -458,6 +512,36 @@ const BookingBus = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showModelConfirm && (
+        <>
+          <div className="w-full z-50 h-full fixed top-0 left-0 bg-[#0000004b] flex flex-col justify-center">
+            <div className="max-w-[300px] mx-auto  bg-white p-4 rounded-md shadow-md">
+              <h2 className="font-bold text-lg">
+                Are your booking details correct?
+              </h2>
+              <p className="text-md mt-2">
+                You will not be able to change your booking details once you
+                proceed to payment
+              </p>
+              <div className="flex flex-col gap-2 mt-4">
+                <button
+                  onClick={() => setShowModelConfirm(false)}
+                  className="bg-gray-100 text-blue-500 px-4 py-2 rounded-md hover:bg-gray-200"
+                >
+                  Check Again
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500"
+                >
+                  Continue
+                </button>
               </div>
             </div>
           </div>

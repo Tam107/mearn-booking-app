@@ -1,12 +1,17 @@
-import { Table } from "antd";
+import { Popconfirm, Table } from "antd";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
+import { deleteBusAction } from "../../redux/actions/BusAction";
+import { Link } from "react-router";
 
 const AdminViewBus = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const stateBus = useSelector((state) => state.BusReducer);
-  console.log(stateBus);
+  const dispatch = useDispatch()
+  const confirm = (id)=>{
+    dispatch(deleteBusAction(id));
+  }
 
   const columns = [
     {
@@ -97,16 +102,18 @@ const AdminViewBus = () => {
       width: 200,
       render: (text, record) => (
         <span className="flex gap-3">
-          <a href={`/dashboard-bus/${record.slug}`} className="text-green-500">
-            Edit
-          </a>
-          <a
-            href={`/buses/${record.slug}`}
-            target="_blank"
-            className="text-blue-500"
+          <Link to={`/dashboard-edit-bus/${record._id}`}>Edit</Link>
+          <Popconfirm
+            title="Delete the hotel?"
+            description="Are you sure to delete this bus?"
+            onConfirm={() => confirm(record._id)}
+            okText="Yes"
+            cancelText="No"
           >
-            View
-          </a>
+            <p className="text-[#1777FF] cursor-pointer hover:text-[#69b1ff]">
+              Delete
+            </p>
+          </Popconfirm>
         </span>
       ),
     },

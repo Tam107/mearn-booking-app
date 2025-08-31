@@ -1,77 +1,81 @@
 import React, { useEffect, useState } from "react";
-import { TiPlusOutline } from "react-icons/ti";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
-import { Country, State } from "country-state-city";
-import { useMediaQuery } from "react-responsive";
-import { Checkbox, Input, Radio, TimePicker, Tooltip } from "antd";
-import { FaQuestionCircle } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { TiPlusOutline } from "react-icons/ti";
 import {
-  busAdminApi,
+    busAdminApi,
   getAllFacilitiesApi,
   uploadByFilesApi,
 } from "../../../Axios/client/api";
-import ModalBoardingArrive from "./ModalBoardingArrive";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import BoardingArrive from "./BoardingArrive";
+import { State } from "country-state-city";
+import { GoClock } from "react-icons/go";
+import { Checkbox, Input, Radio, TimePicker, Tooltip } from "antd";
 import { MdOutlineBusAlert } from "react-icons/md";
 import { CiCircleChevUp, CiMoneyCheck1, CiReceipt } from "react-icons/ci";
-import { GoClock } from "react-icons/go";
 import { PiSeatThin } from "react-icons/pi";
+import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
+import dayjs from "dayjs"; // nếu bạn đang dùng dayjs
+import { FaQuestionCircle } from "react-icons/fa";
+import BoardingArrive from "../AdminCreateBus/BoardingArrive";
+import { useMediaQuery } from "react-responsive";
+import { useDispatch, useSelector } from "react-redux";
 import Facilities from "../Facilities/Facilities";
-import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import EditorTiny from "../EditorTiny/EditorTiny";
-import { createBusAdminAction } from "../../redux/actions/BusAction";
+import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
+import ModalBoardingArrive from "../AdminCreateBus/ModalBoardingArrive";
+import toast from "react-hot-toast";
+import { updateBusAction } from "../../redux/actions/BusAction";
+import { useNavigate } from "react-router";
 
-const AdminCreateBus = () => {
-  const dispatch = useDispatch();
-  //default values
-  const cities = State.getStatesOfCountry("VN");
-  const isMobile = useMediaQuery({ maxWidth: 768 });
-  const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
+const AdminEditBus = ({ data, setData }) => {
   const [facilitiesDefault, setFacilitiesDefault] = useState([]);
+  const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
   const [modalArrivalPoint, setModalArrivalPoint] = useState(false);
+
   const [boardingDefault, setBoardingDefault] = useState([]);
   const [arrivalDefault, setArrivalDefault] = useState([]);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
   const stateBus = useSelector((state) => state.BusReducer);
-
-  // State save
-  const [cityFrom, setCityFrom] = useState("");
-  const [cityTo, setCityTo] = useState("");
-  const [photos, setPhotos] = useState([]);
-  const [boarding,setBoarding] = useState([]);
-  const [arrival, setArrival] = useState([]);
-  const [departureTime, setDepartureTime] = useState();
-  const [arrivalTime, setArrivalTime] = useState();
   const [showCreateFacility, setShowCreateFacility] = useState(false);
-  const [facilities, setFacilities] = useState([]);
-  const [totalSeats, setTotalSeats] = useState("");
-  const [poName, setPoName] = useState("");
-  const [seat, setSeat] = useState([]);
-  const [price, setPrice] = useState(0);
-  const [policy1, setPolicy1] = useState("");
-  const [policy2, setPolicy2] = useState("");
-  const [policy, setPolicy] = useState([]);
-  const [conditions, setConditions] = useState("");
+const dispatch = useDispatch()
+const navigate = useNavigate()
+  const cities = State.getStatesOfCountry("VN");
+  const [loading, setLoading] = useState(false); // Loading state for the button
+  const updateBus = async () => {
+    setLoading(true);
+    try {
+        const dataResponse = await busAdminApi("update-bus/"+data._id, "patch", data);
+  
+        if (dataResponse.success) {
+          toast.success("Update bus successfully");
+          dispatch(updateBusAction(dataResponse));
+          navigate("/dashboard-view-bus");
+        } else {
+          toast.error(dataResponse.message || "Error creating bus");
+        }
+      } catch (error) {
 
+        toast.error("Something went wrong, please try again.");
+      } finally {
+        setLoading(false); // Re-enable the button after the API call
+      }
+  };
+  const addPhotoByFile = async (ev) => {
+    // ev.preventDefault();
+    const files = ev.target.files;
+    const dataForm = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      dataForm.append("photos", files[i]);
+    }
+    const res = await uploadByFilesApi(dataForm);
+
+    if (res.success) {
+      const newImg = res.data.map((item) => item.url);
+      setData({ ...data, photos: [...data.photos, ...newImg] });
+    } else {
+      toast.error("Error");
+    }
+  };
   // useEffect
-  useEffect(() => {
-    if (stateBus?.boardingPointsAdmin?.length > 0 && cityFrom) {
-      setBoardingDefault(
-        stateBus?.boardingPointsAdmin.filter((item) => item.city === cityFrom)
-      );
-    }
-  }, [stateBus?.boardingPointsAdmin, cityFrom]);
-  useEffect(() => {
-    if (stateBus?.arrivalPointsAdmin?.length > 0 && cityTo) {
-      setArrivalDefault(
-        stateBus?.arrivalPointsAdmin.filter((item) => item.city === cityTo)
-      );
-    }
-  }, [stateBus?.arrivalPointsAdmin, cityTo]);
-
   useEffect(() => {
     const getDefaultFaicily = async () => {
       const data = await getAllFacilitiesApi();
@@ -81,37 +85,96 @@ const AdminCreateBus = () => {
     };
     getDefaultFaicily();
   }, [showCreateFacility]);
-
-  //function
+  useEffect(() => {
+    if (stateBus?.boardingPointsAdmin?.length > 0 && data?.cityFrom) {
+      setBoardingDefault(
+        stateBus?.boardingPointsAdmin.filter(
+          (item) => item.city === data?.cityFrom
+        )
+      );
+    }
+  }, [stateBus?.boardingPointsAdmin, data?.cityFrom]);
+  useEffect(() => {
+    if (stateBus?.arrivalPointsAdmin?.length > 0 && data?.cityTo) {
+      setArrivalDefault(
+        stateBus?.arrivalPointsAdmin.filter(
+          (item) => item.city === data?.cityTo
+        )
+      );
+    }
+  }, [stateBus?.arrivalPointsAdmin, data?.cityTo]);
   function removePhoto(filename) {
     // ev.preventDefault();
-    setPhotos([...photos.filter((photo) => photo !== filename)]);
+    let tmpPhotos = data?.photos.filter((photo) => photo !== filename);
+    setData({ ...data, photos: tmpPhotos });
   }
-  const addPhotoByFile = async (ev) => {
-    // ev.preventDefault();
-    const files = ev.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
+  function changeCityFrom(e) {
+    setData({ ...data, cityFrom: e.target.value, boarding: [] });
+  }
+  function changeCityTo(e) {
+    setData({ ...data, cityTo: e.target.value, arrival: [] });
+  }
+  function changeDepartTureTime(time) {
+    setData({ ...data, departureTime: time });
+  }
+  function changeArrivalTime(time) {
+    setData({ ...data, arrivalTime: time });
+  }
+  function changePoName(e) {
+    setData({ ...data, poName: e.target.value });
+  }
+  function changeTotalSeat(e) {
+    setData({ ...data, totalSeats: e.target.value });
+  }
+  function changeSeats(e) {
+    setData({ ...data, seat: e });
+  }
+  function changePrice(e) {
+    setData({ ...data, price: parseFloat(e.target.value) });
+  }
+  function changePolicy1(e) {
+    let tmp = JSON.parse(JSON.stringify(data?.policy));
+    tmp[0] = e.target.value;
+    setData({ ...data, policy: tmp });
+  }
+  function changePolicy2(e) {
+    let tmp = JSON.parse(JSON.stringify(data?.policy));
+    tmp[1] = e.target.value;
+    setData({ ...data, policy: tmp });
+  }
+  function createBoard() {
+    if(data?.cityFrom){
+        setModalBoardingPoint(true)
     }
-
-    const res = await uploadByFilesApi(data);
-
-    if (res.success) {
-      const newImg = res.data.map((item) => item.url);
-      setPhotos([...photos, ...newImg]);
+    else{
+        toast.error("Please select a city from first");
+    }
+  }
+  function createArrival() {
+    if(data?.cityTo){
+        setModalArrivalPoint(true)
+    }
+    else{
+        toast.error("Please select a city to first")
+    }
+  }
+  function changeBoarding(item) {
+    setData({ ...data, boarding: item });
+  }
+  function changeArrival(item) {
+    setData({ ...data, arrival: item });
+  }
+  const handleFaChange = (id) => {
+    const isExist = data.facilities.find((i) => i === id);
+    if (isExist) {
+      const tmp = data.facilities.filter((i) => i != id);
+      setData({ ...data, facilities: tmp });
     } else {
-      toast.error("Error");
+      return setData({ ...data, facilities: [...data.facilities, id] });
     }
   };
-  const handleFaChange = (id) => {
-    const isExist = facilities.find((i) => i === id);
-    if (isExist) {
-      const tmp = facilities.filter((i) => i != id);
-      setFacilities(tmp);
-    } else {
-      return setFacilities([...facilities, id]);
-    }
+  const changeFal = (data) => {
+    setData({ ...data, facilities: data });
   };
   const handleUp = () => {
     window.scrollTo({
@@ -120,67 +183,16 @@ const AdminCreateBus = () => {
       behavior: "smooth", // This enables the smooth scrolling effect
     });
   };
-  const [loading, setLoading] = useState(false); // Loading state for the button
 
-  const navigate = useNavigate();
-  const addBus = async () => {
-    if (
-      !cityFrom ||
-      !cityTo ||
-      !departureTime ||
-      !arrivalTime ||
-      boarding.length === 0 ||
-      arrival.length === 0 ||
-      !policy1 || !policy2
-    ) {
-      return toast.error("Please fill in all required fields");
-    }
-    if(arrival.length>1){
-      return toast.error("Only choose one Arrival Point")
-    }
-    const data = {
-      photos,
-      cityFrom,
-      cityTo,
-      departureTime,
-      arrivalTime,
-      totalSeats,
-      poName,
-      seat,
-      price,
-      policy: [policy1, policy2],
-      boarding: boarding,
-      arrival: arrival,
-      facilities,
-      conditions,
-    };
-    setLoading(true);
-
-    try {
-      const dataResponse = await busAdminApi("createBus", "post", data);
-
-      if (dataResponse.success) {
-        toast.success("Create bus successfully");
-        dispatch(createBusAdminAction(dataResponse));
-        navigate("/dashboard-view-bus");
-      } else {
-        toast.error(dataResponse.message || "Error creating bus");
-      }
-    } catch (error) {
-      toast.error("Something went wrong, please try again.");
-    } finally {
-      setLoading(false); // Re-enable the button after the API call
-    }
-  };
   return (
     <>
       {/* Header */}
       <div className="w-full pt-6 px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h2 className="font-[600] text-gray-600 text-[28px] md:text-[36px] leading-[36px] md:leading-[40px] cursor-pointer">
-          Create new bus
+          Update bus
         </h2>
         <div
-          onClick={addBus}
+          onClick={updateBus}
           className="cursor-pointer transition duration-200 bg-[#98A1AE] rounded-3xl hover:bg-[#c4c7cd] px-4 py-2 flex items-center gap-2 md:gap-4"
         >
           {loading ? (
@@ -190,10 +202,11 @@ const AdminCreateBus = () => {
           )}
 
           <p className="text-white text-md">
-            {loading ? "Creating Bus..." : "Add a new bus"}
+            {loading ? "Updating Bus..." : "Update Bus"}
           </p>
         </div>
       </div>
+
       <div className="w-full px-6 py-6">
         {/* Bus Pictures */}
         <div className="w-full border border-gray-300 rounded-2xl p-4 md:p-6">
@@ -212,8 +225,8 @@ const AdminCreateBus = () => {
               Upload
             </label>
 
-            {photos.length > 0 &&
-              photos.map((item, index) => (
+            {data?.photos?.length > 0 &&
+              data?.photos?.map((item, index) => (
                 <div key={index} className="h-32 relative flex">
                   <img src={item} className="rounded-2xl w-full object-cover" />
                   <div
@@ -227,7 +240,7 @@ const AdminCreateBus = () => {
           </div>
         </div>
 
-        {/* Bus Details */}
+        {/* Bus detail */}
         <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6">
           <div className="flex mb-3 items-center gap-2 md:gap-4">
             <h2 className="font-medium text-lg">Ticket Details</h2>
@@ -246,11 +259,8 @@ const AdminCreateBus = () => {
                   className="size-8 border-r-[1px]"
                 />
                 <select
-                  value={cityFrom}
-                  onChange={(e) => {
-                    setCityFrom(e.target.value);
-                    setBoarding([]); 
-                  }}
+                  value={data?.cityFrom}
+                  onChange={changeCityFrom}
                   className="w-full bg-transparent outline-none"
                 >
                   <option value="" className="text-gray-300 text-sm"></option>
@@ -276,11 +286,8 @@ const AdminCreateBus = () => {
                   className="size-8 border-r-[1px]"
                 />
                 <select
-                  value={cityTo}
-                  onChange={(e) => {
-                    setCityTo(e.target.value);
-                    setArrival([]);
-                  }}
+                  value={data?.cityTo}
+                  onChange={changeCityTo}
                   className="w-full bg-transparent outline-none"
                 >
                   <option value="" className="text-gray-300 text-sm"></option>
@@ -307,10 +314,10 @@ const AdminCreateBus = () => {
                 <TimePicker
                   className="flex-1 !bg-[#F9FAFB] !border-0 !focus:outline-none hover:!border-0 hover:!shadow-none"
                   format="HH:mm"
-                  value={departureTime}
-                  onChange={(time) => {
-                    setDepartureTime(time);
-                  }}
+                  value={
+                    data?.departureTime ? dayjs(data?.departureTime) : null
+                  }
+                  onChange={changeDepartTureTime}
                 />
               </div>
             </div>
@@ -329,10 +336,8 @@ const AdminCreateBus = () => {
                 <TimePicker
                   className="flex-1 !bg-[#F9FAFB] !border-0 !focus:outline-none hover:!border-0 hover:!shadow-none"
                   format="HH:mm"
-                  value={arrivalTime}
-                  onChange={(time) => {
-                    setArrivalTime(time);
-                  }}
+                  value={data?.arrivalTime ? dayjs(data?.arrivalTime) : null}
+                  onChange={changeArrivalTime}
                 />
               </div>
             </div>
@@ -352,12 +357,8 @@ const AdminCreateBus = () => {
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
                   type="number"
                   placeholder="40"
-                  value={totalSeats}
-                  onChange={(e) =>
-                    setTotalSeats(
-                      e.target.value ? parseInt(e.target.value, 10) : 0
-                    )
-                  }
+                  value={data?.totalSeats}
+                  onChange={changeTotalSeat}
                 />
               </div>
             </div>
@@ -376,8 +377,8 @@ const AdminCreateBus = () => {
                 <Input
                   placeholder="Limousine"
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
-                  value={poName}
-                  onChange={(e) => setPoName(e.target.value)}
+                  value={data?.poName}
+                  onChange={changePoName}
                 />
               </div>
             </div>
@@ -395,13 +396,11 @@ const AdminCreateBus = () => {
                 />
                 <Checkbox.Group
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
-                  value={seat}
-                  onChange={(e) => {
-                    setSeat(e);                    
-                  }}
+                  value={data?.seat}
+                  onChange={changeSeats}
                 >
-                  <Checkbox value="1">1-1</Checkbox>
-                  <Checkbox value="2">2-2</Checkbox>
+                  <Checkbox value={1}>1-1</Checkbox>
+                  <Checkbox value={2}>2-2</Checkbox>
                   {/* <Checkbox value="WC">WC</Checkbox> */}
                 </Checkbox.Group>{" "}
               </div>
@@ -422,10 +421,8 @@ const AdminCreateBus = () => {
                   type="number"
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
                   placeholder="500$"
-                  value={price}
-                  onChange={(e) =>
-                    setPrice(e.target.value ? parseInt(e.target.value, 10) : 0)
-                  }
+                  value={data?.price}
+                  onChange={changePrice}
                 />
               </div>
             </div>
@@ -436,16 +433,20 @@ const AdminCreateBus = () => {
                 style={{ borderColor: "rgba(180, 180, 180, 1)" }}
               >
                 <Radio.Group
-                  value={policy1}
-                  onChange={(e) => setPolicy1(e.target.value)}
+                  value={data?.policy?.[0]}
+                  onChange={changePolicy1}
                   className="flex gap-2 mb-4"
                 >
-                  <Radio value="Reschedule Available">Reschedule Available</Radio>
-                  <Radio value="Reschedule Not Available">Reschedule Not Available</Radio>
+                  <Radio value="Reschedule Available">
+                    Reschedule Available
+                  </Radio>
+                  <Radio value="Reschedule Not Available">
+                    Reschedule Not Available
+                  </Radio>
                 </Radio.Group>
                 <Radio.Group
-                  value={policy2}
-                  onChange={(e) => setPolicy2(e.target.value)}
+                  value={data?.policy?.[1]}
+                  onChange={changePolicy2}
                   className="flex gap-2"
                 >
                   <Radio value="Refundable">Refundable</Radio>
@@ -468,11 +469,7 @@ const AdminCreateBus = () => {
           </div>
           <div className="grid gap-2 mt-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             <div
-              onClick={() => {
-                cityFrom
-                  ? setModalBoardingPoint(true)
-                  : toast.error("Please select a city from first");
-              }}
+              onClick={createBoard}
               className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center justify-center"
             >
               <IoCloudUploadOutline />
@@ -481,7 +478,13 @@ const AdminCreateBus = () => {
 
             {boardingDefault?.length > 0 ? (
               boardingDefault.map((item, index) => (
-                <BoardingArrive array={boarding} setArray={setBoarding} data={item} key={item._id} isBoarding={true} />
+                <BoardingArrive
+                  array={data?.boarding}
+                  setArray={changeBoarding}
+                  data={item}
+                  key={item._id}
+                  isBoarding={true}
+                />
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
@@ -490,7 +493,6 @@ const AdminCreateBus = () => {
             )}
           </div>
         </div>
-
         {/* Arrival point */}
         <div className="w-full mt-6 border border-gray-300 rounded-2xl p-4 md:p-6">
           <div className="flex mb-3 items-center gap-2 md:gap-4">
@@ -503,11 +505,7 @@ const AdminCreateBus = () => {
           </div>
           <div className="grid gap-2 mt-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             <div
-              onClick={() => {
-                cityTo
-                  ? setModalArrivalPoint(true)
-                  : toast.error("Please select a city to first");
-              }}
+              onClick={createArrival}
               className="cursor-pointer h-20 border border-gray-300 border-dashed p-4 flex rounded-2xl gap-2 items-center justify-center"
             >
               <IoCloudUploadOutline />
@@ -516,22 +514,19 @@ const AdminCreateBus = () => {
 
             {arrivalDefault?.length > 0 ? (
               arrivalDefault.map((item, index) => (
-                <BoardingArrive array={arrival} setArray={setArrival} data={item} key={item._id} isBoarding={false} />
+                <BoardingArrive
+                  array={data?.arrival}
+                  setArray={changeArrival}
+                  data={item}
+                  key={item._id}
+                  isBoarding={false}
+                />
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
                 No arrival points available for this city.
               </p>
             )}
-
-            {/* {servicesDefault?.length > 0 && (
-              <Services
-                handleServiceChange={handleServiceChange}
-                setServicesDefault={setServicesDefault}
-                servicesDefault={servicesDefault}
-                services={services}
-              />
-            )} */}
           </div>
         </div>
 
@@ -556,7 +551,7 @@ const AdminCreateBus = () => {
             {facilitiesDefault?.length > 0 ? (
               <Facilities
                 handleFaChange={handleFaChange}
-                facilities={facilities}
+                facilities={data?.facilities}
                 setFacilitiesDefault={setFacilitiesDefault}
                 facilitiesDefault={facilitiesDefault}
               />
@@ -567,31 +562,28 @@ const AdminCreateBus = () => {
             )}
           </div>
         </div>
-
         <div className="flex flex-col mt-4 gap-2">
           <label className="text-xl md:text-2xl font-medium">
             Terms & Conditions
           </label>
           <EditorTiny
             handleEditorChange={(e) => {
-              setConditions(e);
+              setData({ ...data, conditions: e });
             }}
-            description={conditions}
+            description={data?.conditions}
           />
         </div>
       </div>
-
       {/* Scroll to top button */}
       <div className="w-full flex items-center justify-center cursor-pointer">
         <CiCircleChevUp onClick={handleUp} size={40} />
       </div>
-
       {/* Modals */}
       {modalBoardingPoint && (
         <ModalBoardingArrive
           isBoarding={true}
           setShowModel={setModalBoardingPoint}
-          city={cityFrom}
+          city={data?.cityFrom}
         />
       )}
 
@@ -600,13 +592,13 @@ const AdminCreateBus = () => {
         <ModalBoardingArrive
           isBoarding={false}
           setShowModel={setModalArrivalPoint}
-          city={cityTo}
+          city={data?.cityTo}
         />
       )}
       {showCreateFacility && (
         <ModelCreateFacility
-          facilities={facilities}
-          setFacilities={setFacilities}
+          facilities={data?.facilities}
+          setFacilities={changeFal}
           setShowCreateFacility={setShowCreateFacility}
           isBus={true}
         />
@@ -615,4 +607,4 @@ const AdminCreateBus = () => {
   );
 };
 
-export default AdminCreateBus;
+export default AdminEditBus;

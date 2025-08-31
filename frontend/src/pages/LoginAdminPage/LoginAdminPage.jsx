@@ -20,7 +20,6 @@ const LoginAdminPage = () => {
         const res = await loginAdminApi(e)
         if(res.success){
             toast.success(res.message)
-            console.log(res)
             dispatch(loginAdminAction(res.data))
         }
         else{

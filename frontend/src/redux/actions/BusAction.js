@@ -278,3 +278,58 @@ export const getAllBusesAdminAction = ()=>async(dispatch)=>{
         })
     }
 }
+
+export const deleteBusAction = (id)=> async(dispatch)=>{
+    try {
+        dispatch({
+            type:"deleteBusRequest",
+        })
+        const data = await busAdminApi("deleteBus/" +id,"delete"); 
+        if(data.success){
+            dispatch({
+                type:"deleteBusSuccess",
+                payload:data.data
+            })
+        } 
+       else{
+        dispatch({
+            type:"deleteBusFailed",
+            payload:"Error when delete",
+        })
+       }
+    } catch (error) {
+        dispatch({
+            type:"deleteBusFailed",
+            payload:error?.response?.data?.message||"Error in axios",
+
+        })
+    }
+
+}
+
+export const updateBusAction = (data)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:"updateBusAdminRequest",
+        })
+        if(data.success){   
+            dispatch({
+                type:"updateBusAdminSuccess",
+                payload:data.data
+            })
+        } 
+       else{
+        dispatch({
+            type:"updateBusAdminFailed",
+            payload:"Error when update bus",
+            // errorCreate:data.message
+        })
+       }
+    } catch (error) {
+        dispatch({
+            type:"updateBusAdminFailed",
+            payload:error?.response?.data?.message||"Error in axios",
+            errorCreate:error?.response?.data?.message || "Error in axios"
+        })
+    }
+}

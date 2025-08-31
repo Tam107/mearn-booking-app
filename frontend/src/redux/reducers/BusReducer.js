@@ -138,4 +138,32 @@ export const BusReducer = createReducer(initialState, (builder) => {
             state.error = action.payload;
         })
 
+        //delete bus
+        .addCase("deleteBusRequest", (state) => {
+            state.loading = true;
+        })
+        .addCase("deleteBusSuccess", (state, action) => {
+            state.loading = false;
+            state.busesAdmin = state.busesAdmin.filter(i=>i._id!== action.payload._id)
+        })
+        .addCase("deleteBusFailed", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+        //update bus
+        .addCase("updateBusAdminRequest", (state) => {
+            state.loading = true;
+        })
+        .addCase("updateBusAdminSuccess", (state, action) => {
+            state.loading = false;
+            state.busesAdmin = state.busesAdmin.map(bus =>
+                bus._id === action.payload._id ? action.payload : bus
+            );
+        })
+        .addCase("updateBusAdminFailed", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+
 });

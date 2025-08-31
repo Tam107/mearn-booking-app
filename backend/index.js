@@ -26,16 +26,13 @@ mongoose.set('strictQuery', true); // or false, depending on your needs
 const connect = async () => {
     try {
         await mongoose.connect(MONGO_URI);
-        // console.log("Connected to MongoDB");
     } catch (e) {
-        // console.log("Error connecting to mongoose", e);
     }
 };
 // Call the connect function
 connect();
 
 mongoose.connection.on("disconnected",()=>{
-    console.log(" Disconnected to MongoDB");
 } );
 
 //middleware
@@ -93,8 +90,6 @@ app.use((error, req, res, next)=>{
 
 
 app.listen(PORT, () => {
-    console.log(`App listening on 8080`);
-    console.log("PORT: ",PORT)
-    console.log("PORT_FRONTEND: ",PORT_FRONTEND)
+  
     swaggerDocs(app, PORT); // Initialize Swagger
 });

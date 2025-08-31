@@ -2,9 +2,7 @@ import { Input } from "antd";
 import React, { useState } from "react";
 import ItemTravelerDetail from "./ItemTravelerDetail";
 
-const BookingTravelerDetail = ({ seats, travelerDetails, setTravelerDetails, processPayment }) => {
-  console.log(travelerDetails);
-  
+const BookingTravelerDetail = ({ seats, travelerDetails, setTravelerDetails, processPayment }) => {  
   const handleChange = (index, field, value) => {
     const updatedDetails = [...travelerDetails];
     updatedDetails[index][field] = value;

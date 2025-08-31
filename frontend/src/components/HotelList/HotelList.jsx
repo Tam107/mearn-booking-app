@@ -114,22 +114,7 @@ const HotelList = () => {
           </div>
 
           {/* Filter Button */}
-          <div className="flex gap-2 items-center">
-            <div
-                onClick={handleClearFilters}
-                className="border cursor-pointer hover:border-black hover:bg-gray-100 transition duration-300 border-gray-200 rounded-lg flex items-center gap-4 p-4"
-            >
-              <p className="font-[400] text-[16px]">Clear Filter</p>
-            </div>
-            <div
-                onClick={() => setShowFilter(true)}
-                className="border cursor-pointer hover:border-black hover:bg-gray-100 transition duration-300 border-gray-200 rounded-lg flex items-center gap-4 p-4"
-            >
-              <TbFilterSearch size={20} />
-              <p className="font-[400] text-[16px]">Filter</p>
-              <div className="size-4 rounded-full bg-red-500 text-sm text-white absolute top-1 right-2 flex items-center justify-center">{filterType.length}</div>
-            </div>
-          </div>
+          
         </div>
 
         {/* Display Hotels */}

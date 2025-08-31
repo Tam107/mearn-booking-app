@@ -114,7 +114,8 @@ const handlePayment = () => {
     arrivalTime: bus?.arrivalTime,
     boarding: bus?.boarding,
     arrival: bus?.arrival,
-    price: bus?.price,
+    price: parseFloat(bus?.price),
+    totalPrice: parseFloat(bus?.price) * parseInt(seats),
     seats: seats,
     layout: layout,
   };

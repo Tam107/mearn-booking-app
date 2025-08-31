@@ -149,3 +149,57 @@ export const getAllBus = async (req, res) => {
         })
     }
 }
+
+export const deleteBus = async (req,res) => {
+    try {
+        const {id} = req.params
+        const busDelete = await Bus.findOneAndDelete({_id:id}).populate("boarding").populate("arrival").populate("facilities")
+        if(busDelete){
+            return res.json({
+                success: true,
+                message: "Get all buses successfully",
+                data: busDelete
+            });
+        }
+        else{
+            return res.json({
+                success: true,
+                message: "Get all buses successfully",
+                data: {}
+            });
+        }
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in BE",
+        })
+    }
+}
+
+export const updateBus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+
+        const newBus = await Bus.findOneAndUpdate({_id:id},data);
+        if(newBus){
+            return res.json({
+                success: true,
+                message: "Update successfully",
+                data: newBus
+            });
+        }
+        return res.json({
+            success: false,
+            message: "Can not find bus",
+            data: {}
+        });
+       
+    } catch (error) {
+        // console.log(error)
+        return res.json({
+            success: false,
+            message: "Error in BE",
+        });
+    }
+}

@@ -144,7 +144,7 @@ const Header = () => {
           {/* Wishlist Overlay with smooth fade-in */}
           {openWishList && (
               <div className="fixed inset-0 bg-black/40 z-50">
-                <div className="absolute top-0 right-0 w-full md:w-[400px] h-full bg-white shadow-lg overflow-y-auto">
+                <div className="">
                   <div className="flex justify-end p-2">
                     <button onClick={() => setOpenWishList(false)}>✕</button>
                   </div>

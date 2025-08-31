@@ -90,8 +90,7 @@ const AdminCreateRoom = () => {
     ola();
   }, [showModel, showCreateFacility]);
 
-  // console.log(facilitiesDefault);
-  // chuc nang price
+
   const handleUp = () => {
     window.scrollTo({
       top: 0,
@@ -188,7 +187,6 @@ const AdminCreateRoom = () => {
     for (let i = 0; i < files.length; i++) {
       data.append("photos", files[i]);
     }
-    // console.log("ok");
 
     const res = await uploadByFilesApi(data);
 
@@ -300,7 +298,6 @@ const AdminCreateRoom = () => {
     setEndDate(null);
     setDaysChoosed([]);
   };
-  // console.log(priceExtra);
 
   const handleCreateRoom = async () => {
     if (!hotelId) {
@@ -325,7 +322,6 @@ const AdminCreateRoom = () => {
       return toast.error("Please choose at least 1 facilities");
     }
 
-    // console.log(facilities);
 
     const res = await createRoomApi({
       RoomType: roomType,
@@ -380,11 +376,9 @@ const AdminCreateRoom = () => {
       setPriceChange();
       return toast.error("Please choose date in the future");
     }
-    // console.log(infoChangePrice?.start,1);
 
     const newEvent = eventsDefault.map((event, index) => {
       if (infoChangePrice?.start.getTime() == event.start.getTime()) {
-        console.log(event, 1);
 
         return {
           ...event,
@@ -424,7 +418,6 @@ const AdminCreateRoom = () => {
     setModelChangePrice(false);
     setPriceChange();
   };
-  // console.log(eventsDefault);
 
   const handlePriceChangeMulti = () => {
     if (!priceChange) {
@@ -447,8 +440,7 @@ const AdminCreateRoom = () => {
       return item.getTime();
     });
     const existExtra = priceExtra.map((item) => {
-      // console.log(item.start);
-      // console.log(infoChangePrice.slots,2);
+
 
       if (timeShots?.includes(item.start.getTime())) {
         return {
@@ -464,7 +456,6 @@ const AdminCreateRoom = () => {
         return item;
       }
     });
-    console.log(moment(noTimeShots[0]).startOf("day").toDate());
 
     const newPriceExtra = noTimeShots.map((item) => {
       return {
@@ -482,7 +473,6 @@ const AdminCreateRoom = () => {
     setModelChangePrice(false);
     toast.success("save changes successfully!");
   };
-  // console.log(priceExtra);
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return (

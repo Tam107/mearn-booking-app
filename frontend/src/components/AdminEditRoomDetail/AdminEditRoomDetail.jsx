@@ -53,7 +53,6 @@ const AdminEditRoomDetail = () => {
     for (let i = 0; i < files.length; i++) {
       data.append("photos", files[i]);
     }
-    // console.log("ok");
 
     const res = await uploadByFilesApi(data);
 
@@ -108,19 +107,14 @@ const AdminEditRoomDetail = () => {
     // const dayOfWeek = moment(startDate).format("dddd");
     const newStartDate = startDate.startOf("day").toDate();
     const newEndDate = endDate.endOf("day").toDate();
-    //  console.log(eventsDefault);
 
     const newEvent = eventsDefault.map((event) => {
-      // console.log(moment(event.end).format("dddd"));
 
       if (
         event.start >= newStartDate.getTime() &&
         event.end <= newEndDate.getTime()
       ) {
         if (daysChoosed.includes(moment(event.start).format("dddd"))) {
-          // console.log(new Date(event.start));
-          // console.log(new Date(event.end));
-
           return {
             ...event,
             title: priceEvents,

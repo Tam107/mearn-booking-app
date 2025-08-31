@@ -1,6 +1,5 @@
 export const create = (req, res, next) => {
     let data = req.body;
-    console.log(data);
     
     if (!data?.cityFrom || !data?.cityTo || !data?.departureTime || !data?.arrivalTime || !data?.totalSeats || !data?.poName || !data?.seat || !data?.price || !data?.policy || !data?.boarding || !data?.arrival) {
         return res.json({

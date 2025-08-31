@@ -34,7 +34,7 @@ const BoardingArrive = ({ isBoarding, data, array, setArray }) => {
   );
   const handleChange = (e) => {
     if (e.target.checked) {
-      setArray((prevArray) => [...prevArray, data._id]);
+      setArray([...array,data._id]);
     } else {
       let newTmp = array.filter((item) => item !== data._id);
       setArray(newTmp);
@@ -53,7 +53,7 @@ const BoardingArrive = ({ isBoarding, data, array, setArray }) => {
             onChange={handleChange}
             type="checkbox"
             className="mr-2"
-            // checked={services?.includes(service?._id)}
+            checked={array?.includes(data?._id)}
           />
           <div>
             <span className="text-md font-medium break-words overflow-hidden text-ellipsis line-clamp-3">

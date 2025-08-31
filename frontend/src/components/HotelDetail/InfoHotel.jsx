@@ -65,13 +65,10 @@ const InfoHotel = ({ data }) => {
   const navigate = useNavigate();
 
   const stateUser = useSelector((state) => state.UserReducer);
-  console.log(stateUser);
 
   const handlePayment = async () => {
     setDisablePaymentButton(true);
     const currenDate = new Date();
-    // console.log(currenDate.toDateString()> checkIn);
-    // console.log();
 
     if (!checkIn) {
       setDisablePaymentButton(false);
@@ -96,9 +93,6 @@ const InfoHotel = ({ data }) => {
 
     if (currenDate.getTime() > checkInDate.getTime()) {
       setDisablePaymentButton(false);
-      console.log(currenDate.toString());
-      console.log(checkInDate.toString());
-      console.log(currenDate.getTime() > checkInDate.getTime());
 
       return toast.error("Selected dates cannot be in the past. Please choose valid future dates");
     }
@@ -125,7 +119,6 @@ const InfoHotel = ({ data }) => {
       roomType: dataRoom._id,
     };
     const res = await createOtpPayment(dataPayment);
-    console.log(res);
     if (res.success) {
       navigate("/booking/" + res.data._id);
       setDisablePaymentButton(false);
