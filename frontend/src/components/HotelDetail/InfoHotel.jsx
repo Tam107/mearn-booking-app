@@ -28,13 +28,11 @@ const InfoHotel = ({ data }) => {
     if (checkOut && checkIn) {
       let tmpInfoPrice = [];
       let tmp = 0;
-      // console.log(dataRoom);
 
       const priceExtra = dataRoom.priceExtra.map((i) => ({
         date: new Date(i.start),
         price: i.title,
       }));
-      // console.log(priceExtra);
 
       const checkInDate = new Date(checkIn);
       const checkOutDate = new Date(checkOut);
@@ -127,11 +125,9 @@ const InfoHotel = ({ data }) => {
       setDisablePaymentButton(false);
     }
 
-    // console.log(dataPayment);
 
     setDisablePaymentButton(false);
   };
-  // console.log(infoPrice);
 
   const stateRoom = useSelector((state) => state.RoomReducer);
   useEffect(() => {

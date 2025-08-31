@@ -11,10 +11,8 @@ const OrderList = ({data}) => {
         return "bg-gray-500"; // Màu xám mặc định nếu không khớp
       };
       const handleSeeDetails = (order) => {
-        // console.log(order);
         
         if (order.status.toLowerCase() === "request") {
-            console.log(1);
             
           navigate(`/booking/${order._id}`); // Điều hướng đến trang booking/id
         } else if (

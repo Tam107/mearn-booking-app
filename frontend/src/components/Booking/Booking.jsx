@@ -27,7 +27,6 @@ const Booking = () => {
     setEmail(stateUser?.user?.email);
     setPhoneNumber(stateUser?.user?.phoneNumber);
   }, [stateUser]);
-  // console.log(data);
 
   const [nameGuest, setNameGuest] = useState("");
   const navigate = useNavigate();
@@ -39,7 +38,6 @@ const Booking = () => {
         date: new Date(i.start),
         price: i.title,
       }));
-      // console.log(priceExtra);
 
       const checkInDate = new Date(data?.checkIn);
       const checkOutDate = new Date(data?.checkOut);
@@ -69,10 +67,8 @@ const Booking = () => {
   };
 
   const fetchApi = async () => {
-    // console.log(id);
 
     const res = await getBookingApi(id);
-    // console.log(res);
 
     if (res.success) {
       if (res.data.status === "Pending" || res.status === "Confirm") {

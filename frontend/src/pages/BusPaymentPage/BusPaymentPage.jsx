@@ -61,7 +61,6 @@ const BusPaymentPage = () => {
     }, 600000);
     return () => clearInterval(interval);
   }, [id, stateBus?.busesAdmin]);
-  console.log(booking);
 
   return (
     <>
@@ -111,7 +110,6 @@ const BusPaymentPage = () => {
                           }}
                           onApprove={(dataOrder, actions) => {
                             return actions.order.capture().then((details) => {
-                              // console.log("Payment successful:", details);
                             });
                           }}
                           // createOrder={createOrder}

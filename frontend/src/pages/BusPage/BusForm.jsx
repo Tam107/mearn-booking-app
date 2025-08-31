@@ -26,7 +26,6 @@ const BusForm = () => {
 
   // default
   const cities = State.getStatesOfCountry("VN");
-  console.log(cities);
 
   const handleSubmit = (e) => {
     e.preventDefault();

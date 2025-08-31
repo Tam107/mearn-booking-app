@@ -14,12 +14,10 @@ const PaymentPage = () => {
      const navigate  = useNavigate()
      const getPaypalClientId = async () => {
       const res = await getPayPalClientApi();
-      // console.log(res.data);
       
       setClientId(res);
     };
     
-    // console.log(data);
     const fetchPrice = async (data) => {
       
   
@@ -31,7 +29,6 @@ const PaymentPage = () => {
           date: new Date(i.start),
           price: i.title,
         }));
-        // console.log(priceExtra);
   
         const checkInDate = new Date(data?.checkIn);
         const checkOutDate = new Date(data?.checkOut);
@@ -61,14 +58,11 @@ const PaymentPage = () => {
           setTotalPrice(tmp);
       }
     };
-    // console.log(totalPrice);
     
     
     const fetchApi = async () => {
-        // console.log(id);
     
         const res = await getBookingApi(id);
-        // console.log(res);
     
         if (res.success) {
           
@@ -81,7 +75,6 @@ const PaymentPage = () => {
             navigate("/order/"+res.data._id)
             return;
           }
-          // console.log(res.data,111);
           
           setData(res.data);
         } else {
@@ -93,7 +86,6 @@ const PaymentPage = () => {
       getPaypalClientId()
     },[id])
     useEffect(()=>{fetchPrice(data)},[data])
-    // console.log(data,"123");
     
 
   return (

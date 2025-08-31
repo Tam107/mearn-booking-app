@@ -82,7 +82,6 @@ const AdminViewEditHotel = () => {
   const [photos, setPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [services, setServices] = useState([]);
-  // console.log(services);
   // policy
   const [typePolicyDefault,setTypePolicyDefault] = useState([
     'House rules',
@@ -118,12 +117,10 @@ const AdminViewEditHotel = () => {
       setDescription(dataDefault?.description)
       setServices(dataDefault?.services?.map(service => service._id));
       setPolicyChecked(dataDefault?.policy.map(i=>i._id))
-      // console.log(dataDefault);
       
     };
     fetchApi();
   }, [dataDefault]);
-  // console.log(services);
   
 
   // handle function
@@ -189,7 +186,6 @@ const AdminViewEditHotel = () => {
   useEffect(()=>{const ola = async ()=>{
     if(typePolicy){
       const tmp = await getPolicyApi({type:typePolicy})
-      // console.log(tmp);
       
       if(tmp.success){
         
@@ -217,7 +213,6 @@ ola()},[typePolicy,showModelPolicy])
   
   const handleSave = async(e) => {
     // e.preventDefault();
-    // console.log(123);
     if (!name || name.trim().length===0 ) {
       return toast.error("Name cannot be empty");
     }
@@ -277,32 +272,6 @@ ola()},[typePolicy,showModelPolicy])
     await dispatch(updateHotelAction(dataHotel))
     dispatch(getAllRoomsAction())
     navigate("/dashboard-view-homes")
-
-
-    // console.log(dataHotel);
-    
-    
-    // const res = await createHotelApi(dataHotel)
-    // if(res.success){
-      
-    //   toast.success("Create hotel successfully")
-    //   setName("")
-    //   setType("")
-    //   setCity("")
-    //   setAddress("")
-    //   setCheapestPrice()
-    //   setRoomType([])
-    //   setCheckIn(dayjs("14:00","HH:mm"))
-    //   setCheckOut(dayjs('14:00',"HH:mm"))
-    //   setLinkPhoto("")
-    //   setPhotos([])
-    //   setDescription("")
-    //   setServices([])
-    //   dispatch(getAllRoomApi()  )
-    // }
-    // else{
-    //   toast.error("Error");
-    // }
   };
 
 

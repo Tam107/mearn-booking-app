@@ -40,7 +40,6 @@ const BusSearchPage = () => {
     getData();
     window.scrollTo(0, 0);
   }, [from, to, busSelector?.busesAdmin]);
-  console.log(buses);
 
   
 

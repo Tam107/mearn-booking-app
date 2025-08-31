@@ -32,7 +32,6 @@ const ModelUpdateFacility = ({ setFacilitiesDefault,facilitiesDefault,setShowMod
             
         }
        
-        // console.log(name,icon,description);
 
         let dataBody = {
           icon

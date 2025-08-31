@@ -35,7 +35,6 @@ const Item = ({data}) => {
       const addToWishlistHandler = (data) => {
         if(isSignedIn){
             setClick(!click);
-            // console.log(data)
             dispatch(addToWishlist(data));
         }
         else{

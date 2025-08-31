@@ -20,14 +20,12 @@ const OrderListPage = () => {
       }
     }
   };
-//   console.log(data);
   
 
   useEffect(() => {
     fetchApi();
   }, [stateUser.user]);
 
-  console.log(stateUser);
   
   
   

@@ -63,13 +63,11 @@ const AdminViewRoomDetail = () => {
     let currentDay = today;
     // tmp?.priceExtra?.forEach((item) => {
     //   const startDate = moment(item.start);
-    //   console.log(startDate);
 
     // });
     while (currentDay.isBefore(oneYearFromNow)) {
       // const ex= tmp?.priceExtra.find(i=>moment(i.start)=== currentDay.startOf("day")._)
-      // console.log(currentDay.startOf("day")._d);
-      // console.log(currentDay);
+
       const ex = tmp?.priceExtra.find((i) => {
         const startDate = moment(i.start);
         if (startDate.isSame(currentDay.startOf("day").toDate(), "day")) {
@@ -78,9 +76,7 @@ const AdminViewRoomDetail = () => {
         return null;
       });
 
-      // console.log(ex);
       if (ex) {
-        // console.log(ex);
 
         events.push({
           title: ex?.title, // Gán title là "100 VND"
@@ -100,7 +96,6 @@ const AdminViewRoomDetail = () => {
     }
     setEventsDefault(events);
   }, [stateRooms?.rooms, slug]);
-  console.log(data);
   const handleUp = () => {
     window.scrollTo({
       top: 0,

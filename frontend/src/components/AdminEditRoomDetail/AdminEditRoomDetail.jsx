@@ -129,7 +129,6 @@ const AdminEditRoomDetail = () => {
         return event;
       }
     });
-    // console.log(newEvent);
 
     const priceExtraTmp = [];
 
@@ -147,7 +146,6 @@ const AdminEditRoomDetail = () => {
       }
     });
     if (priceExtra.length > 0) {
-      // console.log(priceExtra);
 
       const filter = priceExtra.filter(
         (item) =>
@@ -266,7 +264,6 @@ const AdminEditRoomDetail = () => {
   }
   useEffect(() => {
     const tmp = stateRoom?.rooms?.find((item) => item.slug === slug);
-    // console.log(stateRoom);
 
     if (tmp) {
       setData(tmp);
@@ -279,7 +276,6 @@ const AdminEditRoomDetail = () => {
       setDescription(tmp?.description);
       setPhotos(tmp?.photos);
       setPriceExtra(tmp?.priceExtra);
-      // console.log(tmp?.priceExtra);
 
       //set price
     const today = moment(tmp.createdAt); // Lấy ngày hôm nay
@@ -290,16 +286,10 @@ const AdminEditRoomDetail = () => {
 
       while (currentDay.isBefore(oneYearFromNow)) {
         // const ex= tmp?.priceExtra.find(i=>moment(i.start)=== currentDay.startOf("day")._)
-        // console.log(currentDay.startOf("day")._d);
-        // console.log(currentDay);
         const ex = tmp?.priceExtra.find((i, ind) => {
           const startDate = new Date(i.start);
-          // console.log(startDate);
-
-          // console.log(currentDay);
 
           if (startDate.getTime() === currentDay.startOf("day")._d.getTime()) {
-            // console.log(currentDay.startOf("day")._d,i);
             return {
               title: i.title,
               start: currentDay.startOf("day")._d,
@@ -308,12 +298,9 @@ const AdminEditRoomDetail = () => {
           }
           return null;
         });
-        // console.log(ex);
 
-        // console.log(ex);
         if (ex) {
-          // console.log(ex,1);
-          // console.log(new Date(ex.start).startOf("day")._d);
+
 
           events.push({
             title: ex?.title, // Gán title là "100 VND"
@@ -334,7 +321,6 @@ const AdminEditRoomDetail = () => {
       setEventsDefault(events);
     }
   }, [slug, stateRoom]);
-  // console.log(eventsDefault);
 
   //model chang price
   const [modelChangePrice, setModelChangePrice] = useState(false);
@@ -373,11 +359,9 @@ const AdminEditRoomDetail = () => {
       setPriceChange();
       return toast.error("Please choose date in the future");
     }
-    // console.log(infoChangePrice?.start,1);
 
     const newEvent = eventsDefault.map((event, index) => {
       if (infoChangePrice?.start.getTime() == event.start.getTime()) {
-        // console.log(event,1);
 
         return {
           ...event,
@@ -405,11 +389,9 @@ const AdminEditRoomDetail = () => {
         }
         return item;
       });
-      console.log(newPriceExtra, 1);
 
       setPriceExtra(newPriceExtra);
     } else {
-      // console.log(moment(infoChangePrice.start).endOf('day')._d);
 
       const newPriceExtra = [
         ...priceExtra,
@@ -419,14 +401,12 @@ const AdminEditRoomDetail = () => {
           title: priceChange,
         },
       ];
-      // console.log(newPriceExtra,2);
-      // console.log(infoChangePrice);
+
 
       setPriceExtra(newPriceExtra);
     }
     toast.success("save changes successfully!");
 
-    // console.log(newEvent);
 
     setEventsDefault(newEvent);
     setInfoChangePrice(null);
@@ -452,12 +432,10 @@ const AdminEditRoomDetail = () => {
       }
       return event;
     });
-    // console.log(newEvent);
 
     const timeShots = infoChangePrice.slots.map((item) => {
       return item.getTime();
     });
-    console.log(timeShots);
 
     const existExtra = priceExtra.map((item) => {
       if (timeShots?.includes(moment(item.start).startOf("day")._d.getTime())) {
@@ -469,7 +447,6 @@ const AdminEditRoomDetail = () => {
         return item;
       }
     });
-    // console.log(existExtra);
 
     const noTimeShots = timeShots.filter((item) => {
       if (
@@ -480,7 +457,6 @@ const AdminEditRoomDetail = () => {
         return item;
       }
     });
-    // console.log(moment(noTimeShots[0]).startOf("day").toDate());
 
     const newPriceExtra = noTimeShots.map((item) => {
       return {
@@ -503,7 +479,6 @@ const AdminEditRoomDetail = () => {
   const dispatch = useDispatch();
 
   const handleSaveRoom = async () => {
-    // console.log(photos);
     if (!data || !data?.hotel) {
       return toast.error("Hotel no exists!");
     }
@@ -539,7 +514,6 @@ const AdminEditRoomDetail = () => {
       price: price,
       priceExtra: priceExtra,
     };
-    // console.log(data);
 
     const res = await updateRoomApi(dataUpdate, data._id);
     if (res.success) {

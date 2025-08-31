@@ -38,7 +38,6 @@ const Item = ({ i }) => {
   const addToWishlistHandler = (data) => {
     if (isSignedIn) {
       setClick(!click);
-      // console.log(data)
       dispatch(addToWishlist(data));
     } else {
       toast.error("Please login to use wishlist");
@@ -46,7 +45,6 @@ const Item = ({ i }) => {
   };
   const navigate = useNavigate();
 
-  // console.log(i);
 
   return (
     <>
@@ -96,8 +94,6 @@ const Item = ({ i }) => {
                 <p className="font-[400] text-[14px] leading-[22px] text-gray-500">
                   {i?.roomType.map((type, index) => {
                     const isLastItem = index === i.roomType.length - 1;
-                    console.log(i.roomType);
-
                     return (
                       <span key={index}>
                         {type.RoomType}

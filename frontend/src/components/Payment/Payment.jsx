@@ -16,7 +16,6 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
      const navigate = useNavigate()
     
   const handleSuccess =async (details)=>{
-    // console.log("vao đây");
     
   setDisablueButton(true)
     let newData = data
@@ -27,7 +26,6 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
     newData.totalPriceUSD= totalPriceInUSD
     newData.status = "Pending"
     
-    // console.log(newData);
 
     const res = await updateBookingApi(id,newData)
     if (res.success) {
@@ -88,7 +86,6 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                       }}
                       onApprove={(dataOrder, actions) => {
                         return actions.order.capture().then((details) => {
-                          // console.log("Payment successful:", details);
                           handleSuccess(details); // Gọi hàm xử lý sau khi thanh toán thành công
                         });
                       }}
@@ -270,7 +267,6 @@ const Payment = ({ data ,numberOfDays,totalPrice,clientID,id}) => {
                   <div className="flex flex-col gap-2">
                     {data?.roomType?.hotel?.policy?.map((i) => {
                       if (i.type === "House rules") {
-                        // console.log(i?.icon, "icon");
 
                         return (
                           <>

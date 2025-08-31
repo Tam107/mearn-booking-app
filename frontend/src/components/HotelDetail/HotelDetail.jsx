@@ -61,14 +61,12 @@ const HotelDetail = () => {
   const addToWishlistHandler = (data) => {
     if (isSignedIn) {
       setClick(!click);
-      // console.log(data)
       dispatch(addToWishlist(data));
     } else {
       toast.error("Please login to use wishlist");
     }
   };
 
-  // console.log(slug);
   const copyLinkToClipboard = () => {
     const currentUrl = window.location.href; // Get the current page URL
     navigator.clipboard

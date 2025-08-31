@@ -28,7 +28,6 @@ const Item = ({
       const tmp = facilitiesDefault.filter((i) => {
         if (i._id !== data._id) return i;
       });
-      console.log(setFacilitiesDefault);
 
       setFacilitiesDefault(tmp);
     } else {

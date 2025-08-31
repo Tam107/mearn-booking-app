@@ -13,7 +13,6 @@ const FindOrder = () => {
   const [isLoading, setIsLoading] = useState(false); // State để kiểm soát trạng thái loading
   const navigate = useNavigate()
   const handleSearch = async() => {
-    // console.log("Searching for order:", orderId);
     if (!orderId.trim()) {
         return toast.error("Please enter your booking ID");
       }
@@ -36,7 +35,6 @@ const FindOrder = () => {
     
     // Add order lookup logic here
   };
-  console.log(data);
   const handleViewDetails = ()=>{
     if(isSignedIn){
         navigate("/order/"+data._id)
