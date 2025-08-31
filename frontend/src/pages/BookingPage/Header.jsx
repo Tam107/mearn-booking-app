@@ -24,14 +24,21 @@ const Header = () => {
           <span className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-300 text-gray-500 font-semibold">
             2
           </span>
-          <span>Pay</span>
+          <span>Review</span>
         </div>
         <span>—</span>
         <div className="flex items-center gap-1">
           <span className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-300 text-gray-500 font-semibold">
             3
           </span>
-          <span>Voucher Sent</span>
+          <span>Pay</span>
+        </div>
+        <span>—</span>
+        <div className="flex items-center gap-1">
+          <span className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-300 text-gray-500 font-semibold">
+            4
+          </span>
+          <span>E-ticket</span>
         </div>
       </div>
     </div>

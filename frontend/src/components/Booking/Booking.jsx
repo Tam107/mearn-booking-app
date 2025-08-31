@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Carousel, Input } from "antd";
 import iconMap from "../../data/iconMap";
+import BookingContactDetail from "../BookingComonent/BookingContactDetail";
+import BookingRequest from "../BookingComonent/BookingRequest";
 const Booking = () => {
   const stateUser = useSelector((state) => state.UserReducer);
   const { id } = useParams();
@@ -109,15 +111,14 @@ const Booking = () => {
       return toast.error("Invalid email address");
     }
     if (!phoneNumber) {
-
       setDisablueButton(false);
       return toast.error("Please enter your phone number");
     }
-    if ( phoneNumber.length < 7 || phoneNumber.length > 15 ) {
+    if (phoneNumber.length < 7 || phoneNumber.length > 15) {
       setDisablueButton(false);
       return toast.error("Invalid phone number");
     }
-    
+
     if (!isGuest) {
       if (!nameGuest) {
         setDisablueButton(false);
@@ -174,133 +175,23 @@ const Booking = () => {
         <div className="grid grid-cols-2 gap-6">
           <div className="left">
             {/* Contact Details */}
-            <div className="mb-6 bg-white rounded-lg p-6">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold mb-2">
-                  Contact Details (for E-voucher)
-                </h2>
-                <p className="text-md text-[#687176]">
-                  Please fill in all fields correctly to ensure you receive the
-                  booking confirmation voucher in your email.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-medium mb-1">
-                    Contact's Name
-                  </label>
-                  <Input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Enter your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium mb-1">
-                    Contact's Email Address
-                  </label>
-                  <Input
-                    type="email"
-                    className="!w-full border !border-gray-300 !rounded-md !p-2"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium mb-1">
-                    Mobile Number
-                  </label>
-                  <Input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Enter your mobile number"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
-                {!isGuest && (
-                  <>
-                    <div>
-                      <label className="block font-medium mb-1">
-                        Guest's Full Name
-                      </label>
-                      <Input
-                        type="text"
-                        className="w-full border border-gray-300 rounded-md p-2"
-                        placeholder="Enter guest name"
-                        value={nameGuest}
-                        onChange={(e) => setNameGuest(e.target.value)}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="mt-6">
-                <div className="flex items-center gap-6">
-                  {/* Option 1: I am the guest */}
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="guestOption"
-                      value="guest"
-                      className="w-5 h-5 text-blue-500 focus:ring-blue-500"
-                      checked={isGuest}
-                      onChange={() => setIsGuest(true)}
-                    />
-                    <span className="text-gray-900 font-medium">
-                      I am the guest
-                    </span>
-                  </label>
-
-                  {/* Option 2: I'm booking for another person */}
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="guestOption"
-                      value="other"
-                      className="w-5 h-5 text-blue-500 focus:ring-blue-500"
-                      checked={!isGuest}
-                      onChange={() => setIsGuest(false)}
-                    />
-                    <span className="text-gray-900 font-medium">
-                      I'm booking for another person
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
+            <BookingContactDetail
+              name={name}
+              setName={setName}
+              email={email}
+              setEmail={setEmail}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+            />
             {/* Requests */}
-            <div className="mb-6 bg-white rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                Let us know if you have any request
-              </h2>
-              <p className="text-gray-500 mb-4">
-                You will know the availability of your additional request during
-                check-in. Extra charges may incur but you can still cancel your
-                request later.
-              </p>
-
-              <div className="mt-4">
-                <textarea
-                  name="others"
-                  value={request}
-                  onChange={(e) => setRequest(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter your request"
-                ></textarea>
-              </div>
-            </div>
+            <BookingRequest request={request} setRequest={setRequest} />
 
             {/* Total Price */}
             <div className="bg-white shadow-md rounded-lg p-6">
               {/* Price Details Header */}
               <h2 className="text-lg font-semibold mb-4">Price details</h2>
               <p className="text-sm text-gray-500 mb-4">
-                Taxes and fees are recovery charges which Traveloka pays to the
+                Taxes and fees are recovery charges which HighlightOfVN pays to the
                 property. If you have any questions regarding tax and invoice,
                 please refer to Traveloka Terms and Condition.
               </p>

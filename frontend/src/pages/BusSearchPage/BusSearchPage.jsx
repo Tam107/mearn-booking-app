@@ -80,7 +80,7 @@ const BusSearchPage = () => {
                 {buses?.length > 0 ? (
                   buses?.map((bus) => (
                     <>
-                      <Item bus={bus}/>
+                      <Item bus={bus} seats={seats}/>
                     </>
                   ))
                 ) : (

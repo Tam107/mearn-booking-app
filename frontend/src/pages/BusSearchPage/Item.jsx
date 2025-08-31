@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { IoIosReturnRight } from "react-icons/io";
 import iconMap from "../../data/iconMap";
 import { Carousel } from "antd";
+import { useNavigate } from "react-router";
 
-const Item = ({ bus }) => {
+const Item = ({ bus, seats }) => {
   const [layout, setLayout] = useState("");
   const [featureTab, setFeatureTab] = useState(false);
   const [ticketTab, setTicketTab] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (!bus?.photos || bus.photos.length === 0) return;
     const interval = setInterval(() => {
@@ -71,10 +72,61 @@ const Item = ({ bus }) => {
     setFeatureTab(false); // Đóng tab Feature
     setTicketTab(!ticketTab); // Mở tab Ticket
   };
+
+  // Hàm lưu booking vào localStorage, mỗi booking tồn tại ttl (1h)
+const saveBusBookingWithExpiry = (newBooking, ttl) => {
+  const now = new Date().getTime();
+
+  const existingStr = localStorage.getItem('busBooking');
+  let bookings = [];
+
+  if (existingStr) {
+    bookings = JSON.parse(existingStr);
+    bookings = bookings.filter(booking => booking.expiry > now);
+
+    const index = bookings.findIndex(booking => booking.value._id === newBooking._id);
+
+    if (index !== -1) {
+      bookings[index] = {
+        value: newBooking,
+        expiry: now + ttl,
+      };
+    } else {
+      bookings.push({
+        value: newBooking,
+        expiry: now + ttl,
+      });
+    }
+  } else {
+    bookings.push({
+      value: newBooking,
+      expiry: now + ttl,
+    });
+  }
+  localStorage.setItem('busBooking', JSON.stringify(bookings));
+};
+
+const handlePayment = () => {
+  const data = {
+    _id: bus?._id,
+    poName: bus?.poName,
+    departureTime: bus?.departureTime,
+    arrivalTime: bus?.arrivalTime,
+    boarding: bus?.boarding,
+    arrival: bus?.arrival,
+    price: bus?.price,
+    seats: seats,
+    layout: layout,
+  };
+
+  saveBusBookingWithExpiry(data, 3600000);
+  navigate('/bus/booking/' + bus?._id)
+};
+
   return (
     <>
       <div
-        className={`bg-white cursor-pointer  p-4 pb-0 shadow-lg ${
+        className={`bg-white p-4 pb-0 shadow-lg ${
           featureTab || ticketTab ? "rounded-t-sm" : "mb-6 rounded-sm"
         }`}
       >
@@ -158,7 +210,7 @@ const Item = ({ bus }) => {
               }).format(bus?.price)}{" "}
               <span className="text-sm font-[500] text-[#687176]">/pax</span>
             </p>
-            <button className="bg-orange-600 text-sm text-white px-8 py-1 rounded-md shadow-md transform hover:bg-orange-700 transition duration-300">
+            <button onClick={handlePayment} className="bg-orange-600 cursor-pointer text-sm text-white px-8 py-1 rounded-md shadow-md transform hover:bg-orange-700 transition duration-300">
               Book Now
             </button>
           </div>
@@ -166,7 +218,7 @@ const Item = ({ bus }) => {
         <div className="mt-4 flex w-full">
           <h4
             onClick={() => handleFeatureTabClick()}
-            className={`mr-10 z-11 duration-150 transition text-blue-400 text-sm font-[600] ${
+            className={`mr-10 cursor-pointer z-11 duration-150 transition text-blue-400 text-sm font-[600] ${
               featureTab ? "pb-3 border-b-2 border-blue-400" : "pb-4"
             }`}
           >
@@ -174,7 +226,7 @@ const Item = ({ bus }) => {
           </h4>
           <h4
             onClick={() => handleTicketTabClick()}
-            className={`mr-10 z-11 duration-150 transition text-blue-400 text-sm font-[600] ${
+            className={`mr-10 cursor-pointer z-11 duration-150 transition text-blue-400 text-sm font-[600] ${
               ticketTab ? "pb-3 border-b-2 border-blue-400" : "pb-4"
             }`}
           >

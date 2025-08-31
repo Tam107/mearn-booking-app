@@ -36,6 +36,7 @@ import BusPage from './pages/BusPage/BusPage.jsx';
 import AdminViewBusPage from './pages/AdminViewBusPage/AdminViewBusPage.jsx';
 import BusSearchPage from './pages/BusSearchPage/BusSearchPage.jsx';
 import { getAllBusesAdminAction } from './redux/actions/BusAction.js';
+import BookingBusPage from './pages/BookingBusPage/BookingBusPage.jsx';
 
 function App() {
 
@@ -117,6 +118,7 @@ function App() {
        <Route path="/bus/search" element={<BusSearchPage />} />
        <Route path="/bus" element={<BusPage />} />
        <Route path="/booking/:id" element={<BookingPage />} />
+       <Route path="/bus/booking/:id" element={<BookingBusPage />} />
        <Route path="/payment/:id" element={<PaymentPage />} />
        <Route path="/orderSuccess/:id" element={<OrderSuccessPage />} />
        <Route path="/orderList" element={<OrderListPage />} />
