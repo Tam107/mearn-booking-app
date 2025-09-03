@@ -11,6 +11,8 @@ import {
     PieChart,
     Pie,
     Cell,
+    BarChart,
+    Bar,
 } from "recharts";
 
 const Dashboard = () => {
@@ -31,8 +33,16 @@ const Dashboard = () => {
     ];
 
     const customerData = [
-        { name: "New Customers", value: 34249 },
-        { name: "Repeated", value: 1420 },
+        { name: "New Customers", value: 42 },
+        { name: "Repeated", value: 14 },
+    ];
+
+    const topProductsData = [
+        { name: "Bus", sales: 400 },
+        { name: "Train", sales: 300 },
+        { name: "Tour", sales: 250 },
+        { name: "Hotel", sales: 180 },
+        { name: "Cruises", sales: 120 },
     ];
 
     const COLORS = ["#1E90FF", "#32CD32"];
@@ -48,7 +58,18 @@ const Dashboard = () => {
                 <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">Revenue</h3>
                     <select className="mb-4 p-2 border border-gray-300 rounded-lg text-gray-700">
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
                         <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
                     </select>
                     <div className="h-72">
                         <ResponsiveContainer width="100%" height="100%">
@@ -103,19 +124,26 @@ const Dashboard = () => {
                         </ResponsiveContainer>
                     </div>
                     <div className="text-center mt-4 space-y-1">
-                        <p className="text-blue-600 font-semibold">34,249 New Customers</p>
-                        <p className="text-green-600 font-semibold">1,420 Repeated</p>
+                        <p className="text-blue-600 font-semibold">349 New Customers</p>
+                        <p className="text-green-600 font-semibold">20 Repeated</p>
                     </div>
                 </div>
 
-                {/* Featured Product */}
+                {/* Top Products (BarChart instead of Featured Product) */}
                 <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">
-                        Featured Product
+                        Top Products
                     </h3>
-                    <div className="text-center">
-                        <p className="text-gray-700">Beats Headphone 2019</p>
-                        <p className="text-green-600 font-bold text-xl mt-2">$99.00</p>
+                    <div className="h-72">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={topProductsData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#E0E0E0" />
+                                <XAxis dataKey="name" stroke="#666" />
+                                <YAxis stroke="#666" />
+                                <Tooltip />
+                                <Bar dataKey="sales" fill="#1E90FF" barSize={40} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
 
@@ -149,7 +177,7 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Orders Summary (NEW CARD) */}
+                {/* Orders Summary */}
                 <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">
                         Orders Summary
