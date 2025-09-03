@@ -160,46 +160,46 @@ const SidebarAdmin = () => {
                   </li>
                 </Link>
 
-                <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                  <NotificationsNoneIcon className="text-indigo-600" />
-                  <span className="text-sm font-semibold text-gray-600">
-                    Notifications
-                  </span>
-                </li>
+                {/*<li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">*/}
+                {/*  <NotificationsNoneIcon className="text-indigo-600" />*/}
+                {/*  <span className="text-sm font-semibold text-gray-600">*/}
+                {/*    Notifications*/}
+                {/*  </span>*/}
+                {/*</li>*/}
 
-                <p className="text-xs font-semibold text-gray-500 mt-3 mb-2">SERVICE</p>
-                <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                  <SettingsSystemDaydreamOutlinedIcon className="text-indigo-600" />
-                  <span className="text-sm font-semibold text-gray-600">
-                    System Health
-                  </span>
-                </li>
-                <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                  <PsychologyOutlinedIcon className="text-indigo-600" />
-                  <span className="text-sm font-semibold text-gray-600">
-                    Logs
-                  </span>
-                </li>
-                <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                  <SettingsApplicationsIcon className="text-indigo-600" />
-                  <span className="text-sm font-semibold text-gray-600">
-                    Settings
-                  </span>
-                </li>
+                {/*<p className="text-xs font-semibold text-gray-500 mt-3 mb-2">SERVICE</p>*/}
+                {/*<li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">*/}
+                {/*  <SettingsSystemDaydreamOutlinedIcon className="text-indigo-600" />*/}
+                {/*  <span className="text-sm font-semibold text-gray-600">*/}
+                {/*    System Health*/}
+                {/*  </span>*/}
+                {/*</li>*/}
+                {/*<li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">*/}
+                {/*  <PsychologyOutlinedIcon className="text-indigo-600" />*/}
+                {/*  <span className="text-sm font-semibold text-gray-600">*/}
+                {/*    Logs*/}
+                {/*  </span>*/}
+                {/*</li>*/}
+                {/*<li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">*/}
+                {/*  <SettingsApplicationsIcon className="text-indigo-600" />*/}
+                {/*  <span className="text-sm font-semibold text-gray-600">*/}
+                {/*    Settings*/}
+                {/*  </span>*/}
+                {/*</li>*/}
 
-                <p className="text-xs font-semibold text-gray-500 mt-3 mb-2">USER</p>
-                <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                  <AccountCircleOutlinedIcon className="text-indigo-600" />
-                  <span className="text-sm font-semibold text-gray-600">
-                    Profile
-                  </span>
-                </li>
-                <li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">
-                  <ExitToAppIcon className="text-indigo-600" />
-                  <span className="text-sm font-semibold text-gray-600">
-                    Logout
-                  </span>
-                </li>
+                {/*<p className="text-xs font-semibold text-gray-500 mt-3 mb-2">USER</p>*/}
+                {/*<li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">*/}
+                {/*  <AccountCircleOutlinedIcon className="text-indigo-600" />*/}
+                {/*  <span className="text-sm font-semibold text-gray-600">*/}
+                {/*    Profile*/}
+                {/*  </span>*/}
+                {/*</li>*/}
+                {/*<li className="flex items-center space-x-3 cursor-pointer hover:bg-indigo-100 px-2 py-1 rounded-md">*/}
+                {/*  <ExitToAppIcon className="text-indigo-600" />*/}
+                {/*  <span className="text-sm font-semibold text-gray-600">*/}
+                {/*    Logout*/}
+                {/*  </span>*/}
+                {/*</li>*/}
               </ul>
             </div>
           </div>

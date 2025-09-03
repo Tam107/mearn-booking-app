@@ -17,7 +17,7 @@ router.post("/upload-by-link",async(req,res)=>{
             });
         }
         const uploadResult = await uploadFromUrl(imageUrl);
-        if(uploadResult.code==200){
+        if(uploadResult.code===200){
             res.json({ 
                 code:200,
                 data: uploadResult.uploadResult
@@ -33,7 +33,7 @@ router.post("/upload-by-link",async(req,res)=>{
     } catch (error) {
         res.json(
             { 
-                message: 'Internal Server Error',
+                message: 'Internal Server Error in upload image',
                 code:400
             });
     }
@@ -42,9 +42,6 @@ router.post("/upload-by-link",async(req,res)=>{
 
 router.post("/upload-by-files",upload.array('photos',10),uploadMultipleImagesToCloudinary,(req,res)=>{
     try {
-
-        console.log("da upload");
-        
         res.json({
             success:true,
             data:req.resultsImg
@@ -53,7 +50,7 @@ router.post("/upload-by-files",upload.array('photos',10),uploadMultipleImagesToC
     } catch (error) {
         res.json({
             success:false,
-
+            message: "Cannot upload by files"
         })
     }
 })

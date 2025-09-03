@@ -41,14 +41,14 @@ const HeaderAdmin = () => {
 
           {/* Ẩn Notification trên màn hình rất nhỏ */}
           <div className="hidden xs:block">
-            <Tooltip title="Notifications" arrow>
-              <NotificationsNoneIcon className="text-gray-600 cursor-pointer" fontSize="medium" />
-            </Tooltip>
+            {/*<Tooltip title="Notifications" arrow>*/}
+            {/*  <NotificationsNoneIcon className="text-gray-600 cursor-pointer" fontSize="medium" />*/}
+            {/*</Tooltip>*/}
           </div>
 
-          <Tooltip title="Settings" arrow>
-            <SettingsApplicationsIcon className="text-gray-600 cursor-pointer" fontSize="medium" />
-          </Tooltip>
+          {/*<Tooltip title="Settings" arrow>*/}
+          {/*  <SettingsApplicationsIcon className="text-gray-600 cursor-pointer" fontSize="medium" />*/}
+          {/*</Tooltip>*/}
 
           {/* Avatar */}
           <img
