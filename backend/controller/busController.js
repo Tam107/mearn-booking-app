@@ -10,10 +10,9 @@ export const getAllBoardingPoint = async (req, res) => {
             data: boardingPoints
         })
     } catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error with getting all boarding point",
         })
     }
 }
@@ -26,10 +25,9 @@ export const getAllArrivalPoint = async (req, res) => {
             data: boardingPoints
         })
     } catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in Getting all boarding points ",
         })
     }
 }
@@ -51,10 +49,9 @@ export const createPoint = async (req, res) => {
             data: newBoardingPoint
         });
     } catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in creating boarding point",
         })
     }
 }
@@ -75,10 +72,9 @@ export const deletePoint = async (req,res)=>{
         });
     }
     catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in deleting boarding point",
         });
     }
 }
@@ -105,10 +101,9 @@ export const updatePoint = async (req, res) => {
             data: boardingPoint
         });
     } catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in updating boarding point",
         });
     }
 }
@@ -123,11 +118,9 @@ export const createBus = async (req, res) => {
             data: newBus
         });
     } catch (error) {
-        console.log(error);
-        
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in creating bus",
         })
         
     }
@@ -142,10 +135,9 @@ export const getAllBus = async (req, res) => {
             data: buses
         });
     } catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in getting all buses",
         })
     }
 }
@@ -171,7 +163,7 @@ export const deleteBus = async (req,res) => {
     } catch (error) {
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in deleting buses",
         })
     }
 }
@@ -196,10 +188,9 @@ export const updateBus = async (req, res) => {
         });
        
     } catch (error) {
-        // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in updating buses",
         });
     }
 }

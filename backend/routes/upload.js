@@ -17,7 +17,7 @@ router.post("/upload-by-link",async(req,res)=>{
             });
         }
         const uploadResult = await uploadFromUrl(imageUrl);
-        if(uploadResult.code==200){
+        if(uploadResult.code===200){
             res.json({ 
                 code:200,
                 data: uploadResult.uploadResult
