@@ -24,11 +24,15 @@ import Facilities from "../Facilities/Facilities";
 import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import EditorTiny from "../EditorTiny/EditorTiny";
 import { createBusAdminAction } from "../../redux/actions/BusAction";
-
+import BusInputDestination from "./BusInputDestination";
+import { removeDiacritics } from "../../Common/common";
 const AdminCreateBus = () => {
   const dispatch = useDispatch();
   //default values
-  const cities = State.getStatesOfCountry("VN");
+  const cities = State.getStatesOfCountry("VN").map((city) => ({
+    ...city,
+    name: removeDiacritics(city.name),
+  }));
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
   const [facilitiesDefault, setFacilitiesDefault] = useState([]);
@@ -41,7 +45,7 @@ const AdminCreateBus = () => {
   const [cityFrom, setCityFrom] = useState("");
   const [cityTo, setCityTo] = useState("");
   const [photos, setPhotos] = useState([]);
-  const [boarding,setBoarding] = useState([]);
+  const [boarding, setBoarding] = useState([]);
   const [arrival, setArrival] = useState([]);
   const [departureTime, setDepartureTime] = useState();
   const [arrivalTime, setArrivalTime] = useState();
@@ -131,12 +135,13 @@ const AdminCreateBus = () => {
       !arrivalTime ||
       boarding.length === 0 ||
       arrival.length === 0 ||
-      !policy1 || !policy2
+      !policy1 ||
+      !policy2
     ) {
       return toast.error("Please fill in all required fields");
     }
-    if(arrival.length>1){
-      return toast.error("Only choose one Arrival Point")
+    if (arrival.length > 1) {
+      return toast.error("Only choose one Arrival Point");
     }
     const data = {
       photos,
@@ -233,65 +238,20 @@ const AdminCreateBus = () => {
             <h2 className="font-medium text-lg">Ticket Details</h2>
           </div>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-            <div className="flex flex-col gap-2">
-              <p className="text-lg">
-                From <span className="text-red-500">*</span>
-              </p>
-              <div
-                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
-                className="rounded-[4px] flex relative border-[1px]"
-              >
-                <IoIosArrowDropright
-                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
-                  className="size-8 border-r-[1px]"
-                />
-                <select
-                  value={cityFrom}
-                  onChange={(e) => {
-                    setCityFrom(e.target.value);
-                    setBoarding([]); 
-                  }}
-                  className="w-full bg-transparent outline-none"
-                >
-                  <option value="" className="text-gray-300 text-sm"></option>
-                  {cities.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-lg">
-                To <span className="text-red-500">*</span>
-              </p>
-              <div
-                style={{ borderColor: "rgba(180, 180, 180, 1)" }}
-                className="rounded-[4px] flex relative border-[1px]"
-              >
-                <IoIosArrowDropleft
-                  style={{ borderColor: "rgba(180, 180, 180, 1)" }}
-                  className="size-8 border-r-[1px]"
-                />
-                <select
-                  value={cityTo}
-                  onChange={(e) => {
-                    setCityTo(e.target.value);
-                    setArrival([]);
-                  }}
-                  className="w-full bg-transparent outline-none"
-                >
-                  <option value="" className="text-gray-300 text-sm"></option>
-                  {cities.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <BusInputDestination
+              value={cityFrom}
+              setData={setCityFrom}
+              type={"From"}
+              setPoint={setBoarding}
+              cities={cities}
+            />
+            <BusInputDestination
+              value={cityTo}
+              setData={setCityTo}
+              type={"To"}
+              setPoint={setArrival}
+              cities={cities}
+            />
             <div className="flex flex-col gap-2">
               <p className="text-lg">
                 Departure Time <span className="text-red-500">*</span>
@@ -397,7 +357,7 @@ const AdminCreateBus = () => {
                   className="!border-0 !bg-[#F9FAFB] !focus:outline-none hover:!border-0 hover:!shadow-none"
                   value={seat}
                   onChange={(e) => {
-                    setSeat(e);                    
+                    setSeat(e);
                   }}
                 >
                   <Checkbox value="1">1-1</Checkbox>
@@ -440,8 +400,12 @@ const AdminCreateBus = () => {
                   onChange={(e) => setPolicy1(e.target.value)}
                   className="flex gap-2 mb-4"
                 >
-                  <Radio value="Reschedule Available">Reschedule Available</Radio>
-                  <Radio value="Reschedule Not Available">Reschedule Not Available</Radio>
+                  <Radio value="Reschedule Available">
+                    Reschedule Available
+                  </Radio>
+                  <Radio value="Reschedule Not Available">
+                    Reschedule Not Available
+                  </Radio>
                 </Radio.Group>
                 <Radio.Group
                   value={policy2}
@@ -481,7 +445,13 @@ const AdminCreateBus = () => {
 
             {boardingDefault?.length > 0 ? (
               boardingDefault.map((item, index) => (
-                <BoardingArrive array={boarding} setArray={setBoarding} data={item} key={item._id} isBoarding={true} />
+                <BoardingArrive
+                  array={boarding}
+                  setArray={setBoarding}
+                  data={item}
+                  key={item._id}
+                  isBoarding={true}
+                />
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
@@ -516,7 +486,13 @@ const AdminCreateBus = () => {
 
             {arrivalDefault?.length > 0 ? (
               arrivalDefault.map((item, index) => (
-                <BoardingArrive array={arrival} setArray={setArrival} data={item} key={item._id} isBoarding={false} />
+                <BoardingArrive
+                  array={arrival}
+                  setArray={setArrival}
+                  data={item}
+                  key={item._id}
+                  isBoarding={false}
+                />
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">

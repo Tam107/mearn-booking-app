@@ -8,6 +8,8 @@ import { State } from "country-state-city";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
+import BusInputDestination from "./BusInputDestination";
+import { removeDiacritics } from "../../Common/common";
 const BusForm = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -19,13 +21,16 @@ const BusForm = () => {
   function compareWithToday(dateFromApi) {
     const today = dayjs();
     const apiDate = dayjs(dateFromApi);
-  
-    if (apiDate.isBefore(today, 'day')) return false;
+
+    if (apiDate.isBefore(today, "day")) return false;
     return true;
   }
 
   // default
-  const cities = State.getStatesOfCountry("VN");
+  const cities = State.getStatesOfCountry("VN").map((city) => ({
+    ...city,
+    name: removeDiacritics(city.name),
+  }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +39,7 @@ const BusForm = () => {
       toast.error("Please fill in all required fields.");
       return;
     }
-    if(!compareWithToday(departureDate)){
+    if (!compareWithToday(departureDate)) {
       toast.error("Departure date cannot be in the past.");
       return;
     }
@@ -49,6 +54,21 @@ const BusForm = () => {
       seats,
     }).toString();
     navigate("/bus/search?" + query);
+  };
+  const [filteredCitiesFrom, setFilteredCitiesFrom] = useState([]);
+  const [showSuggestionsFrom, setShowSuggestionsFrom] = useState(false);
+  const handleChangeFrom = (e) => {
+    const value = e.target.value;
+    setFrom(value);
+    if (value.length > 0) {
+      const filtered = cities.filter((city) =>
+        city.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredCitiesFrom(filtered);
+      setShowSuggestionsFrom(true);
+    } else {
+      setShowSuggestionsFrom(false);
+    }
   };
 
   return (
@@ -78,46 +98,18 @@ const BusForm = () => {
               <h3 className="text-sm font-bold pb-1">Bus & Shuttle Ticket</h3>
             </div>
             <div className="grid grid-cols-2 gap-x-6">
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[12px] font-bold">From</h4>
-                <div className="relative rounded-sm border-[1px]">
-                  <PiBusThin className="absolute top-0 border-r-[1px] p-1 size-8" />
-                  <select
-                    placeholder="Da Lat"
-                    type="text"
-                    className="h-8 w-full font-sm font-[400] text-[14px] rounded-sm pl-9"
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                  >
-                    <option>Select city</option>
-                    {cities.map((c) => (
-                      <option key={`from-${c.isoCode}`} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[12px] font-bold">To</h4>
-                <div className="relative rounded-sm border-[1px]">
-                  <PiBusThin className="absolute top-0 border-r-[1px] p-1 size-8" />
-                  <select
-                    placeholder="Da Lat"
-                    type="text"
-                    className="h-8 w-full font-sm font-[400] text-[14px] rounded-sm pl-9"
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                  >
-                    <option>Select city</option>
-                    {cities.map((c) => (
-                      <option key={`to-${c.isoCode}`} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+              <BusInputDestination
+                data={from}
+                type={"From"}
+                cities={cities}
+                setData={setFrom}
+              />
+              <BusInputDestination
+                data={to}
+                type={"To"}
+                cities={cities}
+                setData={setTo}
+              />
             </div>
             <div className="grid grid-cols-3 gap-x-6">
               <div className="flex flex-col gap-1">
