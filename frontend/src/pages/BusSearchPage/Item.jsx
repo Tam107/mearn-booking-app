@@ -248,11 +248,11 @@ const Item = ({ bus, seats }) => {
       {featureTab && (
         <>
           <div className="bg-white p-4 border-t-[1px] shadow-lg rounded-b-sm mb-4 border-gray-200 ">
-            <div className="w-full flex items-center gap-2 justify-between">
-              <div className="w-full flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
+            <div className="w-full flex flex-col gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="h-full flex flex-col gap-2">
                   <h4 className="text-sm font-[600]">Fleet Specification</h4>
-                  <div className="border-[1px] border-gray-200 shadow-sm rounded-sm p-2 px-4">
+                  <div className="flex-1 border-[1px] border-gray-200 shadow-sm rounded-sm p-2 px-4">
                     <p className="text-sm pb-1">
                       <span className="font-[600]">Seats:</span>{" "}
                       {bus?.totalSeats} seats
@@ -291,9 +291,9 @@ const Item = ({ bus, seats }) => {
                     })}
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="h-full flex flex-col gap-2">
                   <h4 className="text-sm font-[600]">How to use E-ticket</h4>
-                  <div className="border-[1px] border-gray-200 shadow-sm rounded-sm p-2 px-4">
+                  <div className="border-[1px] border-gray-200 shadow-sm rounded-sm p-2 px-4 flex-1">
                     <ol className="list-decimal pl-5 text-sm text-[rgb(104,113,118)]">
                       <li>
                         To board the bus, you must show the e-ticket to the bus
@@ -315,14 +315,16 @@ const Item = ({ bus, seats }) => {
                     </ol>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-end">
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex flex-wrap">
                   {bus?.photos?.map((photo, index) => (
                     <div
                       key={index}
-                      className="max-h-[220px] max-w-[330px] m-2"
+                      className="max-h-[220px] max-w-[250px] m-2"
                     >
                       <Image
-                        className="max-h-[220px] max-w-[330px] h-full w-full"
+                        className="max-h-[220px] max-w-[250px] h-full w-full"
                         src={photo}
                         alt={`Image ${index + 1}`}
                         preview={{ src: photo }} // Enables full-screen preview on click
