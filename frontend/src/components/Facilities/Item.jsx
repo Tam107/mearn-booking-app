@@ -38,7 +38,6 @@ const Item = ({
   const handleUpdate = (event) => {
     setShowEdit(true);
   };
-  console.log(facilities, data?._id, facilities?.includes(data?._id));
 
   return (
     <>

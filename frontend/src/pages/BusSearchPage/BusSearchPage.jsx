@@ -151,7 +151,6 @@ const BusSearchPage = () => {
     seatsTypeFilter,
   ]);
 
-  console.log(buses);
 
   return (
     <>

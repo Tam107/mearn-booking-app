@@ -78,7 +78,6 @@ const FilterBus = ({
     buses,
   ]);
 
-  console.log(stateBus);
 
   return (
     <div className="w-[250px] mr-2 bg-white h-full p-4 shadow-lg rounded-lg">
