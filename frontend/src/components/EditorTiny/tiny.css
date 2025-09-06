@@ -17,10 +17,6 @@
   outline: none;
 }
 
-.ProseMirror > * + * {
-  margin-top: 16px;
-}
-
 .modal-title {
   margin: 0 0 24px;
   font-size: 20px;

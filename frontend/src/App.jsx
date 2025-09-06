@@ -34,7 +34,7 @@ import PrivateRouteAdmin from './components/PrivateRouteAdmin/PrivateRouteAdmin.
 import BusPage from './pages/BusPage/BusPage.jsx';
 import AdminViewBusPage from './pages/AdminViewBusPage/AdminViewBusPage.jsx';
 import BusSearchPage from './pages/BusSearchPage/BusSearchPage.jsx';
-import { getAllBusesAdminAction } from './redux/actions/BusAction.js';
+import { getAllArrivalPointAdminAction, getAllBoardingPointAdminAction, getAllBusesAdminAction } from './redux/actions/BusAction.js';
 import BookingBusPage from './pages/BookingBusPage/BookingBusPage.jsx';
 import BusPaymentPage from './pages/BusPaymentPage/BusPaymentPage.jsx';
 import AdminManageBusPage from './pages/AdminManageBusPage/AdminManageBusPage.jsx';
@@ -52,6 +52,8 @@ function App() {
       Store.dispatch(getAllHotelsAction())
       Store.dispatch(getAllRoomsAction())
       Store.dispatch(getAllBusesAdminAction());  
+      Store.dispatch(getAllBoardingPointAdminAction());
+      Store.dispatch(getAllArrivalPointAdminAction());
     
     }
     fetchApi()

@@ -64,7 +64,6 @@ const BusSearchPage = () => {
   const filterChange = () => {
     let tmp = getData();
     if (boardingFilter.length > 0) {
-      debugger;
       tmp = tmp?.filter((i) =>
         i?.boarding?.some((b) =>
           boardingFilter.some((filter) => b.name.includes(filter))

@@ -30,10 +30,6 @@ const FilterBus = ({
 }) => {
   const dispatch = useDispatch();
   const stateBus = useSelector((state) => state.BusReducer);
-  useEffect(() => {
-    dispatch(getAllBoardingPointAdminAction());
-    dispatch(getAllArrivalPointAdminAction());
-  }, []);
 
   // default options
   const [boardingnPointDefault, setBoardingnPointDefault] = useState([]);

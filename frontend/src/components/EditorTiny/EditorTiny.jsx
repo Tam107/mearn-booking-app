@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Modal, Input } from "antd"; // Ant Design components
+import { Button, Modal, Input } from "antd";
 import { useEditor, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -11,9 +11,8 @@ import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Code from "@tiptap/extension-code";
 import History from "@tiptap/extension-history";
-// Custom Icons (your existing Icons.jsx)
 import * as Icons from "./Icon";
-import "./tiny.css"
+import "./tiny.css";
 
 const EditorTiny = ({ description, handleEditorChange }) => {
   const editor = useEditor({
@@ -31,17 +30,23 @@ const EditorTiny = ({ description, handleEditorChange }) => {
     ],
     content: description,
     onUpdate: ({ editor }) => {
-      handleEditorChange(editor.getHTML()); // Pass content to parent component
+      handleEditorChange(editor.getHTML());
     },
   });
-  console.log(description);
-  
-  
+
   useEffect(() => {
-    if (editor && description) {
+    if (editor && editor.getHTML() !== description) {
       editor.commands.setContent(description);
     }
   }, [description, editor]);
+
+  useEffect(() => {
+    return () => {
+      if (editor) {
+        editor.destroy();
+      }
+    };
+  }, [editor]);
 
   const [modalIsOpen, setIsOpen] = useState(false);
   const [url, setUrl] = useState("");
@@ -75,33 +80,17 @@ const EditorTiny = ({ description, handleEditorChange }) => {
     closeModal();
   }, [editor, closeModal]);
 
-  const toggleBold = useCallback(
-    () => editor.chain().focus().toggleBold().run(),
-    [editor]
-  );
-  const toggleUnderline = useCallback(
-    () => editor.chain().focus().toggleUnderline().run(),
-    [editor]
-  );
-  const toggleItalic = useCallback(
-    () => editor.chain().focus().toggleItalic().run(),
-    [editor]
-  );
-  const toggleStrike = useCallback(
-    () => editor.chain().focus().toggleStrike().run(),
-    [editor]
-  );
-  const toggleCode = useCallback(
-    () => editor.chain().focus().toggleCode().run(),
-    [editor]
-  );
+  const toggleBold = useCallback(() => editor.chain().focus().toggleBold().run(), [editor]);
+  const toggleUnderline = useCallback(() => editor.chain().focus().toggleUnderline().run(), [editor]);
+  const toggleItalic = useCallback(() => editor.chain().focus().toggleItalic().run(), [editor]);
+  const toggleStrike = useCallback(() => editor.chain().focus().toggleStrike().run(), [editor]);
+  const toggleCode = useCallback(() => editor.chain().focus().toggleCode().run(), [editor]);
 
   if (!editor) return null;
 
   return (
     <div className="relative w-full mb-6 bg-white ">
-      {/* Toolbar */}
-      <div className="absolute top-1 flex w-full items-center gap-2 h-[40px] m-0 py-0 px-2 rounded-tl-sm rounded-tr-sm border-b-[1px] border-b-gray-400 text-gray-200">
+      <div className="absolute z-50 top-1 flex w-full items-center gap-2 h-[40px] m-0 py-0 px-2 rounded-tl-sm rounded-tr-sm border-b-[1px] border-b-gray-400 text-gray-200">
         <Button
           icon={<Icons.RotateLeft />}
           onClick={() => editor.chain().focus().undo().run()}
@@ -128,9 +117,7 @@ const EditorTiny = ({ description, handleEditorChange }) => {
         />
         <Button
           icon={<Icons.Underline />}
-          className={
-            editor.isActive("underline") ? "bg-green-500 text-white" : ""
-          }
+          className={editor.isActive("underline") ? "bg-green-500 text-white" : ""}
           onClick={toggleUnderline}
           size="small"
         />
@@ -154,10 +141,8 @@ const EditorTiny = ({ description, handleEditorChange }) => {
         />
       </div>
 
-      {/* Editor Content */}
-      <EditorContent className="" editor={editor} />
+      <EditorContent spellCheck="true" editor={editor} />
 
-      {/* Link Modal */}
       <Modal
         title="Edit Link"
         visible={modalIsOpen}
