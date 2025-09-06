@@ -132,8 +132,8 @@ const Item = ({ bus, seats, index }) => {
   return (
     <>
       <div
-        className={`bg-white p-4 pb-0 shadow-lg ${
-          featureTab || ticketTab ? "rounded-t-sm" : "mb-6 rounded-sm"
+        className={`bg-white p-4 pb-0 shadow-xl ${
+          featureTab || ticketTab ? "rounded-t-lg" : "mb-6 rounded-sm"
         }`}
       >
         <div className="pb-3">
