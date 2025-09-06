@@ -3,8 +3,8 @@ import { IoIosReturnRight } from "react-icons/io";
 import iconMap from "../../data/iconMap";
 import { Carousel, Image } from "antd";
 import { useNavigate } from "react-router";
-
-const Item = ({ bus, seats,index }) => {
+import "./antd.css";
+const Item = ({ bus, seats, index }) => {
   const [layout, setLayout] = useState("");
   const [featureTab, setFeatureTab] = useState(false);
   const [ticketTab, setTicketTab] = useState(false);
@@ -15,8 +15,8 @@ const Item = ({ bus, seats,index }) => {
     const interval = setInterval(() => {
       setImgIndex((prevIndex) => (prevIndex + 1) % bus.photos.length);
     }, 5000);
-    if(index==0){
-      setFeatureTab(true)
+    if (index == 0) {
+      setFeatureTab(true);
     }
     return () => clearInterval(interval);
   }, []);
@@ -319,22 +319,22 @@ const Item = ({ bus, seats,index }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-4">
-                <div className="flex-1 flex flex-wrap">
-                  {bus?.photos?.map((photo, index) => (
-                    <div
-                      key={index}
-                      className="max-h-[220px] max-w-[250px] m-2"
-                    >
-                      <Image
-                        className="max-h-[220px] max-w-[250px] h-full w-full"
-                        src={photo}
-                        alt={`Image ${index + 1}`}
-                        preview={{ src: photo }} // Enables full-screen preview on click
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div
+                className={`grid gap-4 ${
+                  bus?.photos?.length <= 3 ? "grid-cols-3" : "grid-cols-4"
+                }`}
+              >
+                {bus?.photos?.map((photo, index) => (
+                  <div key={index} className="h-full">
+                    <Image
+                      style={{ height: "100% !important" }}
+                      className="!h-full w-full object-cover"
+                      src={photo}
+                      alt={`Image ${index + 1}`}
+                      preview={{ src: photo }}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
