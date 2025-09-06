@@ -10,7 +10,6 @@ export const createHotelAction = (hotelData)=>async(dispatch)=>{
         const data = await createHotelApi(hotelData)
   
         if(data.success){
-            // console.log(1);
             dispatch({
                 type:"hotelCreateSuccess",
                 payload:data.data
@@ -43,7 +42,6 @@ export const getAllHotelsAction = ()=>async(dispatch)=>{
         const data = await getAllHotelApi()
   
         if(data.success){
-            // console.log(1);
             dispatch({
                 type:"getAllHotelSucess",
                 payload:data.data
@@ -93,7 +91,6 @@ export const updateHotelAction = (hotelData)=>async(dispatch)=>{
     
             })
             const data = await updateHotelApi(hotelData)
-            console.log(data.data);
             
             if(data.success){
                 dispatch({

@@ -1,37 +1,7 @@
 
-// export const createHotelAction = (hotelData)=>async(dispatch)=>{
-//     try {
-//         dispatch({
-//             type:"hotelCreateRequest",
+
 
 import { getAllRoomApi } from "../../../Axios/client/api"
-
-//         })
-//         const data = await createHotelApi(hotelData)
-  
-//         if(data.success){
-//             // console.log(1);
-//             dispatch({
-//                 type:"hotelCreateSuccess",
-//                 payload:data.data
-//             })
-//         } 
-//        else{
-//         dispatch({
-//             type:"hotelCreateFailed",
-//             payload:"Error when create",
-
-//         })
-//        }
-        
-//     } catch (error) {
-//         dispatch({
-//             type:"hotelCreateFailed",
-//             payload:error?.response?.data?.message||"Error in axios",
-
-//         })
-//     }
-// }
 
 
 export const getAllRoomsAction = ()=>async(dispatch)=>{
@@ -41,13 +11,8 @@ export const getAllRoomsAction = ()=>async(dispatch)=>{
 
         })
         const data = await getAllRoomApi()
-     
         
-        if(data.success){
-   
-            console.log(data);
-            
-            // console.log(1);
+        if(data.success){            
             dispatch({
                 type:"getAllRoomSucess",
                 payload:data.data
@@ -71,14 +36,8 @@ export const getAllRoomsAction = ()=>async(dispatch)=>{
 }
 
 export const updateRoomsListAction = (room)=>async(dispatch)=>{
-    try {
-       
-        console.log(room);
-        
+    try {    
         if(room){
-            console.log("ok");
-            
-            // console.log(1);
             dispatch({
                 type:"roomUpdateListSuccess",
                 payload:room

@@ -7,9 +7,7 @@ export const loadAdminAction = ()=>async(dispatch)=>{
 
         })
         const data = await getAdminApi()
-        console.log(data)
         if(data.success){
-            // console.log(1);
             dispatch({
                 type:"LoadAdminSuccess",
                 payload:data.data

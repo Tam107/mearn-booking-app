@@ -7,9 +7,7 @@ import axios from "axios"
 // document.cookie = `cardId=${getCookie("cardId")}; path=/`;
 const baseURI = import.meta.env.VITE_BASE_URI;
 
-console.log("Base uri",baseURI)
 
-// console.log("Base uri",baseURI)
 // Set config defaults when creating the instance
 const instance = axios.create({
     baseURL: baseURI,
@@ -26,7 +24,6 @@ instance.interceptors.request.use(function (config) {
     // config.headers.Authorization = `Bearer ${localStorage.getItem("access_token")}`;
     // config.headers.Authorization = `Bearer ${localStorage.getItem("user_token")}`;
 
-    // console.log(config);
 
     
     return config;

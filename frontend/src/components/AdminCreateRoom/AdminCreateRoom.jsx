@@ -43,13 +43,6 @@ function getEndOfDay(date) {
 
 const baseDate = new Date();
 
-const CustomEvent = ({ event }) => {
-  return (
-    <div className="text-[12px] whitespace-normal break-words leading-snug mt-auto">
-      {new Intl.NumberFormat("de-DE").format(event.title)} VND
-    </div>
-  );
-};
 
 const AdminCreateRoom = () => {
   const navigate = useNavigate();
@@ -176,39 +169,10 @@ const AdminCreateRoom = () => {
     }
   };
 
-  function removePhoto(ev, filename) {
-    ev.preventDefault();
-    setPhotos([...photos.filter((photo) => photo !== filename)]);
-  }
-
-  const addPhotoByFile = async (ev) => {
-    // ev.preventDefault();
-    const files = ev.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
-    }
-
-    const res = await uploadByFilesApi(data);
-
-    if (res.success) {
-      const newImg = res.data.map((item) => item.url);
-      setPhotos([...photos, ...newImg]);
-    } else {
-      toast.error("Error");
-    }
-  };
-
   //set gia 2
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [openEndDate, setOpenEndDate] = useState(false);
-  const handleStartDateChange = (date) => {
-    setOpenEndDate(false);
-    setStartDate(date);
-    setOpenEndDate(true); // Open the endDate picker when startDate is selected
-  };
-
   const handleEndDateChange = (date) => {
     setEndDate(date);
     setOpenEndDate(false); // Open the endDate picker when startDate is selected
@@ -506,7 +470,7 @@ const AdminCreateRoom = () => {
               </Tooltip>
             )}
           </div>
-          <UploadImg addPhotoByFile={addPhotoByFile} removePhoto={removePhoto} photos={photos}/>
+          <UploadImg setPhotos={setPhotos} photos={photos}/>
         </div>
 
         {/* Room Details */}

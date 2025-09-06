@@ -67,7 +67,7 @@ const BusForm = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto my-10">
+      <div className="w-11/12 mx-auto mb-10">
         <div className="text-center flex flex-col gap-2 mb-5">
           <h2 className="font-[600] pb-2 text-[36px] leading-[40px] text-[#1F2937]">
             Book Bus Travel Shuttle Tickets with Promo Price

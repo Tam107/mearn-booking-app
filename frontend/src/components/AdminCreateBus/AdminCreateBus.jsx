@@ -4,7 +4,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { useMediaQuery } from "react-responsive";
 import { Checkbox, Input, Radio, TimePicker, Tooltip } from "antd";
 import { FaQuestionCircle } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
   busAdminApi,
   getAllFacilitiesApi,
@@ -24,8 +24,14 @@ import EditorTiny from "../EditorTiny/EditorTiny";
 import { createBusAdminAction } from "../../redux/actions/BusAction";
 import BusInputDestination from "./BusInputDestination";
 import UploadImg from "../UploadImg/UploadImg";
+import { removeDiacritics } from "../../Common/common";
+import dayjs from "dayjs";
 const AdminCreateBus = () => {
+  // State diff
   const dispatch = useDispatch();
+  const stateBus = useSelector((state) => state.BusReducer);
+  const { id } = useParams();
+
   //default values
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
@@ -33,9 +39,9 @@ const AdminCreateBus = () => {
   const [modalArrivalPoint, setModalArrivalPoint] = useState(false);
   const [boardingDefault, setBoardingDefault] = useState([]);
   const [arrivalDefault, setArrivalDefault] = useState([]);
-  const stateBus = useSelector((state) => state.BusReducer);
 
   // State save
+  const [isUpdate,setIsUpdate] = useState(false)
   const [cityFrom, setCityFrom] = useState("");
   const [cityTo, setCityTo] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -51,21 +57,24 @@ const AdminCreateBus = () => {
   const [price, setPrice] = useState(0);
   const [policy1, setPolicy1] = useState("");
   const [policy2, setPolicy2] = useState("");
-  const [policy, setPolicy] = useState([]);
   const [conditions, setConditions] = useState("");
 
   // useEffect
   useEffect(() => {
     if (stateBus?.boardingPointsAdmin?.length > 0 && cityFrom) {
       setBoardingDefault(
-        stateBus?.boardingPointsAdmin.filter((item) => item.city === cityFrom)
+        stateBus?.boardingPointsAdmin.filter(
+          (item) => removeDiacritics(item.city) === cityFrom
+        )
       );
     }
   }, [stateBus?.boardingPointsAdmin, cityFrom]);
   useEffect(() => {
     if (stateBus?.arrivalPointsAdmin?.length > 0 && cityTo) {
       setArrivalDefault(
-        stateBus?.arrivalPointsAdmin.filter((item) => item.city === cityTo)
+        stateBus?.arrivalPointsAdmin.filter(
+          (item) => removeDiacritics(item.city) === cityTo
+        )
       );
     }
   }, [stateBus?.arrivalPointsAdmin, cityTo]);
@@ -80,28 +89,59 @@ const AdminCreateBus = () => {
     getDefaultFaicily();
   }, [showCreateFacility]);
 
-  //function
-  function removePhoto(filename) {
-    // ev.preventDefault();
-    setPhotos([...photos.filter((photo) => photo !== filename)]);
+  useEffect(() => {
+    if (id) {
+      const tmp  = stateBus?.busesAdmin?.find(i=>i._id == id)
+      if(tmp ===-1) {
+        toast.error("Can not find bus!")
+        setIsUpdate(false)
+        navigate("/dashboard")
+        return;
+      }  
+      setIsUpdate(true)    
+      fillDataUpdate(tmp) 
+    }
+    else{
+      setIsUpdate(false)
+      setCityFrom("")
+      setCityTo("")
+      setPhotos([])
+      setBoarding([])
+      setArrival([])
+      setDepartureTime()
+      setArrivalTime()
+      setShowCreateFacility(false)
+      setFacilities([])
+      setTotalSeats("");
+      setPoName("")
+      setSeat([]);
+      setPrice(0);
+      setPolicy1("");
+      setPolicy2("");
+      setConditions("");
+      setArrivalDefault([])
+      setBoardingDefault([])
+    }
+  }, [id,stateBus?.busesAdmin]);
+
+  function fillDataUpdate(data){  
+    setCityFrom(data?.cityFrom)
+    setCityTo(data?.cityTo)
+    setPhotos(data?.photos)
+    setBoarding(data?.boarding.map(i=>i._id))
+    setArrival(data?.arrival.map(i=>i._id))
+    setDepartureTime(dayjs(data?.departureTime))
+    setArrivalTime(dayjs(data?.arrivalTime))
+    setFacilities(data?.facilities?.map(i=>i._id))
+    setTotalSeats(data?.totalSeats)
+    setPoName(data?.poName)
+    setSeat(data?.seat);
+    setPrice(data?.price);
+    setPolicy1(data?.policy?.[0]);
+    setPolicy2(data?.policy?.[1]);
+    setConditions(data?.conditions);
   }
-  const addPhotoByFile = async (ev) => {
-    // ev.preventDefault();
-    const files = ev.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
-    }
 
-    const res = await uploadByFilesApi(data);
-
-    if (res.success) {
-      const newImg = res.data.map((item) => item.url);
-      setPhotos([...photos, ...newImg]);
-    } else {
-      toast.error("Error");
-    }
-  };
   const handleFaChange = (id) => {
     const isExist = facilities.find((i) => i === id);
     if (isExist) {
@@ -115,10 +155,10 @@ const AdminCreateBus = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth", // This enables the smooth scrolling effect
+      behavior: "smooth",
     });
   };
-  const [loading, setLoading] = useState(false); // Loading state for the button
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const addBus = async () => {
@@ -176,7 +216,9 @@ const AdminCreateBus = () => {
       {/* Header */}
       <div className="w-full pt-6 px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h2 className="font-[600] text-gray-600 text-[28px] md:text-[36px] leading-[36px] md:leading-[40px] cursor-pointer">
-          Create new bus
+          {
+            isUpdate ? "Update Bus" : "Create new bus"
+          }
         </h2>
         <div
           onClick={addBus}
@@ -189,7 +231,7 @@ const AdminCreateBus = () => {
           )}
 
           <p className="text-white text-md">
-            {loading ? "Creating Bus..." : "Add a new bus"}
+          {loading ? (isUpdate ? "Updating Bus..." : "Creating Bus...") : (isUpdate ? "Update Bus" : "Add a new bus")}
           </p>
         </div>
       </div>
@@ -199,7 +241,7 @@ const AdminCreateBus = () => {
           <div className="flex mb-3 items-center gap-2 md:gap-4">
             <h2 className="font-medium text-lg">Bus Picture</h2>
           </div>
-          <UploadImg addPhotoByFile={addPhotoByFile} removePhoto={removePhoto} photos={photos}/>
+          <UploadImg setPhotos={setPhotos} photos={photos} />
         </div>
 
         {/* Bus Details */}
@@ -328,8 +370,8 @@ const AdminCreateBus = () => {
                     setSeat(e);
                   }}
                 >
-                  <Checkbox value="1">1-1</Checkbox>
-                  <Checkbox value="2">2-2</Checkbox>
+                  <Checkbox value={1}>1-1</Checkbox>
+                  <Checkbox value={2}>2-2</Checkbox>
                   {/* <Checkbox value="WC">WC</Checkbox> */}
                 </Checkbox.Group>{" "}
               </div>

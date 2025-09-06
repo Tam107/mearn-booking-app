@@ -7,7 +7,6 @@ export const loadUserAction = ()=>async(dispatch)=>{
 
         })
         const data = await getUserApi()
-        console.log(data);
         if(data.success){
             dispatch({
                 type:"LoadUserSuccess",

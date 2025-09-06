@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDropright } from "react-icons/io";
 import { cities, searchCity } from "../../Common/common.js";
 import { Input } from "antd";
 const BusInputDestination = ({ value, setData, type, setPoint }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(value);
   const [filteredCities, setFilteredCities] = useState(cities);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    if (value) {
-      const filtered = searchCity(cities, value);
+    setInputValue(e.target.value);
+    if (e.target.value) {
+      const filtered = searchCity(cities, e.target.value);
       setFilteredCities(filtered);
       setShowSuggestions(true);
     } else {
@@ -22,10 +21,11 @@ const BusInputDestination = ({ value, setData, type, setPoint }) => {
 
   const handleSelect = (city) => {
     setInputValue(city.name);
-    setData(city.id);
+    setData(city.name);
     setPoint([]);
     setShowSuggestions(false);
   };
+  useEffect(()=>{setInputValue(value)},[value,showSuggestions])
 
   return (
     <div className="flex flex-col gap-2">
@@ -53,9 +53,10 @@ const BusInputDestination = ({ value, setData, type, setPoint }) => {
           <ul className="absolute top-full left-0 right-0 bg-white border mt-1 max-h-60 overflow-auto z-50">
             {filteredCities.map((city) => (
               <li
-                key={city.id}
+                key={city.isoCode}
                 className="p-2 cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSelect(city)}
+                
               >
                 {city.name}
               </li>

@@ -80,7 +80,7 @@ function App() {
   />
   <Route
     path="/dashboard-edit-bus/:id"
-    element={<PrivateRouteAdmin><AdminEditBusPage /></PrivateRouteAdmin>}
+    element={<PrivateRouteAdmin><AdminCreateBusPage /></PrivateRouteAdmin>}
   />
   <Route
     path="/dashboard-create-room"

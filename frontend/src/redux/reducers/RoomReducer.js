@@ -47,9 +47,7 @@ export const RoomReducer = createReducer(initialState, (builder) => {
         })
         .addCase('roomUpdateListSuccess', (state, action) => {
             state.loading = false;
-            state.rooms =[...state.rooms, action.payload];
-            console.log(action.payload);
-            
+            state.rooms =[...state.rooms, action.payload];            
             state.success = true;
         })
         .addCase('roomUpdateListFailed', (state, action) => {

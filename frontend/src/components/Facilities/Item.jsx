@@ -17,7 +17,7 @@ const Item = ({
   data,
   handleFaChange,
   facilities,
-}) => {
+}) => {  
   const [hover, setHover] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -38,6 +38,7 @@ const Item = ({
   const handleUpdate = (event) => {
     setShowEdit(true);
   };
+  console.log(facilities, data?._id, facilities?.includes(data?._id));
 
   return (
     <>
@@ -55,7 +56,7 @@ const Item = ({
                     onChange={() => handleFaChange(data._id)}
                     type="checkbox"
                     className="mr-2"
-                    checked={facilities.includes(data._id)}
+                    checked={facilities?.includes(data._id)}
                   />
 
                   <span className={data?.icon ? "mr-2" : ""}>
@@ -115,7 +116,7 @@ const Item = ({
                 onChange={() => handleFaChange(data._id)}
                 type="checkbox"
                 className="mr-2"
-                checked={facilities.includes(data._id)}
+                checked={facilities?.includes(data._id)}
               />
 
               <span className={data?.icon ? "mr-2" : ""}>

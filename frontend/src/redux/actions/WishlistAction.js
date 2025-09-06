@@ -4,9 +4,6 @@ export const addToWishlist = (data) => async (dispatch, getState) => {
       type: "addToWishlist",
       payload: data,
     });
-  
-    // console.log(localStorage.getItem("wishlistItems"))
-    // console.log(getState())
     localStorage.setItem("wishlistItems", JSON.stringify(getState().WishlistReducer.wishlist));
     return data;
   };
