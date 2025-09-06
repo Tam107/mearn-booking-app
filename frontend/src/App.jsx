@@ -13,7 +13,6 @@ import AdminCreatePage from './pages/AdminCreatePage/AdminCreatePage.jsx';
 import LoginAdminPage from './pages/LoginAdminPage/LoginAdminPage.jsx';
 import { loadAdminAction } from './redux/actions/AdminAction.js';
 import DashboardPage from './pages/DashboardPage/DashboardPage.jsx';
-import AdminCreateBusPage from './pages/AdminCreateBusPage/AdminCreateBusPage.jsx';
 import HotelListPage from './pages/HotelListPage/HotelListPage.jsx';
 import AdminCreateHotelPage from './pages/AdminCreateHotelPage/AdminCreateHotelPage.jsx';
 import AdminViewRoomPage from './pages/AdminViewRoomPage/AdminViewRoomPage.jsx';
@@ -38,7 +37,7 @@ import BusSearchPage from './pages/BusSearchPage/BusSearchPage.jsx';
 import { getAllBusesAdminAction } from './redux/actions/BusAction.js';
 import BookingBusPage from './pages/BookingBusPage/BookingBusPage.jsx';
 import BusPaymentPage from './pages/BusPaymentPage/BusPaymentPage.jsx';
-import AdminEditBusPage from './pages/AdminEditBusPage/AdminEditBusPage.jsx';
+import AdminManageBusPage from './pages/AdminManageBusPage/AdminManageBusPage.jsx';
 
 function App() {
 
@@ -76,11 +75,11 @@ function App() {
   />
   <Route
     path="/dashboard-create-bus"
-    element={<PrivateRouteAdmin><AdminCreateBusPage /></PrivateRouteAdmin>}
+    element={<PrivateRouteAdmin><AdminManageBusPage /></PrivateRouteAdmin>}
   />
   <Route
     path="/dashboard-edit-bus/:id"
-    element={<PrivateRouteAdmin><AdminCreateBusPage /></PrivateRouteAdmin>}
+    element={<PrivateRouteAdmin><AdminManageBusPage /></PrivateRouteAdmin>}
   />
   <Route
     path="/dashboard-create-room"

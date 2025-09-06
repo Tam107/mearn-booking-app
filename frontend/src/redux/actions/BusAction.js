@@ -308,6 +308,7 @@ export const deleteBusAction = (id)=> async(dispatch)=>{
 }
 
 export const updateBusAction = (data)=>async(dispatch)=>{
+    debugger
     try {
         dispatch({
             type:"updateBusAdminRequest",

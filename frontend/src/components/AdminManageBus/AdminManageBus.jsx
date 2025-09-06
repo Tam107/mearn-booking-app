@@ -8,7 +8,6 @@ import { useNavigate, useParams } from "react-router";
 import {
   busAdminApi,
   getAllFacilitiesApi,
-  uploadByFilesApi,
 } from "../../../Axios/client/api";
 import ModalBoardingArrive from "./ModalBoardingArrive";
 import toast from "react-hot-toast";
@@ -21,12 +20,12 @@ import { PiSeatThin } from "react-icons/pi";
 import Facilities from "../Facilities/Facilities";
 import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import EditorTiny from "../EditorTiny/EditorTiny";
-import { createBusAdminAction } from "../../redux/actions/BusAction";
+import { createBusAdminAction, updateBusAction } from "../../redux/actions/BusAction";
 import BusInputDestination from "./BusInputDestination";
 import UploadImg from "../UploadImg/UploadImg";
 import { removeDiacritics } from "../../Common/common";
 import dayjs from "dayjs";
-const AdminCreateBus = () => {
+const AdminManageBus = () => {
   // State diff
   const dispatch = useDispatch();
   const stateBus = useSelector((state) => state.BusReducer);
@@ -41,7 +40,7 @@ const AdminCreateBus = () => {
   const [arrivalDefault, setArrivalDefault] = useState([]);
 
   // State save
-  const [isUpdate,setIsUpdate] = useState(false)
+  const [isUpdate, setIsUpdate] = useState(false);
   const [cityFrom, setCityFrom] = useState("");
   const [cityTo, setCityTo] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -91,50 +90,49 @@ const AdminCreateBus = () => {
 
   useEffect(() => {
     if (id) {
-      const tmp  = stateBus?.busesAdmin?.find(i=>i._id == id)
-      if(tmp ===-1) {
-        toast.error("Can not find bus!")
-        setIsUpdate(false)
-        navigate("/dashboard")
+      const tmp = stateBus?.busesAdmin?.find((i) => i._id == id);
+      if (!tmp) {
+        // toast.error("Can not find bus!");
+        setIsUpdate(false);
+        navigate("/dashboard");
         return;
-      }  
-      setIsUpdate(true)    
-      fillDataUpdate(tmp) 
-    }
-    else{
-      setIsUpdate(false)
-      setCityFrom("")
-      setCityTo("")
-      setPhotos([])
-      setBoarding([])
-      setArrival([])
-      setDepartureTime()
-      setArrivalTime()
-      setShowCreateFacility(false)
-      setFacilities([])
+      }
+      setIsUpdate(true);
+      fillDataUpdate(tmp);
+    } else {
+      setIsUpdate(false);
+      setCityFrom("");
+      setCityTo("");
+      setPhotos([]);
+      setBoarding([]);
+      setArrival([]);
+      setDepartureTime();
+      setArrivalTime();
+      setShowCreateFacility(false);
+      setFacilities([]);
       setTotalSeats("");
-      setPoName("")
+      setPoName("");
       setSeat([]);
       setPrice(0);
       setPolicy1("");
       setPolicy2("");
       setConditions("");
-      setArrivalDefault([])
-      setBoardingDefault([])
+      setArrivalDefault([]);
+      setBoardingDefault([]);
     }
-  }, [id,stateBus?.busesAdmin]);
+  }, [id, stateBus?.busesAdmin,isUpdate]);
 
-  function fillDataUpdate(data){  
-    setCityFrom(data?.cityFrom)
-    setCityTo(data?.cityTo)
-    setPhotos(data?.photos)
-    setBoarding(data?.boarding.map(i=>i._id))
-    setArrival(data?.arrival.map(i=>i._id))
-    setDepartureTime(dayjs(data?.departureTime))
-    setArrivalTime(dayjs(data?.arrivalTime))
-    setFacilities(data?.facilities?.map(i=>i._id))
-    setTotalSeats(data?.totalSeats)
-    setPoName(data?.poName)
+  function fillDataUpdate(data) {
+    setCityFrom(data?.cityFrom);
+    setCityTo(data?.cityTo);
+    setPhotos(data?.photos);
+    setBoarding(data?.boarding.map((i) => i._id));
+    setArrival(data?.arrival.map((i) => i._id));
+    setDepartureTime(dayjs(data?.departureTime));
+    setArrivalTime(dayjs(data?.arrivalTime));
+    setFacilities(data?.facilities?.map((i) => i._id));
+    setTotalSeats(data?.totalSeats);
+    setPoName(data?.poName);
     setSeat(data?.seat);
     setPrice(data?.price);
     setPolicy1(data?.policy?.[0]);
@@ -196,14 +194,28 @@ const AdminCreateBus = () => {
     setLoading(true);
 
     try {
-      const dataResponse = await busAdminApi("createBus", "post", data);
-
-      if (dataResponse.success) {
-        toast.success("Create bus successfully");
-        dispatch(createBusAdminAction(dataResponse));
-        navigate("/dashboard-view-bus");
+      if (!isUpdate) {
+        const dataResponse = await busAdminApi("createBus", "post", data);
+        if (dataResponse.success) {
+          toast.success("Create bus successfully");
+          dispatch(createBusAdminAction(dataResponse));
+          navigate("/dashboard-view-bus");
+        } else {
+          toast.error(dataResponse.message || "Error creating bus");
+        }
       } else {
-        toast.error(dataResponse.message || "Error creating bus");
+        const dataResponse = await busAdminApi(
+          "update-bus/" + id,
+          "patch",
+          data
+        );
+        if (dataResponse.success) {
+          toast.success("Update bus successfully");
+          dispatch(updateBusAction(dataResponse));
+          navigate("/dashboard-view-bus");
+        } else {
+          toast.error(dataResponse.message || "Error creating bus");
+        }
       }
     } catch (error) {
       toast.error("Something went wrong, please try again.");
@@ -216,9 +228,7 @@ const AdminCreateBus = () => {
       {/* Header */}
       <div className="w-full pt-6 px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h2 className="font-[600] text-gray-600 text-[28px] md:text-[36px] leading-[36px] md:leading-[40px] cursor-pointer">
-          {
-            isUpdate ? "Update Bus" : "Create new bus"
-          }
+          {isUpdate ? "Update Bus" : "Create new bus"}
         </h2>
         <div
           onClick={addBus}
@@ -231,7 +241,13 @@ const AdminCreateBus = () => {
           )}
 
           <p className="text-white text-md">
-          {loading ? (isUpdate ? "Updating Bus..." : "Creating Bus...") : (isUpdate ? "Update Bus" : "Add a new bus")}
+            {loading
+              ? isUpdate
+                ? "Updating Bus..."
+                : "Creating Bus..."
+              : isUpdate
+              ? "Update Bus"
+              : "Add a new bus"}
           </p>
         </div>
       </div>
@@ -601,4 +617,4 @@ const AdminCreateBus = () => {
   );
 };
 
-export default AdminCreateBus;
+export default AdminManageBus;

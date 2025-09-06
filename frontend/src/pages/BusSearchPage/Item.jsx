@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoIosReturnRight } from "react-icons/io";
 import iconMap from "../../data/iconMap";
-import { Carousel } from "antd";
+import { Carousel, Image } from "antd";
 import { useNavigate } from "react-router";
 
 const Item = ({ bus, seats }) => {
@@ -9,7 +9,7 @@ const Item = ({ bus, seats }) => {
   const [featureTab, setFeatureTab] = useState(false);
   const [ticketTab, setTicketTab] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     if (!bus?.photos || bus.photos.length === 0) return;
     const interval = setInterval(() => {
@@ -68,61 +68,63 @@ const Item = ({ bus, seats }) => {
   };
 
   const handleTicketTabClick = () => {
-    if(!bus?.conditions) return;
+    if (!bus?.conditions) return;
     setFeatureTab(false); // Đóng tab Feature
     setTicketTab(!ticketTab); // Mở tab Ticket
   };
 
   // Hàm lưu booking vào localStorage, mỗi booking tồn tại ttl (1h)
-const saveBusBookingWithExpiry = (newBooking, ttl) => {
-  const now = new Date().getTime();
+  const saveBusBookingWithExpiry = (newBooking, ttl) => {
+    const now = new Date().getTime();
 
-  const existingStr = localStorage.getItem('busBooking');
-  let bookings = [];
+    const existingStr = localStorage.getItem("busBooking");
+    let bookings = [];
 
-  if (existingStr) {
-    bookings = JSON.parse(existingStr);
-    bookings = bookings.filter(booking => booking.expiry > now);
+    if (existingStr) {
+      bookings = JSON.parse(existingStr);
+      bookings = bookings.filter((booking) => booking.expiry > now);
 
-    const index = bookings.findIndex(booking => booking.value._id === newBooking._id);
+      const index = bookings.findIndex(
+        (booking) => booking.value._id === newBooking._id
+      );
 
-    if (index !== -1) {
-      bookings[index] = {
-        value: newBooking,
-        expiry: now + ttl,
-      };
+      if (index !== -1) {
+        bookings[index] = {
+          value: newBooking,
+          expiry: now + ttl,
+        };
+      } else {
+        bookings.push({
+          value: newBooking,
+          expiry: now + ttl,
+        });
+      }
     } else {
       bookings.push({
         value: newBooking,
         expiry: now + ttl,
       });
     }
-  } else {
-    bookings.push({
-      value: newBooking,
-      expiry: now + ttl,
-    });
-  }
-  localStorage.setItem('busBooking', JSON.stringify(bookings));
-};
-
-const handlePayment = () => {
-  const data = {
-    _id: bus?._id,
-    poName: bus?.poName,
-    departureTime: bus?.departureTime,
-    arrivalTime: bus?.arrivalTime,
-    boarding: bus?.boarding,
-    arrival: bus?.arrival,
-    price: parseFloat(bus?.price),
-    totalPrice: parseFloat(bus?.price) * parseInt(seats),
-    seats: seats,
-    layout: layout,
+    localStorage.setItem("busBooking", JSON.stringify(bookings));
   };
 
-  saveBusBookingWithExpiry(data, 3600000);
-  navigate('/bus/booking/' + bus?._id)
-};
+  const handlePayment = () => {
+    const data = {
+      _id: bus?._id,
+      poName: bus?.poName,
+      departureTime: bus?.departureTime,
+      arrivalTime: bus?.arrivalTime,
+      boarding: bus?.boarding,
+      arrival: bus?.arrival,
+      price: parseFloat(bus?.price),
+      totalPrice: parseFloat(bus?.price) * parseInt(seats),
+      seats: seats,
+      layout: layout,
+    };
+
+    saveBusBookingWithExpiry(data, 3600000);
+    navigate("/bus/booking/" + bus?._id);
+  };
 
   return (
     <>
@@ -136,7 +138,12 @@ const handlePayment = () => {
           <div className="flex">
             {bus?.policy &&
               bus?.policy.map((policy, index) => (
-                <p key={index} className={`text-[12px] text-gray-600 ${index !== 0 ? "ml-1" : ""}`}>
+                <p
+                  key={index}
+                  className={`text-[12px] text-gray-600 ${
+                    index !== 0 ? "ml-1" : ""
+                  }`}
+                >
                   {policy}
                   {index !== bus.policy.length - 1 && " - "}
                 </p>
@@ -211,7 +218,10 @@ const handlePayment = () => {
               }).format(bus?.price)}{" "}
               <span className="text-sm font-[500] text-[#687176]">/pax</span>
             </p>
-            <button onClick={handlePayment} className="bg-orange-600 cursor-pointer text-sm text-white px-8 py-1 rounded-md shadow-md transform hover:bg-orange-700 transition duration-300">
+            <button
+              onClick={handlePayment}
+              className="bg-orange-600 cursor-pointer text-sm text-white px-8 py-1 rounded-md shadow-md transform hover:bg-orange-700 transition duration-300"
+            >
               Book Now
             </button>
           </div>
@@ -239,7 +249,7 @@ const handlePayment = () => {
         <>
           <div className="bg-white p-4 border-t-[1px] shadow-lg rounded-b-sm mb-4 border-gray-200 ">
             <div className="w-full flex items-center gap-2 justify-between">
-              <div className="w-[57%] flex flex-col gap-4">
+              <div className="w-full flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <h4 className="text-sm font-[600]">Fleet Specification</h4>
                   <div className="border-[1px] border-gray-200 shadow-sm rounded-sm p-2 px-4">
@@ -305,27 +315,20 @@ const handlePayment = () => {
                     </ol>
                   </div>
                 </div>
-              </div>
-              <div className="w-[37%] flex mr-2">
-                <div className="w-full">
-                  <div className="max-h-[220px] max-w-[330px]">
-                    <img
-                      className="max-h-[220px] max-w-[330px] h-full  w-full"
-                      src={bus?.photos[imgIndex]}
-                      alt={bus?.poName}
-                    />
-                  </div>
-                  <div className="flex gap-1 justify-center mt-1">
-                    {[...Array(bus?.photos.length).keys()].map((index) => (
-                      <div
-                        key={index}
-                        className={`h-2 w-2 rounded-full ${
-                          index === imgIndex ? "bg-black" : "bg-gray-300"
-                        } cursor-pointer`}
-                        onClick={() => setImgIndex(index)}
-                      ></div>
-                    ))}
-                  </div>
+                <div className="flex flex-wrap justify-end">
+                  {bus?.photos?.map((photo, index) => (
+                    <div
+                      key={index}
+                      className="max-h-[220px] max-w-[330px] m-2"
+                    >
+                      <Image
+                        className="max-h-[220px] max-w-[330px] h-full w-full"
+                        src={photo}
+                        alt={`Image ${index + 1}`}
+                        preview={{ src: photo }} // Enables full-screen preview on click
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

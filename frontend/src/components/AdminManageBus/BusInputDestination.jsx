@@ -14,8 +14,8 @@ const BusInputDestination = ({ value, setData, type, setPoint }) => {
       setFilteredCities(filtered);
       setShowSuggestions(true);
     } else {
+      setInputValue("")
       setFilteredCities(cities);
-      setShowSuggestions(false);
     }
   };
 

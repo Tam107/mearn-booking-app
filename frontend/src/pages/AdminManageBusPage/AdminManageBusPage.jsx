@@ -1,15 +1,15 @@
 import React from "react";
 import SidebarAdmin from "../../components/SidebarAdmin/SidebarAdmin";
-import AdminCreateBus from "../../components/AdminCreateBus/AdminCreateBus";
+import AdminManageBus from "../../components/AdminManageBus/AdminManageBus";
 
-const AdminCreateBusPage = () => {
+const AdminManageBusPage = () => {
   return (
     <>
      
         <div className="flex">
             <SidebarAdmin />
             <div className="w-full">
-                <AdminCreateBus/>
+                <AdminManageBus/>
             </div>
         </div>
     
@@ -17,4 +17,4 @@ const AdminCreateBusPage = () => {
   );
 };
 
-export default AdminCreateBusPage;
+export default AdminManageBusPage;

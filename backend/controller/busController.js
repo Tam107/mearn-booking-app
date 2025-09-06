@@ -111,20 +111,27 @@ export const updatePoint = async (req, res) => {
 export const createBus = async (req, res) => {
     try {
         const newBus = new Bus(req.body);
+        
         await newBus.save();
+
+        const populatedBus = await Bus.findById(newBus._id)
+            .populate("boarding")
+            .populate("arrival")
+            .populate("facilities");
+
         return res.json({
             success: true,
             message: "Create bus successfully",
-            data: newBus
+            data: populatedBus
         });
     } catch (error) {
         return res.json({
             success: false,
             message: "Error in creating bus",
-        })
-        
+        });
     }
 }
+
 
 export const getAllBus = async (req, res) => {
     try {
@@ -173,7 +180,7 @@ export const updateBus = async (req, res) => {
         const { id } = req.params;
         const data = req.body;
 
-        const newBus = await Bus.findOneAndUpdate({_id:id},data);
+        const newBus = await Bus.findOneAndUpdate({_id: id}, data, { new: true }).populate("boarding").populate("arrival").populate("facilities"); 
         if(newBus){
             return res.json({
                 success: true,
