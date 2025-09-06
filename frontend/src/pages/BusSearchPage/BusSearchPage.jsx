@@ -204,9 +204,9 @@ const BusSearchPage = () => {
               </div>
               <div className="w-full flex flex-col">
                 {buses?.length > 0 ? (
-                  buses?.map((bus) => (
+                  buses?.map((bus,index) => (
                     <>
-                      <Item bus={bus} seats={seats} />
+                      <Item index={index} bus={bus} seats={seats} />
                     </>
                   ))
                 ) : (

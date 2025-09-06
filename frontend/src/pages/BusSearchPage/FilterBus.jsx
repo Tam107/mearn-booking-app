@@ -78,13 +78,23 @@ const FilterBus = ({
     buses,
   ]);
 
+  const resetFilter = ()=>{
+    setBoardingFilter([])
+    setArrivalFilter([])
+    setPoNameFilter([])
+    setDepartureTimeFilter([])
+    setArrivalTimeFilter([])
+    setSeatArrangementFilter([])
+    setSeatsTypeFilter([])
+  }
+
 
   return (
     <div className="w-[250px] mr-2 bg-white h-full p-4 shadow-lg rounded-lg">
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-md font-semibold">Filter Results</h3>
-          <p className="text-sm text-blue-400 cursor-pointer">Reset filter</p>
+          <p onClick={resetFilter} className="text-sm text-blue-400 !cursor-pointer">Reset filter</p>
         </div>
         <p className="text-[#687176] text-sm">
           Showing results based on your categories

@@ -4,7 +4,7 @@ import iconMap from "../../data/iconMap";
 import { Carousel, Image } from "antd";
 import { useNavigate } from "react-router";
 
-const Item = ({ bus, seats }) => {
+const Item = ({ bus, seats,index }) => {
   const [layout, setLayout] = useState("");
   const [featureTab, setFeatureTab] = useState(false);
   const [ticketTab, setTicketTab] = useState(false);
@@ -15,6 +15,9 @@ const Item = ({ bus, seats }) => {
     const interval = setInterval(() => {
       setImgIndex((prevIndex) => (prevIndex + 1) % bus.photos.length);
     }, 5000);
+    if(index==0){
+      setFeatureTab(true)
+    }
     return () => clearInterval(interval);
   }, []);
 
