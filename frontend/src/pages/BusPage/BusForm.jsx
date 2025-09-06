@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PiBusThin } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { DatePicker } from "antd";
@@ -17,6 +17,18 @@ const BusForm = () => {
   const [returnDate, setReturnDate] = useState("");
   const [seats, setSeats] = useState();
   const navigate = useNavigate();
+  const query = new URLSearchParams(location.search);
+  const fromQuery = query?.get("from");
+  const toQuery = query?.get("to");
+  const seatsQuery = query?.get("seats");
+  const departureDateQuery = query?.get("departureDate");
+
+  useEffect(()=>{
+    if(fromQuery) setFrom(fromQuery)
+    if(toQuery) setTo(toQuery)
+    if(departureDateQuery) setDepartureDate(dayjs(departureDateQuery))
+    if(seatsQuery) setSeats(seatsQuery)
+  },[fromQuery,toQuery,seatsQuery,departureDateQuery])
 
   function compareWithToday(dateFromApi) {
     const today = dayjs();
@@ -67,20 +79,7 @@ const BusForm = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto mb-10">
-        <div className="text-center flex flex-col gap-2 mb-5">
-          <h2 className="font-[600] pb-2 text-[36px] leading-[40px] text-[#1F2937]">
-            Book Bus Travel Shuttle Tickets with Promo Price
-          </h2>
-          <p className="font-[400] mx-10 text-[16px] leading-[24px] text-[#6B7280]">
-            Booking bus and travel shuttle tickets is now as easy as shopping
-            online from Highlights of Vietnam online agent ticket. Find complete
-            information of bus and travel routes, schedules, boarding points,
-            facilities, and ticket prices in Highlights of Vietnam Lifestyle
-            SuperApp.
-          </p>
-        </div>
-        <div className="mx-auto w-[960px]">
+      <div className="w-full">
           <div
             style={{
               boxShadow: "0px 4px 10px rgba(3, 18, 26, 0.15)",
@@ -144,7 +143,6 @@ const BusForm = () => {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 };

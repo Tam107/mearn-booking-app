@@ -12,6 +12,7 @@ import {
   removeDiacritics,
 } from "../../Common/common";
 import FilterBus from "./FilterBus";
+import BusForm from "../BusPage/BusForm";
 
 const BusSearchPage = () => {
   const busSelector = useSelector((state) => state.BusReducer);
@@ -35,6 +36,7 @@ const BusSearchPage = () => {
   const seats = query?.get("seats");
   const [buses, setBuses] = useState([]);
   const [busTmp, setBusTmp] = useState([]);
+  const [openChangeForm, setOpenChangeForm] = useState(false);
   const getData = () => {
     const filteredBuses = busSelector?.busesAdmin?.filter(
       (bus) =>
@@ -49,6 +51,7 @@ const BusSearchPage = () => {
   useEffect(() => {
     getData();
     window.scrollTo(0, 0);
+    setOpenChangeForm(false);
   }, [from, to, busSelector?.busesAdmin]);
 
   // FilterBus
@@ -150,31 +153,47 @@ const BusSearchPage = () => {
     seatsTypeFilter,
   ]);
 
-
   return (
     <>
       <Header />
+      {/* <div className="h-[120px] border-t-[1px] border-gray-400 bg-white"></div> */}
       <div className="w-full mt-2 bg-[#F2F3F3] min-h-[100vh]">
         <div className="w-[70%] mx-auto py-6">
-          <div className="w-full border-b-2 pb-3 mb-3 border-b-[#CDD0D1] flex items-center justify-between">
-            <div className="flex flex-col">
-              <div className="flex gap-2 items-center">
-                <p className="font-bold text-[16px] text-slate-900">{from}</p>
-                <IoIosReturnRight size={30} />
-                <p className="font-bold text-[16px] text-slate-900">{to}</p>
+          <div className="w-full border-b-2 pb-3 mb-3 border-b-[#CDD0D1] ">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <div className="flex gap-2 items-center">
+                  <p className="font-bold text-[16px] text-slate-900">{from}</p>
+                  <IoIosReturnRight size={30} />
+                  <p className="font-bold text-[16px] text-slate-900">{to}</p>
+                </div>
+                <div>
+                  <p className="text-gray-600 text-sm font-bold">
+                    {departureDate}
+                    <span className="pl-6">{seats} seats</span>
+                  </p>
+                </div>
               </div>
               <div>
-                <p className="text-gray-600 text-sm font-bold">
-                  {departureDate}
-                  <span className="pl-6">{seats} seats</span>
-                </p>
+                <Button
+                  onClick={() => {
+                    setOpenChangeForm(!openChangeForm);
+                  }}
+                  type="primary"
+                  size="large"
+                >
+                  <p className="text-[16px] font-[600]">Change Search</p>
+                </Button>
               </div>
             </div>
-            <div>
-              <Button type="primary" size="large">
-                <p className="text-[16px] font-[600]">Change Search</p>
-              </Button>
-            </div>
+            {openChangeForm && (
+              <>
+                <div className="my-2">
+                  <BusForm 
+                  />
+                </div>
+              </>
+            )}
           </div>
           <div className="w-full flex gap-2">
             <FilterBus
@@ -203,7 +222,7 @@ const BusSearchPage = () => {
               </div>
               <div className="w-full flex flex-col">
                 {buses?.length > 0 ? (
-                  buses?.map((bus,index) => (
+                  buses?.map((bus, index) => (
                     <>
                       <Item index={index} bus={bus} seats={seats} />
                     </>
