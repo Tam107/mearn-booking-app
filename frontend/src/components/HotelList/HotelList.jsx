@@ -9,6 +9,7 @@ import { GiHomeGarage } from "react-icons/gi";
 import { Country, State, City } from "country-state-city";
 import { useSelector } from "react-redux";
 import Item from "./Item";
+import { cities } from "../../Common/common";
 
 const HotelList = () => {
   const stateHotels = useSelector((state) => state.HotelReducer);
@@ -18,8 +19,6 @@ const HotelList = () => {
   const [whereSearch, setWhereSearch] = useState("");
   const [city, setCity] = useState("");
   const [showFilter, setShowFilter] = useState(false);
-
-  const cities = State.getStatesOfCountry("VN");
 
   useEffect(() => {
     window.scrollTo(0, 0);

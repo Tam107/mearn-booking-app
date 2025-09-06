@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { PiBusThin } from "react-icons/pi";
 import unidecode from 'unidecode';
+import { cities, searchCity } from "../../Common/common";
 
-const BusInputDestination = ({ type,setData,cities,data }) => {
+const BusInputDestination = ({ type,setData,data }) => {
     const [filteredCities, setFilteredCities] = useState(cities);
     const [showSuggestionsFrom, setShowSuggestionsFrom] = useState(false);
     const handleChangeFrom = (e) => {
@@ -15,9 +16,7 @@ const BusInputDestination = ({ type,setData,cities,data }) => {
         } 
         setData(value);
         if (value.length > 0) {
-          const filtered = cities.filter((city) =>
-            unidecode(city.name).toLowerCase().includes(value.toLowerCase())
-          );
+          const filtered = searchCity(cities,value)
           setFilteredCities(filtered);
           setShowSuggestionsFrom(true);
         } else {

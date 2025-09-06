@@ -6,6 +6,7 @@ import { IoIosReturnRight } from "react-icons/io";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import Item from "./Item";
+import { removeDiacritics } from "../../Common/common";
 
 const BusSearchPage = () => {
   const busSelector = useSelector((state) => state.BusReducer);
@@ -32,8 +33,8 @@ const BusSearchPage = () => {
     const getData = () => {
       const filteredBuses = busSelector?.busesAdmin?.filter(
         (bus) =>
-          bus?.cityFrom?.toLowerCase() === from?.toLowerCase() &&
-          bus?.cityTo?.toLowerCase() === to?.toLowerCase()
+          removeDiacritics(bus?.cityFrom?.toLowerCase()) === from?.toLowerCase() &&
+          removeDiacritics(bus?.cityTo?.toLowerCase()) === to?.toLowerCase()
       );
       setBuses(filteredBuses || []);
     };

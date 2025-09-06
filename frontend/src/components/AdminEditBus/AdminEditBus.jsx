@@ -25,6 +25,7 @@ import ModalBoardingArrive from "../AdminCreateBus/ModalBoardingArrive";
 import toast from "react-hot-toast";
 import { updateBusAction } from "../../redux/actions/BusAction";
 import { useNavigate } from "react-router";
+import { cities } from "../../Common/common";
 
 const AdminEditBus = ({ data, setData }) => {
   const [facilitiesDefault, setFacilitiesDefault] = useState([]);
@@ -37,8 +38,7 @@ const AdminEditBus = ({ data, setData }) => {
   const stateBus = useSelector((state) => state.BusReducer);
   const [showCreateFacility, setShowCreateFacility] = useState(false);
 const dispatch = useDispatch()
-const navigate = useNavigate()
-  const cities = State.getStatesOfCountry("VN");
+const navigate = useNavigate() 
   const [loading, setLoading] = useState(false); // Loading state for the button
   const updateBus = async () => {
     setLoading(true);

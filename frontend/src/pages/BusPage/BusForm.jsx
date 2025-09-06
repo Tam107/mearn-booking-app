@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import BusInputDestination from "./BusInputDestination";
-import { removeDiacritics } from "../../Common/common";
+import { cities, removeDiacritics, searchCity } from "../../Common/common";
 const BusForm = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -27,11 +27,6 @@ const BusForm = () => {
   }
 
   // default
-  const cities = State.getStatesOfCountry("VN").map((city) => ({
-    ...city,
-    name: removeDiacritics(city.name),
-  }));
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic
@@ -57,19 +52,18 @@ const BusForm = () => {
   };
   const [filteredCitiesFrom, setFilteredCitiesFrom] = useState([]);
   const [showSuggestionsFrom, setShowSuggestionsFrom] = useState(false);
-  const handleChangeFrom = (e) => {
-    const value = e.target.value;
-    setFrom(value);
-    if (value.length > 0) {
-      const filtered = cities.filter((city) =>
-        city.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredCitiesFrom(filtered);
-      setShowSuggestionsFrom(true);
-    } else {
-      setShowSuggestionsFrom(false);
-    }
-  };
+  // const handleChangeFrom = (e) => {
+  //   const value = e.target.value;
+  //   setFrom(value);
+  //   if (value.length > 0) {
+  //     const filtered = searchCity(cities)
+
+  //     setFilteredCitiesFrom(filtered);
+  //     setShowSuggestionsFrom(true);
+  //   } else {
+  //     setShowSuggestionsFrom(false);
+  //   }
+  // };
 
   return (
     <>
@@ -101,13 +95,11 @@ const BusForm = () => {
               <BusInputDestination
                 data={from}
                 type={"From"}
-                cities={cities}
                 setData={setFrom}
               />
               <BusInputDestination
                 data={to}
                 type={"To"}
-                cities={cities}
                 setData={setTo}
               />
             </div>

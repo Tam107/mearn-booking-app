@@ -21,6 +21,7 @@ import {
 } from "../../../Axios/client/api";
 import { getAllHotelsAction } from "../../redux/actions/HotelAction";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import { cities } from "../../Common/common";
 
 const AdminCreateHotel = () => {
   const dispatch = useDispatch();
@@ -32,8 +33,6 @@ const AdminCreateHotel = () => {
 
   // default values
   const typeDefault = ["Hotel", "Villa", "House", "Flat"];
-  const cities = State.getStatesOfCountry("VN");
-
   const [roomTypeDefault, setRoomTypeDefault] = useState([
     "King Room",
     "Deluxe Room",

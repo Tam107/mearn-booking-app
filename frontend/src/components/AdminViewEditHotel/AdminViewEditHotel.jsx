@@ -28,6 +28,7 @@ import EditorTiny from "../EditorTiny/EditorTiny";
 import ModelCreatePolicy from "../ModelCreatePolicy/ModelCreatePolicy";
 import Policy from "../Policy/Policy";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import { cities } from "../../Common/common";
 
 const AdminViewEditHotel = () => {
     const {slug} = useParams()
@@ -40,7 +41,6 @@ const AdminViewEditHotel = () => {
 
   // default values
   const typeDefault = ["Hotel", "Villa", "House", "Flat"];
-  const cities = State.getStatesOfCountry("VN");
   const roomTypeDefault = [
     "King Room",
     "1 Bed Room",

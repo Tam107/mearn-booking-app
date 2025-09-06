@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TiPlusOutline } from "react-icons/ti";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
-import { Country, State } from "country-state-city";
 import { useMediaQuery } from "react-responsive";
 import { Checkbox, Input, Radio, TimePicker, Tooltip } from "antd";
 import { FaQuestionCircle } from "react-icons/fa";
@@ -25,14 +23,10 @@ import ModelCreateFacility from "../ModelCreateFacility/ModelCreateFacility";
 import EditorTiny from "../EditorTiny/EditorTiny";
 import { createBusAdminAction } from "../../redux/actions/BusAction";
 import BusInputDestination from "./BusInputDestination";
-import { removeDiacritics } from "../../Common/common";
+import UploadImg from "../UploadImg/UploadImg";
 const AdminCreateBus = () => {
   const dispatch = useDispatch();
   //default values
-  const cities = State.getStatesOfCountry("VN").map((city) => ({
-    ...city,
-    name: removeDiacritics(city.name),
-  }));
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [modalBoardingPoint, setModalBoardingPoint] = useState(false);
   const [facilitiesDefault, setFacilitiesDefault] = useState([]);
@@ -205,31 +199,7 @@ const AdminCreateBus = () => {
           <div className="flex mb-3 items-center gap-2 md:gap-4">
             <h2 className="font-medium text-lg">Bus Picture</h2>
           </div>
-          <div className="grid gap-2 mt-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-6">
-            <label className="border border-gray-300 border-dashed cursor-pointer bg-transparent rounded-2xl p-6 flex items-center justify-center text-2xl text-gray-600">
-              <input
-                type="file"
-                multiple
-                className="hidden"
-                onChange={addPhotoByFile}
-              />
-              <IoCloudUploadOutline />
-              Upload
-            </label>
-
-            {photos.length > 0 &&
-              photos.map((item, index) => (
-                <div key={index} className="h-32 relative flex">
-                  <img src={item} className="rounded-2xl w-full object-cover" />
-                  <div
-                    onClick={() => removePhoto(item)}
-                    className="absolute top-0 right-0 w-6 h-6 text-sm flex items-center justify-center text-white bg-red-500 rounded-full cursor-pointer hover:bg-red-700 transition z-50 duration-300"
-                  >
-                    X
-                  </div>
-                </div>
-              ))}
-          </div>
+          <UploadImg addPhotoByFile={addPhotoByFile} removePhoto={removePhoto} photos={photos}/>
         </div>
 
         {/* Bus Details */}
@@ -243,14 +213,12 @@ const AdminCreateBus = () => {
               setData={setCityFrom}
               type={"From"}
               setPoint={setBoarding}
-              cities={cities}
             />
             <BusInputDestination
               value={cityTo}
               setData={setCityTo}
               type={"To"}
               setPoint={setArrival}
-              cities={cities}
             />
             <div className="flex flex-col gap-2">
               <p className="text-lg">
