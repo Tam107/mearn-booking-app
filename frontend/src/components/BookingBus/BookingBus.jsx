@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BookingContactDetail from "../BookingComonent/BookingContactDetail";
 import BookingRequest from "../BookingComonent/BookingRequest";
 import BookingTravelerDetail from "../BookingComonent/BookingTravelerDetail";
-import { Button } from "antd";
+import { Button, Carousel, Image } from "antd";
 import toast from "react-hot-toast";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router";
@@ -13,7 +13,7 @@ import iconMap from "../../data/iconMap";
 import { useUser } from "@clerk/clerk-react";
 const BookingBus = () => {
   const [booking, setBooking] = useState([]);
-  const {  user } = useUser();
+  const { user } = useUser();
   const { id } = useParams();
   const stateBus = useSelector((state) => state.BusReducer);
   const [name, setName] = useState("");
@@ -61,12 +61,12 @@ const BookingBus = () => {
     if (!existingStr) return [];
 
     const bookings = JSON.parse(existingStr);
-  
-    const newBooking = bookings.filter(i=>i.expiry > now)
+
+    const newBooking = bookings.filter((i) => i.expiry > now);
 
     localStorage.setItem("busBooking", JSON.stringify(newBooking));
 
-    return newBooking.map(i=>i.value)
+    return newBooking.map((i) => i.value);
   };
   function formatTime(time) {
     if (!time) return "";
@@ -112,26 +112,23 @@ const BookingBus = () => {
         }))
       );
     } else {
-      if(id && stateBus?.busesAdmin?.length > 0){
+      if (id && stateBus?.busesAdmin?.length > 0) {
         toast.error("This bus booking session has expired.");
         navigate("/bus");
       }
-      
-      
     }
   };
-  useEffect(()=>{
-    if(user){
+  useEffect(() => {
+    if (user) {
       setName(user?.fullName);
-      setEmail(user?.primaryEmailAddress.emailAddress)
+      setEmail(user?.primaryEmailAddress.emailAddress);
     }
-  },[user])
-  
+  }, [user]);
 
   useEffect(() => {
     setData(stateBus?.busesAdmin?.find((bus) => bus._id === id));
     setBookingF();
-  }, [id, stateBus?.busesAdmin]);  
+  }, [id, stateBus?.busesAdmin]);
   const handlePayment = () => {
     if (!name || !email || !phoneNumber) {
       toast.error("Please fill in contact details.");
@@ -158,18 +155,17 @@ const BookingBus = () => {
       toast.error("This bus booking session has expired.");
       navigate("/bus");
       return;
-    }
-    else{
-      let tmp = JSON.parse(localStorage.getItem("busBooking"))
+    } else {
+      let tmp = JSON.parse(localStorage.getItem("busBooking"));
       tmp[tmpIndex].value = {
         ...tmp[tmpIndex].value,
-        contactDetail:{
+        contactDetail: {
           name,
           email,
-          phoneNumber
+          phoneNumber,
         },
         travelerDetails: travelerDetails,
-      }
+      };
       localStorage.setItem("busBooking", JSON.stringify(tmp));
 
       navigate("/bus/payment/" + id);
@@ -292,8 +288,8 @@ const BookingBus = () => {
               </>
             )}
           </div>
-          <div className="right">
-            <div className="bg-white shadow-md rounded-lg px-6 py-4 w-fit">
+          <div className="right w-3/4">
+            <div className="bg-white shadow-md rounded-lg px-6 py-4 w-full">
               <div className="flex gap-2 items-center mb-4">
                 <p className="font-bold text-sm text-slate-900">
                   {data?.cityFrom}
