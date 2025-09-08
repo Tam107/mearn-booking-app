@@ -11,32 +11,35 @@ import {
   getAllHotelsAction,
 } from "../../redux/actions/HotelAction";
 import { getAllRoomsAction } from "../../redux/actions/RoomAction";
+import Search from "antd/es/input/Search";
 
 const AdminViewHotel = () => {
+  const [searchText, setSearchText] = useState("");
   const stateHotels = useSelector((state) => state.HotelReducer);
-  const [open, setOpen] = useState(false);
-  const [hotelSelected, setHotelSelected] = useState("");
   const [hotelSelectedId, setHotelSelectedId] = useState("");
-  const [input, setInput] = useState("");
-  const [hotelPopup, setHotelPopup] = useState(stateHotels?.hotels);
   const [dataHotels, setDataHotels] = useState(stateHotels.hotels);
 
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
-  const handleSearchChange = (e) => {
-    setInput(e.target.value);
-    setHotelPopup(
-      stateHotels.hotels.filter((hotel) =>
-        hotel.name.toLowerCase().includes(e.target.value.toLowerCase())
-      )
-    );
-  };
-
   useEffect(() => {
     setDataHotels(stateHotels?.hotels);
-    setHotelPopup(stateHotels?.hotels);
   }, [stateHotels.hotels, dispatch]);
+
+  useEffect(() => {
+    if (searchText) {
+      const lower = searchText.toLowerCase();
+      let tmp = dataHotels.filter(
+        (hotel) =>
+          hotel?.name?.toLowerCase().includes(lower) ||
+          hotel?.city?.toLowerCase().includes(lower) ||
+          hotel?.type?.toLowerCase().includes(lower)
+      );
+      setDataHotels(tmp);
+    } else {
+      setDataHotels(stateHotels?.hotels);
+    }
+  }, [searchText]);
 
   useEffect(() => {
     if (hotelSelectedId.length > 0) {
@@ -126,73 +129,18 @@ const AdminViewHotel = () => {
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
         <div className="flex-1 flex gap-4 w-full md:w-auto">
           {/* Dropdown select */}
-          <div className="relative shadow px-4 border bg-white p-2 rounded-3xl w-full md:w-[300px]">
-            <div
-              onClick={() => setOpen(!open)}
-              className="cursor-pointer flex items-center justify-between"
-            >
-              <p className="text-gray-600">
-                {hotelSelected.length > 0 ? hotelSelected : "Select Home"}
-              </p>
-              <BiChevronDown size={20} />
-            </div>
-            {open && (
-              <ul className="absolute z-50 px-4 pb-2 top-10 left-0 bg-gray-500 overflow-y-auto max-h-56 rounded-3xl mt-2 w-full">
-                <div className="flex sticky top-0 items-center gap-2 bg-gray-500 p-2">
-                  <AiOutlineSearch className="text-gray-200" size={20} />
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={handleSearchChange}
-                    placeholder="Enter hotel name"
-                    className="placeholder:text-gray-200 text-gray-200 flex-1 p-2 outline-none bg-transparent"
-                  />
-                </div>
-                {hotelPopup?.map((hotel) => (
-                  <li
-                    onClick={() => {
-                      setOpen(false);
-                      setHotelSelected(hotel.name);
-                      setHotelSelectedId(hotel._id);
-                    }}
-                    key={hotel._id}
-                    className="text-white text-[16px] cursor-pointer hover:text-blue-300"
-                  >
-                    {hotel.name}
-                  </li>
-                ))}
-                {hotelPopup?.length === 0 && (
-                  <p className="text-white text-[16px]">
-                    No homes available for the search.
-                  </p>
-                )}
-              </ul>
-            )}
-          </div>
-          {/* Get all */}
-          <div
-            onClick={() => {
-              setHotelSelected("");
-              setHotelSelectedId("");
-              setOpen(false);
-              setInput("");
-              setHotelPopup(stateHotels.hotels);
-            }}
-            className="cursor-pointer shadow-2xl px-4 border border-gray-300 bg-white p-2 flex items-center justify-center rounded-3xl whitespace-nowrap"
-            >
-            Get All
-          </div>
+
+          <Search
+            placeholder="Search by Name, City, Type..."
+            allowClear
+            onSearch={(val) => setSearchText(val)}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="rounded-xl shadow-sm"
+            style={{ width: 280 }}
+          />
         </div>
-        {/* Create button */}
-        <Link
-          to="/dashboard-create-home"
-          className="shadow px-4 border bg-white p-2 flex items-center justify-center rounded-3xl whitespace-nowrap"
-        >
-          Create homes
-        </Link>
       </div>
 
-      {/* Table / Mobile Cards */}
       {isMobile ? (
         <div>
           {dataHotels.map((hotel) => (
