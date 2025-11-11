@@ -2,7 +2,7 @@ import express from "express";
 import ServiceHotel from "../models/ServiceHotel.js";
 
 const router = express.Router();
-router.get("/get", async (req, res) => {
+router.get("", async (req, res) => {
     try {
         const service = await ServiceHotel.find({})
         return res.json({
@@ -19,7 +19,7 @@ router.get("/get", async (req, res) => {
     }
 });
 
-router.post("/create", async (req, res) => {
+router.post("", async (req, res) => {
     try {
         const { name, icon } = req.body
         if (!name) {
@@ -66,7 +66,7 @@ router.post("/create", async (req, res) => {
     }
 });
 
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
         await ServiceHotel.deleteOne({ _id: req.params.id })
         res.json({
@@ -82,7 +82,7 @@ router.delete("/delete/:id", async (req, res) => {
     }
 })
 
-router.patch('/edit/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     try {
         if(!req.body.name){
             const updatedSer = await ServiceHotel.findByIdAndUpdate(req.params.id
@@ -133,12 +133,6 @@ router.patch('/edit/:id', async (req, res) => {
             message: "Update service succesfully",
             data:updatedSer
         })
-        
-
-        
-
-
-        
 
     } catch (error) {
         return res.json({

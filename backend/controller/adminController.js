@@ -1,6 +1,6 @@
 import { sendAdminToken } from "../helpers/JsonToken.js"
 import Admin from "../models/Admin.js"
-export const create = async(req,res)=>{
+export const createHotelAdmin = async(req, res)=>{
     try {
         const {username,email,password,phoneNumber} = req.body
 
@@ -24,7 +24,7 @@ export const create = async(req,res)=>{
         })
     }
 }
-export const login = async(req,res)=>{
+export const loginAdmin = async(req, res)=>{
     try {
         const {email,password} = req.body
 

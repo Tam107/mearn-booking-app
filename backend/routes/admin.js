@@ -1,8 +1,8 @@
 import express from "express";
-import { create,login,getAdmin } from "../controller/adminController.js";
+import { createHotelAdmin,loginAdmin,getAdmin } from "../controller/adminController.js";
 import { verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
-router.post("/create",create );
-router.post("/login",login);
-router.get("/getAdmin",verifyAdmin,getAdmin)
+router.post("",createHotelAdmin );
+router.post("/login",loginAdmin);
+router.get("",verifyAdmin,getAdmin)
 export default router;

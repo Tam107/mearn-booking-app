@@ -1,18 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import usersRoute from "./routes/users.js"; // Keep .jsx if necessary
-import serviceHotelRoute from "./routes/serviceHotel.js"; // Keep .jsx if necessary
-import facilityHotel from "./routes/facilityHotel.js"; // Keep .jsx if necessary
-import uploadRoute from "./routes/upload.js"; // Keep .jsx if necessary
-import policyRoute from "./routes/policy.js"; // Keep .jsx if necessary
-import BookingRoute from "./routes/Booking.js"; // Keep .jsx if necessary
-import hotelsRoute from "./routes/hotels.js"; // Keep .jsx if necessary
-import adminsRoute from "./routes/admin.js"; // Keep .jsx if necessary
+import usersRoute from "./routes/users.js";
+import serviceHotelRoute from "./routes/serviceHotel.js";
+import facilityHotel from "./routes/facilityHotel.js";
+import uploadRoute from "./routes/upload.js";
+import policyRoute from "./routes/policy.js";
+import BookingRoute from "./routes/Booking.js";
+import hotelsRoute from "./routes/hotels.js";
+import adminsRoute from "./routes/admin.js";
 import roomsRoute from "./routes/rooms.js";
-import busRoute from "./routes/bus.js"; // Keep .jsx if necessary
+import busRoute from "./routes/bus.js";
 import swaggerDocs from "./swagger.js";
-import cookieParser from "cookie-parser"; // Keep .jsx if necessary
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import googleAuthRoute from "./routes/googleAuth.js";
 import {PORT, MONGO_URI, CLIENT_ID_PAYPAL, PORT_FRONTEND} from "./config/env.js";
@@ -66,10 +66,13 @@ app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 app.use("/api/admin", adminsRoute);
 app.use("/api/auth", googleAuthRoute);
-app.use("/api/servicesHotel", serviceHotelRoute);
-app.use("/api/facilityHotel", facilityHotel);
+// app.use("/api/servicesHotel", serviceHotelRoute);
+// app.use("/api/facilityHotel", facilityHotel);
+
+app.use("/api/hotels/services", serviceHotelRoute);
+app.use("/api/hotels/facilities", facilityHotel);
 app.use("/api/upload", uploadRoute);
-app.use("/api/policy", policyRoute);
+app.use("/api/policies", policyRoute);
 app.use("/api/booking", BookingRoute);
 app.use("/api/bus", busRoute);
 app.use("/api/config/paypal", (req,res)=>{

@@ -2,7 +2,7 @@ import express from "express";
 import Policy from "../models/Policy.js";
 
 const router = express.Router();
-router.post("/get",async(req,res)=>{
+router.post("",async(req,res)=>{
     try{
         // console.log(req.body);
         
@@ -15,13 +15,13 @@ router.post("/get",async(req,res)=>{
         console.log(e);
         return res.json({
             success:false,
-            message:"Error in BE"
+            message:"Internal Server Error in Policy"
         })
         
     }
 });
 
-router.post("/create",async(req,res)=>{
+router.post("",async(req,res)=>{
     try{
         const {name,type} = req.body
         if(!name){
@@ -61,12 +61,12 @@ router.post("/create",async(req,res)=>{
         console.log(e);
         return res.json({
             success:false,
-            message:"Error in BE"
+            message:"Internal Server Error in Policy"
         })
         
     }
 });
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/policy/:id", async (req, res) => {
     try {
         // console.log(req.params);
         
@@ -79,11 +79,11 @@ router.delete("/delete/:id", async (req, res) => {
         console.log(e);
         return res.json({
             success: false,
-            message: "Error in BE"
+            message: "Internal Server Error in Policy"
         })
     }
 })
-router.patch('/edit/:id', async (req, res) => {
+router.patch('/policy/:id', async (req, res) => {
     try {
        if(!req.body.name){
     
@@ -105,10 +105,6 @@ router.patch('/edit/:id', async (req, res) => {
                        data:updatedSer
                    })
                }
-       
-              
-
-       
 
         const serviceName = req.body.name.trim().toLowerCase();
 
@@ -142,19 +138,13 @@ router.patch('/edit/:id', async (req, res) => {
             message: "Update policy succesfully",
             data:updatedSer
         })
-        
-
-        
-
-
-        
 
     } catch (error) {
         console.log(error);
         
         return res.json({
             success: false,
-            message: "Error in BE"
+            message: "Internal Server Error in Policy"
         })
     }
 })

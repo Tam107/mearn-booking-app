@@ -1,7 +1,7 @@
 import express from "express";
 import Facility from "../models/Facility.js";
 const router = express.Router();
-router.get("/get",async(req,res)=>{
+router.get("",async(req,res)=>{
     try{
         const record = await Facility.find({})
         return res.json({
@@ -12,13 +12,13 @@ router.get("/get",async(req,res)=>{
         console.log(e);
         return res.json({
             success:false,
-            message:"Error in BE"
+            message:"Internal Server Error in Facility Hotel"
         })
         
     }
 });
 
-router.post("/create",async(req,res)=>{
+router.post("",async(req,res)=>{
     try{
         const {name} = req.body
         if(!name){
@@ -51,13 +51,13 @@ router.post("/create",async(req,res)=>{
         console.log(e);
         return res.json({
             success:false,
-            message:"Error in BE"
+            message:"Internal Server Error in Facility Hotel"
         })
         
     }
 });
 
-router.patch('/edit/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     try {
         // console.log(req.params.id);
         // console.log(req.body);
@@ -112,22 +112,16 @@ router.patch('/edit/:id', async (req, res) => {
             message: "Update facility succesfully",
             data:updatedSer
         })
-        
-
-        
-
-
-        
 
     } catch (error) {
         return res.json({
             success: false,
-            message: "Error in BE"
+            message: "Internal Server Error in Facility Hotel"
         })
     }
 })
 
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
         // console.log(req.params);
         
@@ -140,7 +134,7 @@ router.delete("/delete/:id", async (req, res) => {
         console.log(e);
         return res.json({
             success: false,
-            message: "Error in BE"
+            message: "Internal Server Error in Facility Hotel"
         })
     }
 })

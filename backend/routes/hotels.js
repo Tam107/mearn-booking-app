@@ -11,10 +11,10 @@ import {
 
 const router = express.Router();
 
-router.post("/create", createHotel);
-router.get("/getAll", getAllHotels);
-router.delete("/delete/:id", deleteHotel);
-router.patch("/update", updateHotel);
+router.post("", createHotel);
+router.get("", getAllHotels);
+router.delete("/hotel/:id", deleteHotel);
+router.patch("/hotel", updateHotel);
 
 /**
  * @swagger

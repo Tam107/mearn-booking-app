@@ -5,7 +5,7 @@ export const getAllBoardingPointAdminAction = ()=>async(dispatch)=>{
         dispatch({
             type:"getAllBoardingAdminRequest",
         })
-        const data = await busAdminApi("getAll-boardingPoint","get"); 
+        const data = await busAdminApi("boarding-points","get");
         if(data.success){
             dispatch({
                 type:"getAllBoardingAdminSuccess",
@@ -33,7 +33,7 @@ export const getAllArrivalPointAdminAction = ()=>async(dispatch)=>{
         dispatch({
             type:"getAllArrivalAdminRequest",
         })
-        const data = await busAdminApi("getAll-arrivalPoint","get"); 
+        const data = await busAdminApi("arrival-points","get");
         if(data.success){
             dispatch({
                 type:"getAllArrivalAdminSuccess",
@@ -60,7 +60,7 @@ export const addBoardingPointAdminAction = (payload)=>async(dispatch)=>{
         dispatch({
             type:"addBoardingAdminRequest",
         })
-        const data = await busAdminApi("createPoint","post",payload); 
+        const data = await busAdminApi("create-point","post",payload);
         if(data.success){
 
             dispatch({
@@ -117,7 +117,7 @@ export const deleteBoardingPointAdminAction = (payload)=>async(dispatch)=>{
         dispatch({
             type:"deleteBoardingAdminRequest",
         })
-        const data = await busAdminApi(`deletePoint/${payload}`,"delete"); 
+        const data = await busAdminApi(`point/${payload}`,"delete");
         if(data.success){
             
             dispatch({
@@ -201,7 +201,7 @@ export const updateArrivalPointAdminAction = (payload)=>async(dispatch)=>{
         dispatch({
             type:"updateArrivalAdminRequest",
         })
-        const data = await busAdminApi(`updatePoint/${payload._id}`,"patch",payload); 
+        const data = await busAdminApi(`point/${payload._id}`,"patch",payload);
         if(data.success){   
             dispatch({
                 type:"updateArrivalAdminSuccess",
@@ -256,7 +256,7 @@ export const getAllBusesAdminAction = ()=>async(dispatch)=>{
         dispatch({
             type:"getAllBusesAdminRequest",
         })
-        const data = await busAdminApi("getAll-bus","get"); 
+        const data = await busAdminApi("buses","get");
         if(data.success){
             dispatch({
                 type:"getAllBusesAdminSuccess",
@@ -284,7 +284,7 @@ export const deleteBusAction = (id)=> async(dispatch)=>{
         dispatch({
             type:"deleteBusRequest",
         })
-        const data = await busAdminApi("deleteBus/" +id,"delete"); 
+        const data = await busAdminApi("buses/" +id,"delete");
         if(data.success){
             dispatch({
                 type:"deleteBusSuccess",

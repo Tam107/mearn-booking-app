@@ -17,7 +17,7 @@ const registerUser = async (data) => {
 
 const checkTokenOtp = async (data) => {
     try {
-        const URL_LOGIN = '/users/checkOtp'
+        const URL_LOGIN = '/users/check-otp'
         const response = await axios.post(URL_LOGIN, data, { withCredentials: true })
         return response
     } catch (error) {
@@ -30,7 +30,7 @@ const checkTokenOtp = async (data) => {
 
 const getUserApi = async () => {
     try {
-        const URL_LOGIN = '/users/getuser'
+        const URL_LOGIN = '/users/get-user-verify'
         const response = await axios.get(URL_LOGIN, { withCredentials: true })
         return response
     } catch (error) {
@@ -56,7 +56,7 @@ const loginApi = async (data) => {
 
 const createAdmin = async (data) => {
     try {
-        const URL_LOGIN = '/admin/create'
+        const URL_LOGIN = '/admin'
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -82,7 +82,7 @@ const loginAdminApi = async (data) => {
 
 const getAdminApi = async () => {
     try {
-        const URL_LOGIN = '/admin/getAdmin'
+        const URL_LOGIN = '/admin'
         const response = await axios.get(URL_LOGIN, { withCredentials: true })
         return response
     } catch (error) {
@@ -95,7 +95,7 @@ const getAdminApi = async () => {
 
 const getAllServicesApi = async () => {
     try {
-        const URL_LOGIN = '/servicesHotel/get'
+        const URL_LOGIN = '/hotels/services'
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {
@@ -108,7 +108,7 @@ const getAllServicesApi = async () => {
 
 const getAllFacilitiesApi = async () => {
     try {
-        const URL_LOGIN = '/facilityHotel/get'
+        const URL_LOGIN = '/hotels/facilities'
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {
@@ -121,7 +121,7 @@ const getAllFacilitiesApi = async () => {
 
 const createServicesApi = async (data) => {
     try {
-        const URL_LOGIN = '/servicesHotel/create'
+        const URL_LOGIN = '/hotels/services'
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -134,7 +134,7 @@ const createServicesApi = async (data) => {
 
 const deleteServicesApi = async (data) => {
     try {
-        const URL_LOGIN = '/servicesHotel/delete/' + data
+        const URL_LOGIN = '/hotels/services/' + data
         const response = await axios.delete(URL_LOGIN)
         return response
     } catch (error) {
@@ -147,7 +147,7 @@ const deleteServicesApi = async (data) => {
 
 const editServicesApi = async (id, data) => {
     try {
-        const URL_LOGIN = '/servicesHotel/edit/' + id
+        const URL_LOGIN = '/hotels/services/' + id
         const response = await axios.patch(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -160,7 +160,7 @@ const editServicesApi = async (id, data) => {
 
 const editFacilitiesApi = async (id, data) => {
     try {
-        const URL_LOGIN = '/facilityHotel/edit/' + id
+        const URL_LOGIN = '/hotels/facilities/' + id
         const response = await axios.patch(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -173,7 +173,7 @@ const editFacilitiesApi = async (id, data) => {
 
 const createFacilitiesApi = async (data) => {
     try {
-        const URL_LOGIN = '/facilityHotel/create'
+        const URL_LOGIN = '/hotels/facilities'
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -186,7 +186,7 @@ const createFacilitiesApi = async (data) => {
 
 const deleteFacilitiesApi = async (data) => {
     try {
-        const URL_LOGIN = '/facilityHotel/delete/' + data
+        const URL_LOGIN = '/hotels/facilities/' + data
         const response = await axios.delete(URL_LOGIN)
         return response
     } catch (error) {
@@ -225,7 +225,7 @@ const uploadByFilesApi = async (data) => {
 
 const createHotelApi = async (data) => {
     try {
-        const URL_LOGIN = `/hotels/create`
+        const URL_LOGIN = `/hotels`
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -238,7 +238,7 @@ const createHotelApi = async (data) => {
 
 const deleteHotelApi = async (id) => {
     try {
-        const URL_LOGIN = `/hotels/delete/` + id
+        const URL_LOGIN = `/hotels/hotel/` + id
         const response = await axios.delete(URL_LOGIN)
         return response
     } catch (error) {
@@ -251,7 +251,7 @@ const deleteHotelApi = async (id) => {
 
 const getAllHotelApi = async () => {
     try {
-        const URL_LOGIN = `/hotels/getAll`
+        const URL_LOGIN = `/hotels`
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {
@@ -264,7 +264,7 @@ const getAllHotelApi = async () => {
 
 const getAllRoomApi = async () => {
     try {
-        const URL_LOGIN = `/rooms/getAll`
+        const URL_LOGIN = `/rooms`
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {
@@ -277,7 +277,7 @@ const getAllRoomApi = async () => {
 
 const updateHotelApi = async (data) => {
     try {
-        const URL_LOGIN = `/hotels/update`
+        const URL_LOGIN = `/hotels/hotel`
         const response = await axios.patch(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -290,7 +290,7 @@ const updateHotelApi = async (data) => {
 
 const createRoomApi = async (data) => {
     try {
-        const URL_LOGIN = `/rooms/create`
+        const URL_LOGIN = `/rooms`
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -303,7 +303,7 @@ const createRoomApi = async (data) => {
 
 const deleteRoomApi = async (id, hotelId) => {
     try {
-        const URL_LOGIN = `/rooms/delete/` + id + "/" + hotelId
+        const URL_LOGIN = `/rooms/room/` + id + "/" + hotelId
         const response = await axios.delete(URL_LOGIN)
         return response
     } catch (error) {
@@ -316,7 +316,7 @@ const deleteRoomApi = async (id, hotelId) => {
 
 const updateRoomApi = async (data, id) => {
     try {
-        const URL_LOGIN = `/rooms/edit/${id}`
+        const URL_LOGIN = `/rooms/room/${id}`
         const response = await axios.patch(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -329,7 +329,7 @@ const updateRoomApi = async (data, id) => {
 
 const getPolicyApi = async (data) => {
     try {
-        const URL_LOGIN = `/policy/get`
+        const URL_LOGIN = `/policies`
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -342,7 +342,7 @@ const getPolicyApi = async (data) => {
 
 const createPolicyApi = async (data) => {
     try {
-        const URL_LOGIN = `/policy/create`
+        const URL_LOGIN = `/policies`
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -355,7 +355,7 @@ const createPolicyApi = async (data) => {
 
 const deletePolicyApi = async (data) => {
     try {
-        const URL_LOGIN = '/policy/delete/' + data
+        const URL_LOGIN = '/policies/policy/' + data
         const response = await axios.delete(URL_LOGIN)
         return response
     } catch (error) {
@@ -368,7 +368,7 @@ const deletePolicyApi = async (data) => {
 
 const editPolicyApi = async (id, data) => {
     try {
-        const URL_LOGIN = '/policy/edit/' + id
+        const URL_LOGIN = '/policies/policy/' + id
         const response = await axios.patch(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -381,7 +381,7 @@ const editPolicyApi = async (id, data) => {
 
 const createOtpPayment = async (data) => {
     try {
-        const URL_LOGIN = '/booking/create'
+        const URL_LOGIN = '/booking'
         const response = await axios.post(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -394,7 +394,7 @@ const createOtpPayment = async (data) => {
 
 const getBookingApi = async (id) => {
     try {
-        const URL_LOGIN = '/booking/get/' + id
+        const URL_LOGIN = '/booking/' + id
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {
@@ -407,7 +407,7 @@ const getBookingApi = async (id) => {
 
 const updateBookingApi = async (id, data) => {
     try {
-        const URL_LOGIN = '/booking/update/' + id
+        const URL_LOGIN = '/booking/' + id
         const response = await axios.patch(URL_LOGIN, data)
         return response
     } catch (error) {
@@ -420,7 +420,7 @@ const updateBookingApi = async (id, data) => {
 
 const updateStatusBookingApi = async (id) => {
     try {
-        const URL_LOGIN = '/booking/updateStatus/' + id
+        const URL_LOGIN = '/booking/update-status/' + id
         const response = await axios.patch(URL_LOGIN)
         return response
     } catch (error) {
@@ -433,7 +433,7 @@ const updateStatusBookingApi = async (id) => {
 
 const getBookingByEmailApi = async (email) => {
     try {
-        const URL_LOGIN = '/booking/getByEmail/' + email
+        const URL_LOGIN = '/booking/by-email/' + email
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {
@@ -446,7 +446,7 @@ const getBookingByEmailApi = async (email) => {
 
 const getAllBookingApi = async () => {
     try {
-        const URL_LOGIN = '/booking/getAll'
+        const URL_LOGIN = '/booking'
         const response = await axios.get(URL_LOGIN)
         return response
     } catch (error) {

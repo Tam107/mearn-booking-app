@@ -10,9 +10,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
 
 router.post('/register',upload.single("file"),uploadImageToCloudinary,registerUserValidate,register)
-router.post('/checkOtp',checkOtp)
+router.post('/check-otp',checkOtp)
 router.post('/login',loginUserValidate,login)
-router.get("/getuser",verifyToken,getUser)
+router.get("/get-user-verify",verifyToken,getUser)
 
 
 

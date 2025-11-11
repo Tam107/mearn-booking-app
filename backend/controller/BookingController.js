@@ -3,17 +3,14 @@
 import Admin from "../models/Admin.js"
 import Booking from "../models/Booking.js"
 import { sendMail } from "../helpers/sendMail.js"
-export const create = async (req, res) => {
+export const createBooking = async (req, res) => {
     try {
-
-
         const booking = new Booking(req.body)
         await booking.save()
         return res.json({
             success: true,
             data: booking
         })
-
     } catch (error) {
         // console.log(error)
         return res.json({
@@ -22,12 +19,10 @@ export const create = async (req, res) => {
         })
     }
 }
-export const get = async (req, res) => {
+export const getBooking = async (req, res) => {
     try {
         // console.log(req.params);
         // console.log("vao day");
-
-
         const data = await Booking.findOne({ _id: req.params.id })
             .populate({
                 path: "roomType", // Populate roomType
@@ -70,8 +65,6 @@ export const getByEmail = async (req, res) => {
     try {
 
         // console.log(req.params);
-
-
         const data = await Booking.find({ email: req.params.email }).sort({createdAt:-1})
             .populate({
                 path: "roomType", // Populate roomType
@@ -105,9 +98,6 @@ export const getByEmail = async (req, res) => {
 };
 export const updateStatus = async (req, res) => {
     try {
-
-
-
         if (!req.params.id) {
             return res.status(200).json({
                 success: false,
@@ -115,8 +105,6 @@ export const updateStatus = async (req, res) => {
             });
         }
         // console.log(req.body);
-        
-
         // Tìm và cập nhật booking theo ID
         let updatedBooking = await Booking.findByIdAndUpdate(
             req.params.id, // ID của booking cần cập nhật
@@ -134,12 +122,7 @@ export const updateStatus = async (req, res) => {
                 }
             ],
         });
-
-        
-
         // Kiểm tra nếu không tìm thấy booking
-       
-
         // Trả về kết quả thành công
         return res.status(200).json({
             success: true,
@@ -155,11 +138,8 @@ export const updateStatus = async (req, res) => {
     }
 };
 
-export const update = async (req, res) => {
+export const updateBooking = async (req, res) => {
     try {
-
-
-
         if (!req.params.id) {
             return res.status(200).json({
                 success: false,
@@ -167,8 +147,6 @@ export const update = async (req, res) => {
             });
         }
         // console.log(req.body);
-        
-
         // Tìm và cập nhật booking theo ID
         let updatedBooking = await Booking.findByIdAndUpdate(
             req.params.id, // ID của booking cần cập nhật
@@ -178,8 +156,6 @@ export const update = async (req, res) => {
 
         console.log(updatedBooking,1);
         console.log(req.body,2);
-        
-        
 
         // Kiểm tra nếu không tìm thấy booking
         if (!updatedBooking) {
@@ -189,7 +165,6 @@ export const update = async (req, res) => {
             });
         }
         // console.log(req.body);
-        
         if(req.body.status==="Pending"){
             updatedBooking = await updatedBooking.populate({
                 path: "roomType", // Populate roomType
@@ -331,12 +306,10 @@ export const update = async (req, res) => {
     }
 };
 
-export const getAll = async (req, res) => {
+export const getAllBooking = async (req, res) => {
     try {
         // console.log(req.params);
         // console.log("vao day");
-
-
         const data = await Booking.find({}).sort({createdAt:-1})
             .populate({
                 path: "roomType", // Populate roomType
