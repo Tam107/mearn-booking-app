@@ -8,4 +8,9 @@ router.get("",getAllBooking );
 router.patch("/:id",updateBooking );
 router.patch("/update-status/:id",updateStatus );
 
+// payment onepay will be implemented
+router.post("/:id/create-payment", createBookingPayment);
+router.get("/onepay/return", onepayReturn);
+router.all("/onepay/ipn", onepayIPN);
+
 export default router;

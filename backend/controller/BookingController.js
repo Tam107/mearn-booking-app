@@ -3,6 +3,14 @@
 import Admin from "../models/Admin.js"
 import Booking from "../models/Booking.js"
 import { sendMail } from "../helpers/sendMail.js"
+import {
+    BASE_URL,
+    MERCHANT_PAYNOW_ACCESS_CODE,
+    MERCHANT_PAYNOW_HASH_CODE,
+    ONEPAY_MERCHANT,
+    ONEPAY_RETURN_URL
+} from "../utils/configOnepay.js";
+import {buildRawData, genSecureHash} from "../utils/onepayHelper.js";
 export const createBooking = async (req, res) => {
     try {
         const booking = new Booking(req.body)
@@ -15,7 +23,7 @@ export const createBooking = async (req, res) => {
         // console.log(error)
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in creating booking",
         })
     }
 }
@@ -341,3 +349,129 @@ export const getAllBooking = async (req, res) => {
         });
     }
 };
+
+export const createBookingPayment = async (req, res) => {
+    // To be implemented
+    try{
+        const bookingId = req.params.id;
+        const booking = await Booking.findBy(bookingId);
+        if(!booking){
+            return res.status(404).json({
+                success:false,
+                message:"Booking not found"
+            });
+        }
+
+        const marchTxnRef = `BK_${bookingId}_${Date.now()}`;
+        const amount = Math.round(booking.totalPrice * 100);
+
+        const params = {
+            vpc_Version: "2",
+            vpc_Command: "pay",
+            vpc_AccessCode: MERCHANT_PAYNOW_ACCESS_CODE,
+            vpc_Locale: "vn",
+            vpc_Merchant: ONEPAY_MERCHANT,
+            vpc_ReturnURL: ONEPAY_RETURN_URL,
+            vpc_MerchTxnRef: marchTxnRef,
+            vpc_OrderInfo: `Booking_${bookingId}`,
+            vpc_Amount: amount.toString(),
+            vpc_TicketNo: req.ip || "127.0.0.1",
+            vpc_Currency: "VND",
+        };
+
+        const rawData = buildRawData(params);
+        const secureHash = genSecureHash(rawData, MERCHANT_PAYNOW_HASH_CODE);
+        params.vpc_SecureHash = secureHash;
+
+        // save booking.onepay
+        booking.onepay = {
+            merchTxnRef: marchTxnRef,
+            amount: booking.totalPrice,
+            status: "PENDING",
+        };
+        await booking.save();
+
+        const redirectUrl = `${BASE_URL}?${new URLSearchParams(params).toString()}`;
+        return res.status(200).json({
+            success:true,
+            url:redirectUrl
+        });
+    }catch (error){
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Failed to create OnePay transaction" });
+    }
+}
+
+/** ===================================
+ * OnePay ReturnURL (redirect người dùng)
+ * GET /api/booking/onepay/return
+ * =================================== */
+export const onepayReturn = async (req, res)=>{
+    try{
+        const params = req.query;
+        const merchTxnRef = params.vpc_MerchTxnRef;
+        const booking= await Booking.findOne({"onepay.merchTxnRef":merchTxnRef});
+        if(!booking){
+            return res.status(404).json({ success: false, message: "Booking not found" });
+        }
+
+        const rawData = buildRawData(params);
+        const expectedSecureHash = genSecureHash(rawData, MERCHANT_PAYNOW_HASH_CODE);
+        if(expectedSecureHash !== (params.vpc_SecureHash || "").toUpperCase()){
+            return res.status(400).json({ success: false, message: "Invalid Secure Hash" });
+        }
+
+        if(params.vpc_TxnResponseCode === "0"){
+            // Payment successful
+            booking.isPaid = true;
+            booking.payAt = new Date();
+            booking.onepay.status = "SUCCESS";
+            booking.status = "PENDING";
+        }else{
+            // Payment failed
+            booking.onepay.status = "FAILED";
+        }
+
+        // backend receive transactionNo from return URL
+        booking.onepay.transactionNo = params.vpc_TransactionNo;
+        booking.onepay.rawResponse = params;
+        await booking.save();
+
+        return res.status(200).json({ success: true, message: "OnePay payment processed", data: booking });
+    }catch (error){
+        return res.status(500).json({ success: false, message: "Error in OnePay Return URL" });
+    }
+}
+
+export const onepayIpn = async (req, res)=>{
+    const params = req.method === "GET" ? req.query : req.body;
+    const merchTxnRef = params.vpc_MerchTxnRef;
+    const booking = await Booking.findOne({"onepay.merchTxnRef":merchTxnRef});
+    if(!booking){
+        return res.status(404).json({ success: false, message: "Booking not found" });
+    }
+
+    const raw = buildRawData(params);
+    const expectedSecureHash = genSecureHash(raw, MERCHANT_PAYNOW_HASH_CODE);
+    if(expectedSecureHash !== (params.vpc_SecureHash || "").toUpperCase()){
+        return res.status(400).json({ success: false, message: "Invalid Secure Hash" });
+    }
+    const code = params.vpc_TxnResponseCode;
+    if(code === "0"){
+        booking.onepay.status = "SUCCESS";
+        booking.isPaid = true;
+        booking.payAt = new Date();
+        booking.status = "CONFIRM";
+    }else{
+        booking.onepay.status = "FAILED";
+    }
+    booking.onepay.transactionNo = params.vpc_TransactionNo;
+    booking.onepay.rawResponse = params;
+    await booking.save();
+
+    return res.status(200).json({ success: true, message: "OnePay IPN processed", data: booking });
+}
+// danh cho frontend gọi tạo payment
+// await axios.post(`/api/booking/${booking._id}/create-payment`);
+
+
