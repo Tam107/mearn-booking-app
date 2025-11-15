@@ -1,0 +1,100 @@
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import usersRoute from "./routes/users.js";
+import serviceHotelRoute from "./routes/serviceHotel.js";
+import facilityHotel from "./routes/facilityHotel.js";
+import uploadRoute from "./routes/upload.js";
+import policyRoute from "./routes/policy.js";
+import bookingRoute from "./routes/booking.js";
+import hotelsRoute from "./routes/hotels.js";
+import adminsRoute from "./routes/admin.js";
+import roomsRoute from "./routes/rooms.js";
+import busRoute from "./routes/bus.js";
+import paymentRoute from "./routes/payment.js";
+import swaggerDocs from "./swagger.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import googleAuthRoute from "./routes/googleAuth.js";
+import {PORT, MONGO_URI, CLIENT_ID_PAYPAL, PORT_FRONTEND} from "./config/env.js";
+
+const app = express();
+dotenv.config();
+
+// Set strictQuery option
+mongoose.set('strictQuery', true); // or false, depending on your needs
+
+const connect = async () => {
+    try {
+        await mongoose.connect(MONGO_URI);
+    } catch (e) {
+    }
+};
+// Call the connect function
+connect();
+
+mongoose.connection.on("disconnected",()=>{
+} );
+
+//middleware
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
+// app.use(cors({
+//     origin:PORT_FRONTEND,
+//     credentials:true
+// }))
+
+app.use(cors({
+    origin: [
+        'https://highlightsofvietnam.pages.dev',
+        'https://highlightsofvietnamm.vercel.app',
+        'http://localhost:5173', // hoặc port development của bạn
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS',"PATCH"],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+}));
+
+app.get("/health", async (req, res) => {
+    res.send({message: "Health is ok"})
+})
+
+// route
+app.use("/api/users", usersRoute);
+app.use("/api/hotels", hotelsRoute);
+app.use("/api/rooms", roomsRoute);
+app.use("/api/admin", adminsRoute);
+app.use("/api/auth", googleAuthRoute);
+// app.use("/api/servicesHotel", serviceHotelRoute);
+// app.use("/api/facilityHotel", facilityHotel);
+
+app.use("/api/hotels/services", serviceHotelRoute);
+app.use("/api/hotels/facilities", facilityHotel);
+app.use("/api/upload", uploadRoute);
+app.use("/api/policies", policyRoute);
+app.use("/api/booking", bookingRoute);
+app.use("/api/bus", busRoute);
+app.use("/api/payment", paymentRoute)
+app.use("/api/config/paypal", (req,res)=>{
+    res.send(CLIENT_ID_PAYPAL)
+});
+
+
+app.use((error, req, res, next)=>{
+    const errorStatus = error.status || 500;
+    const errorMessage = error.message || "Something went wrong";
+    return res.status(errorStatus).json({
+        success: false,
+        status: errorStatus,
+        message: errorMessage,
+        // stack: error.stack,
+    });
+})
+
+
+app.listen(PORT, () => {
+  
+    swaggerDocs(app, PORT); // Initialize Swagger
+});

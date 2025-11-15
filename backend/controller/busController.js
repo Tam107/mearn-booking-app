@@ -1,0 +1,203 @@
+import BoardingArrive from "../models/BoardingArrive.js"
+import Bus from "../models/Bus.js"
+
+export const getAllBoardingPoint = async (req, res) => {
+    try {
+        const boardingPoints = await BoardingArrive.find({ isBoarding: true }).sort({ createdAt: -1 })
+        return res.json({
+            success: true,
+            message: "Get all boarding points successfully",
+            data: boardingPoints
+        })
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error with getting all boarding point",
+        })
+    }
+}
+export const getAllArrivalPoint = async (req, res) => {
+    try {
+        const boardingPoints = await BoardingArrive.find({ isBoarding: false }).sort({ createdAt: -1 })
+        return res.json({
+            success: true,
+            message: "Get all boarding points successfully",
+            data: boardingPoints
+        })
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in Getting all boarding points ",
+        })
+    }
+}
+
+export const createPoint = async (req, res) => {
+    try {
+        const data = req.body;
+        if (!data.name || !data.address || !data.city) {
+            return res.json({
+                success: false,
+                message: "Please provide all required fields",
+            })
+        }
+        const newBoardingPoint = new BoardingArrive(data);
+        await newBoardingPoint.save();
+        return res.json({
+            success: true,
+            message: "Create boarding point successfully",
+            data: newBoardingPoint
+        });
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in creating boarding point",
+        })
+    }
+}
+export const deletePoint = async (req,res)=>{
+    try{
+        const { id } = req.params;        
+        const boardingPoint = await BoardingArrive.findByIdAndDelete(id);
+        if (!boardingPoint) {
+            return res.json({
+                success: false,
+                message: "Boarding point not found",
+            });
+        }
+        return res.json({
+            success: true,
+            message: "Delete boarding point successfully",
+            data: boardingPoint
+        });
+    }
+    catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in deleting boarding point",
+        });
+    }
+}
+export const updatePoint = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        if (!data.name || !data.address || !data.city) {
+            return res.json({
+                success: false,
+                message: "Please provide all required fields",
+            });
+        }
+        const boardingPoint = await BoardingArrive.findByIdAndUpdate(id, data, { new: true });
+        if (!boardingPoint) {
+            return res.json({
+                success: false,
+                message: "Boarding point not found",
+            });
+        }
+        return res.json({
+            success: true,
+            message: "Update boarding point successfully",
+            data: boardingPoint
+        });
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in updating boarding point",
+        });
+    }
+}
+
+export const createBus = async (req, res) => {
+    try {
+        const newBus = new Bus(req.body);
+        
+        await newBus.save();
+
+        const populatedBus = await Bus.findById(newBus._id)
+            .populate("boarding")
+            .populate("arrival")
+            .populate("facilities");
+
+        return res.json({
+            success: true,
+            message: "Create bus successfully",
+            data: populatedBus
+        });
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in creating bus",
+        });
+    }
+}
+
+
+export const getAllBus = async (req, res) => {
+    try {
+        const buses = await Bus.find().populate("boarding").populate("arrival").populate("facilities").sort({ createdAt: -1 });
+        return res.json({
+            success: true,
+            message: "Get all buses successfully",
+            data: buses
+        });
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in getting all buses",
+        })
+    }
+}
+
+export const deleteBus = async (req,res) => {
+    try {
+        const {id} = req.params
+        const busDelete = await Bus.findOneAndDelete({_id:id}).populate("boarding").populate("arrival").populate("facilities")
+        if(busDelete){
+            return res.json({
+                success: true,
+                message: "Get all buses successfully",
+                data: busDelete
+            });
+        }
+        else{
+            return res.json({
+                success: true,
+                message: "Get all buses successfully",
+                data: {}
+            });
+        }
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in deleting buses",
+        })
+    }
+}
+
+export const updateBus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+
+        const newBus = await Bus.findOneAndUpdate({_id: id}, data, { new: true }).populate("boarding").populate("arrival").populate("facilities"); 
+        if(newBus){
+            return res.json({
+                success: true,
+                message: "Update successfully",
+                data: newBus
+            });
+        }
+        return res.json({
+            success: false,
+            message: "Can not find bus",
+            data: {}
+        });
+       
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Error in updating buses",
+        });
+    }
+}
