@@ -143,7 +143,7 @@ const Booking = () => {
     const res = await updateBookingApi(id, dataPayment);
 
     if (res.success) {
-      toast.success("Continue to Payment");
+      toast.success("Continue to Payment.js");
       setDisablueButton(false);
       navigate(`/payment/${id}`);
     } else {
@@ -242,13 +242,13 @@ const Booking = () => {
                 </p>
               </div>
 
-              {/* Payment Info */}
+              {/* Payment.js Info */}
               <div className="flex items-center text-blue-500 text-sm mb-4">
                 <i className="fas fa-clock mr-2"></i>
                 <p>You won’t be charged yet!</p>
               </div>
 
-              {/* Continue to Payment Button */}
+              {/* Continue to Payment.js Button */}
               <button
                 disabled={disableButton}
                 onClick={handlePayment}

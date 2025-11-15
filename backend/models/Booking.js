@@ -2,27 +2,27 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv';
 dotenv.config();
 
-const OnepaySchema = new mongoose.Schema({
-    merchTxnRef: { type: String },          // vpc_MerchTxnRef (mã giao dịch gửi sang OnePay)
-    transactionNo: { type: String },        // vpc_TransactionNo (mã giao dịch OnePay trả về)
-    amount: { type: Number },               // số tiền (VND) không nhân 100
-    status: {
-        type: String,
-        enum: ["PENDING", "SUCCESS", "FAILED"],
-        default: "PENDING",
-    },
-    rawResponse: { type: mongoose.Schema.Types.Mixed }, // lưu toàn bộ query OnePay trả về
-}, { _id: false });
-
 const BookingSchema = new mongoose.Schema({
-    guests: Number,
-    checkIn: Date,
-    checkOut: Date,
+    bookingType:{
+        type: String,
+        enum: ["HOTEL","BUS"],
+        // required: true,
+    },
+    // roomType for hotel booking
     roomType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room",
     },
 
+    // bus for bus booking
+    bus:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Bus",
+    },
+
+    guests: Number,
+    checkIn: Date,
+    checkOut: Date,
     name: String,
     email: String,
     phoneNumber: String,
@@ -30,20 +30,38 @@ const BookingSchema = new mongoose.Schema({
     isGuest: Boolean,
     nameGuest:String,
 
-    stepPayment: { type: Boolean, default: false },
-    paymentMethod: { type: String, default: "onepay" },
+    // Thanh toán tiền tệ
+    // paymentMethod: { type: String, default: "onepay" },
 
+    // vnd price
+    totalPriceVND: { type:Number, required:false },
+    totalPriceEUR: Number, // euro price
+
+    selectedCurrency: {
+        type: String,
+        enum: ["VND", "EUR"],
+        default: "VND"
+    },
+
+    exchangeRate: { type: Number, min : 0}, // Tỷ giá áp dụng: 1 EUR = ? VND
+
+    status: { type: String, enum: ["REQUEST", "CONFIRMED", "CANCELLED"], default: "REQUEST" },
+    // payment
+    payment:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
+    },
+    stepPayment: { type: Boolean, default: false },
     isPaid: { type: Boolean, default: false },
     payAt: Date,
-
-    totalPrice: { type:Number, required:true },
-    totalPriceUSD: Number,
-
-    status: { type:String, default:"Request" },
-
-    // thanh toán onepay
-    onepay: OnepaySchema
-
 }, { timestamps: true });
+
+// Virtual để populate payment
+BookingSchema.virtual('paymentInfo', {
+    ref: 'Payment',
+    localField: '_id',
+    foreignField: 'booking',
+    justOne: true
+});
 
 export default mongoose.model("Booking", BookingSchema);

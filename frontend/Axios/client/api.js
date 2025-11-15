@@ -379,7 +379,7 @@ const editPolicyApi = async (id, data) => {
     }
 }
 
-const createOtpPayment = async (data) => {
+const createBookingHotelPayment = async (data) => {
     try {
         const URL_LOGIN = '/booking'
         const response = await axios.post(URL_LOGIN, data)
@@ -513,7 +513,7 @@ export {
     editFacilitiesApi,
     deletePolicyApi,
     editPolicyApi,
-    createOtpPayment,
+    createBookingHotelPayment,
     getBookingApi,
     updateBookingApi,
     getPayPalClientApi,

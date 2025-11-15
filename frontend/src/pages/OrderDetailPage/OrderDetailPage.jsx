@@ -137,7 +137,7 @@ const OrderDetailPage = () => {
               </p>
             </div>
             
-            {/* Payment Method */}
+            {/* Payment.js Method */}
             <div className="flex justify-between">
               <p className="text-gray-600">Payment Method:</p>
               <p className="font-semibold text-gray-800">

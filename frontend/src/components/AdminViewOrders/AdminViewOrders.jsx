@@ -133,7 +133,7 @@ const AdminViewOrders = () => {
             loadingRow === record._id
           }
         >
-          {loadingRow === record._id ? "Processing..." : "Confirm Payment"}
+          {loadingRow === record._id ? "Processing..." : "Confirm Payment.js"}
         </Button>
       ),
     },
@@ -197,7 +197,7 @@ const AdminViewOrders = () => {
                 }
                 className="mt-2"
               >
-                {loadingRow === item._id ? "Processing..." : "Confirm Payment"}
+                {loadingRow === item._id ? "Processing..." : "Confirm Payment.js"}
               </Button>
             </div>
           ))}

@@ -1,4 +1,3 @@
-
 // import { populate } from "dotenv"
 import Admin from "../models/Admin.js"
 import Booking from "../models/Booking.js"
@@ -11,6 +10,55 @@ import {
     ONEPAY_RETURN_URL
 } from "../utils/configOnepay.js";
 import {buildRawData, genSecureHash} from "../utils/onepayHelper.js";
+import getCurrentRate from "../utils/getExchangeRate.js";
+/*export const createHotelBooking = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const {
+      guests,
+      checkIn,
+      checkOut,
+      roomType: roomId,
+      totalPriceVND,
+      selectedCurrency = "VND",
+    } = req.body;
+
+    // Validate
+    if (!totalPriceVND || totalPriceVND <= 0)
+      return res.status(400).json({ success: false, message: "Invalid price" });
+
+    // Tìm room
+    const room = await Room.findById(roomId);
+    if (!room) return res.status(404).json({ success: false, message: "Room not found" });
+
+    // Tạo Booking
+    const booking = new Booking({
+      bookingType: "HOTEL",
+      roomType: roomId,
+      guests,
+      checkIn: new Date(checkIn),
+      checkOut: new Date(checkOut),
+
+      totalPriceVND,               // ← LƯU TRỰC TIẾP
+      selectedCurrency,
+
+      status: "REQUEST",
+      stepPayment: false,
+      isPaid: false,
+    });
+
+    await booking.save({ session });
+    await session.commitTransaction();
+
+    return res.status(201).json({ success: true, data: booking });
+  } catch (error) {
+    await session.abortTransaction();
+    return res.status(500).json({ success: false, message: error.message });
+  } finally {
+    session.endSession();
+  }
+};*/
 export const createBooking = async (req, res) => {
     try {
         const booking = new Booking(req.body)
@@ -20,13 +68,14 @@ export const createBooking = async (req, res) => {
             data: booking
         })
     } catch (error) {
-        // console.log(error)
+        console.log("create booking: ",error)
         return res.json({
             success: false,
             message: "Error in creating booking",
         })
     }
 }
+
 export const getBooking = async (req, res) => {
     try {
         // console.log(req.params);
@@ -65,10 +114,11 @@ export const getBooking = async (req, res) => {
         // console.log(error);
         return res.json({
             success: false,
-            message: "Error in BE",
+            message: "Error in getting booking by id",
         });
     }
 };
+
 export const getByEmail = async (req, res) => {
     try {
 
@@ -104,6 +154,7 @@ export const getByEmail = async (req, res) => {
         });
     }
 };
+
 export const updateStatus = async (req, res) => {
     try {
         if (!req.params.id) {
@@ -179,9 +230,9 @@ export const updateBooking = async (req, res) => {
                 populate: [
                     {
                         path: "hotel",
-                        
+
                     },
-                  
+
                 ],
             });
             await sendMail({
@@ -295,8 +346,8 @@ export const updateBooking = async (req, res) => {
                     </body>
                   </html>
                 `,
-              });
-           
+            });
+
         }
 
         // Trả về kết quả thành công
@@ -336,7 +387,6 @@ export const getAllBooking = async (req, res) => {
                     }
                 ],
             })
-        // Kiểm tra nếu `data` tồn tại và không phải là một đối tượng rỗng
         return res.json({
             success: true,
             data: data,
@@ -350,128 +400,21 @@ export const getAllBooking = async (req, res) => {
     }
 };
 
-export const createBookingPayment = async (req, res) => {
-    // To be implemented
-    try{
-        const bookingId = req.params.id;
-        const booking = await Booking.findBy(bookingId);
-        if(!booking){
-            return res.status(404).json({
-                success:false,
-                message:"Booking not found"
-            });
-        }
+export const getExchangeRateHandler = async (req, res) => {
+    try {
+        const rate = await getCurrentRate();
 
-        const marchTxnRef = `BK_${bookingId}_${Date.now()}`;
-        const amount = Math.round(booking.totalPrice * 100);
-
-        const params = {
-            vpc_Version: "2",
-            vpc_Command: "pay",
-            vpc_AccessCode: MERCHANT_PAYNOW_ACCESS_CODE,
-            vpc_Locale: "vn",
-            vpc_Merchant: ONEPAY_MERCHANT,
-            vpc_ReturnURL: ONEPAY_RETURN_URL,
-            vpc_MerchTxnRef: marchTxnRef,
-            vpc_OrderInfo: `Booking_${bookingId}`,
-            vpc_Amount: amount.toString(),
-            vpc_TicketNo: req.ip || "127.0.0.1",
-            vpc_Currency: "VND",
-        };
-
-        const rawData = buildRawData(params);
-        const secureHash = genSecureHash(rawData, MERCHANT_PAYNOW_HASH_CODE);
-        params.vpc_SecureHash = secureHash;
-
-        // save booking.onepay
-        booking.onepay = {
-            merchTxnRef: marchTxnRef,
-            amount: booking.totalPrice,
-            status: "PENDING",
-        };
-        await booking.save();
-
-        const redirectUrl = `${BASE_URL}?${new URLSearchParams(params).toString()}`;
         return res.status(200).json({
-            success:true,
-            url:redirectUrl
+            success: true,
+            data: { rate },
+            cached: false
         });
-    }catch (error){
-        console.log(error);
-        return res.status(500).json({ success: false, message: "Failed to create OnePay transaction" });
+    } catch (error) {
+        console.error("Handler error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to get exchange rate",
+            error: error.message
+        });
     }
-}
-
-/** ===================================
- * OnePay ReturnURL (redirect người dùng)
- * GET /api/booking/onepay/return
- * =================================== */
-export const onepayReturn = async (req, res)=>{
-    try{
-        const params = req.query;
-        const merchTxnRef = params.vpc_MerchTxnRef;
-        const booking= await Booking.findOne({"onepay.merchTxnRef":merchTxnRef});
-        if(!booking){
-            return res.status(404).json({ success: false, message: "Booking not found" });
-        }
-
-        const rawData = buildRawData(params);
-        const expectedSecureHash = genSecureHash(rawData, MERCHANT_PAYNOW_HASH_CODE);
-        if(expectedSecureHash !== (params.vpc_SecureHash || "").toUpperCase()){
-            return res.status(400).json({ success: false, message: "Invalid Secure Hash" });
-        }
-
-        if(params.vpc_TxnResponseCode === "0"){
-            // Payment successful
-            booking.isPaid = true;
-            booking.payAt = new Date();
-            booking.onepay.status = "SUCCESS";
-            booking.status = "PENDING";
-        }else{
-            // Payment failed
-            booking.onepay.status = "FAILED";
-        }
-
-        // backend receive transactionNo from return URL
-        booking.onepay.transactionNo = params.vpc_TransactionNo;
-        booking.onepay.rawResponse = params;
-        await booking.save();
-
-        return res.status(200).json({ success: true, message: "OnePay payment processed", data: booking });
-    }catch (error){
-        return res.status(500).json({ success: false, message: "Error in OnePay Return URL" });
-    }
-}
-
-export const onepayIpn = async (req, res)=>{
-    const params = req.method === "GET" ? req.query : req.body;
-    const merchTxnRef = params.vpc_MerchTxnRef;
-    const booking = await Booking.findOne({"onepay.merchTxnRef":merchTxnRef});
-    if(!booking){
-        return res.status(404).json({ success: false, message: "Booking not found" });
-    }
-
-    const raw = buildRawData(params);
-    const expectedSecureHash = genSecureHash(raw, MERCHANT_PAYNOW_HASH_CODE);
-    if(expectedSecureHash !== (params.vpc_SecureHash || "").toUpperCase()){
-        return res.status(400).json({ success: false, message: "Invalid Secure Hash" });
-    }
-    const code = params.vpc_TxnResponseCode;
-    if(code === "0"){
-        booking.onepay.status = "SUCCESS";
-        booking.isPaid = true;
-        booking.payAt = new Date();
-        booking.status = "CONFIRM";
-    }else{
-        booking.onepay.status = "FAILED";
-    }
-    booking.onepay.transactionNo = params.vpc_TransactionNo;
-    booking.onepay.rawResponse = params;
-    await booking.save();
-
-    return res.status(200).json({ success: true, message: "OnePay IPN processed", data: booking });
-}
-// danh cho frontend gọi tạo payment
-// await axios.post(`/api/booking/${booking._id}/create-payment`);
-
-
+};

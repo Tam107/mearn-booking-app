@@ -29,7 +29,7 @@ const OrderSuccessPage = () => {
         navigate(`/booking/${id}`);
       }
       if (!res.data?.isPaid) {
-        toast.error('Payment first');
+        toast.error('Payment.js first');
         navigate(`/payment/${id}`);
       }
       setData(res.data);

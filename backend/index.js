@@ -6,11 +6,12 @@ import serviceHotelRoute from "./routes/serviceHotel.js";
 import facilityHotel from "./routes/facilityHotel.js";
 import uploadRoute from "./routes/upload.js";
 import policyRoute from "./routes/policy.js";
-import BookingRoute from "./routes/Booking.js";
+import bookingRoute from "./routes/booking.js";
 import hotelsRoute from "./routes/hotels.js";
 import adminsRoute from "./routes/admin.js";
 import roomsRoute from "./routes/rooms.js";
 import busRoute from "./routes/bus.js";
+import paymentRoute from "./routes/payment.js";
 import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -73,8 +74,9 @@ app.use("/api/hotels/services", serviceHotelRoute);
 app.use("/api/hotels/facilities", facilityHotel);
 app.use("/api/upload", uploadRoute);
 app.use("/api/policies", policyRoute);
-app.use("/api/booking", BookingRoute);
+app.use("/api/booking", bookingRoute);
 app.use("/api/bus", busRoute);
+app.use("/api/payment", paymentRoute)
 app.use("/api/config/paypal", (req,res)=>{
     res.send(CLIENT_ID_PAYPAL)
 });
